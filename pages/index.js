@@ -2,9 +2,14 @@
 import { useState, useEffect, useCallback } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
+import axios from 'axios'
+import Moralis from 'moralis/dist/moralis.min.js';
+
 import styles from '../styles/Home.module.css'
 import { useUserContext } from '../utils/context'
+import abi from '../utils/abi.json'
 
+import Web3 from 'web3';
 import Web3Modal from 'web3modal'
 import { Web3Provider } from '@ethersproject/providers';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -18,6 +23,8 @@ export default function Home(props) {
   const {ctx, setCtx} = useUserContext()
 
   const subscribeToProviderEvents = async (provider) => {
+    console.log('index | subscribeToProviderEvents')
+
     if (!provider.on) {
       return;
     }
@@ -46,9 +53,11 @@ export default function Home(props) {
 
   const changedAccount = async (accounts) => {
     if(!accounts.length) {
+      console.log('index | changedAccount | disconnected',)
       // Metamask Lock fire an empty accounts array 
       await resetApp();
     } else {
+      console.log('index | changedAccount | connected',)
       setCtx({ 
         ...ctx, 
         w3m: {
@@ -60,6 +69,7 @@ export default function Home(props) {
   }
 
   const networkChanged = async (networkId) => {
+    console.log('index | networkChanged')
     const web3Modal = new Web3Modal({
       network: getNetwork(),
       cacheProvider: true,
@@ -76,6 +86,7 @@ export default function Home(props) {
     // const library = new Web3Provider(ctx?.w3m?.provider);
     // const network = await library.getNetwork();
     const chainId = network.chainId;
+    console.log(`index | networkChanged: ${chainId}`)
     setCtx({ 
       ...ctx, 
       w3m: {
@@ -91,9 +102,14 @@ export default function Home(props) {
     resetApp();
   }
 
-  const getNetwork = () => getChainData(ctx.chainId || 1).network;
+  const getNetwork = () => {
+    console.log('index | getNetwork')
+    return getChainData(ctx.chainId || 1).network;
+  }
 
   const getProviderOptions = () => {
+    console.log('index | getProviderOptions')
+
     const providerOptions = {
       walletconnect: {
         package: WalletConnectProvider,
@@ -130,11 +146,13 @@ export default function Home(props) {
   };
 
   const resetApp = async () => {
-    console.log('resetApp |')
+    console.log('index | resetApp')
     localStorage.removeItem("WEB3_CONNECT_CACHED_PROVIDER");
     localStorage.removeItem("walletconnect");
     sessionStorage.setItem('CHIPTOS_CONNECTED', 'false')
-    if(ctx.w3m){
+
+    if(ctx.w3m && ctx.w3m.Web3Modal){
+      await ctx.web3Modal.provider.close()
       await ctx.w3m.web3Modal.clearCachedProvider();
       await unSubscribe(ctx.w3m.provider);
     }
@@ -146,9 +164,9 @@ export default function Home(props) {
 
   };
 
-
-
   const connectWeb3 = useCallback(async () => {
+    console.log('index | connectWeb3')
+
     try{
       const web3Modal = new Web3Modal({
         network: getNetwork(),
@@ -163,18 +181,23 @@ export default function Home(props) {
       const network = await library.getNetwork();
       
       const address = provider.selectedAddress ? provider.selectedAddress : provider.accounts[0];
-  
+
+      // create a connection to the contract
+      const web3 =  new Web3(Web3.givenProvider)
+      const Contract = await new web3.eth.Contract(abi, '0x5955373cc1196fd91a4165c4c5c227b30a3948f9')
+    
       setCtx({
         ...ctx,
+        chainId: network.chainId,
+        address,
+        connected: true,
         w3m: {
           provider,
           library,
           network,
           web3Modal,
           library,
-          chainId: network.chainId,
-          address,
-          connected: true
+          Contract,
         }
       });
       
@@ -191,7 +214,33 @@ export default function Home(props) {
 
 
 
+  const testApi = async () => {
+    console.log('index | testApi...')
+    
+    let data = await axios.get('/api/hello')
+    console.log('index | testApi | data:', data)
+    // setCtx({
+    //   ...ctx,
+    //   courses: '???'
+    // })
+  }
 
+
+  const checkIsHolder = async () => {
+    console.log(`index | checkIsHolder...`)
+    let isHolder = await ctx.w3m.Contract.methods
+      .usedAddresses(ctx.address)
+      .call()
+      .then(data => data ? true : false)
+      .catch(err => console.log('index | isHolder | error:', err))
+
+      console.log(`index | checkIsHolder: ${isHolder}`)
+      setCtx({
+        ...ctx,
+        isHolder
+      })
+      return isHolder
+  }
 
 
 
@@ -211,16 +260,24 @@ export default function Home(props) {
       </Head>
       <p>index.js - Home</p>
 
-      {/* <pre>{inspect(ctx)}</pre> */}
 
-      <p>Chain ID: {ctx?.w3m?.chainId}</p>
-      <p>Address: {ctx?.w3m?.address}</p>
 
-      <button onClick={() => setCtx({...ctx, newData: 'New Context!'})}>Set CTX</button>
-      <button onClick={() => resetApp()}>RESET</button>
+
+      {ctx.connected 
+      ?
+      <>
+        <p>Chain ID: {ctx?.w3m?.chainId}</p>
+        <p>Address: {ctx?.w3m?.address}</p>
+        <button onClick={() => resetApp()}>RESET</button>
+        <button onClick={() => testApi()}>API TEST</button>
+        <button onClick={() => checkIsHolder()}>IS HOLDER</button>
+      </>
+      :
       <button onClick={() => connectWeb3()}>Connect</button>
 
-
+      
+    }
+    <pre>{inspect({...ctx, w3m:{}})}</pre>
    
     </div>
   )
