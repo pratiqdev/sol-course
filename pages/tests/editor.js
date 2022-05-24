@@ -3,7 +3,6 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../../styles/Home.module.css'
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
-import '../../styles/globals.css'
 
 const ResponsiveImage = (props) => (
   <Image alt={props.alt} layout="responsive" {...props} />
