@@ -5,7 +5,8 @@ const UserContext = createContext();
 
 export function UserContextWrapper({ children }) {
   let initialCtx = {
-    user_address: '0x00'
+    user_address: '0x00',
+    w3m: null
   }
   const [ctx, setCtx] = useState(initialCtx)
   
