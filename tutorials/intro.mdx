@@ -1,3 +1,13 @@
+import { Editor } from 'components'
+import { code, tests } from '@data/intro.js'
+
+export const meta = {
+    title: 'Intro',
+    tags: ['Solidity', 'Editor', 'Compiling'],
+    time: '2 minutes'
+}
+
+
 export const code = `
 
 // This is the code that would appear in the editor
@@ -27,3 +37,27 @@ export const tests = {
    ]
 
 }
+
+<!-- ======================================================================= -->
+
+# Intro
+
+This is where the instructions would appear, written
+in mdx so you can use:
+ 
+titles
+text
+lists
+blockquotes
+inline-code
+codeblocks
+custom elements
+
+Mdx is easy to write in and makes sure that the content is always styled well 
+and fits the coding experience / expectations
+
+
+<Editor 
+code={code} 
+tests={tests}
+/>
