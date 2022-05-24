@@ -1,12 +1,49 @@
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { useUserContext } from '../utils/context'
+import Web3Modal from 'web3modal'
 
 export default function Home(props) {
   const {ctx, setCtx} = useUserContext()
+
+
+  const connectWeb3 = useCallback(async () => {
+
+    const web3Modal = new Web3Modal({
+      network: this.getNetwork(),
+      cacheProvider: true,
+      providerOptions: this.getProviderOptions()
+    });
+    const provider = await this.web3Modal.connect();
+
+    const library = new Web3Provider(this.provider);
+
+    const network = await library.getNetwork();
+
+    const address = this.provider.selectedAddress ? this.provider.selectedAddress : this.provider.accounts[0];
+
+    setCtx({
+      ...ctx,
+      library,
+      chainId: network.chainId,
+      address,
+      connected: true
+    });
+
+    await this.subscribeToProviderEvents(this.provider);
+
+  }, [])
+
+  useEffect(() => {
+
+    connectWeb3()
+  
+    return () => {}
+  }, [connectWeb3])
+  
 
 
 
