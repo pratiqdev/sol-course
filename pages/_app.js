@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }) {
     <UserContextWrapper>
       <nav>
         <Link href='/'>Home</Link>
-        <Link href='/tests/editor'>Editor</Link>
+        <Link href='/courses'>Courses</Link>
       </nav>
       <Component {...pageProps} />
     </UserContextWrapper>
