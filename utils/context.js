@@ -5,8 +5,11 @@ const UserContext = createContext();
 
 export function UserContextWrapper({ children }) {
   let initialCtx = {
-    user_address: '0x00',
-    w3m: null
+    chainId: 1,
+    address: '0x00',
+    connected: false,
+    isHolder: false,
+    holderToken: '' 
   }
   const [ctx, setCtx] = useState(initialCtx)
   

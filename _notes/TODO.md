@@ -13,3 +13,27 @@
   - left sidebar tutorial nav
   - center sidebar tutorial content
   - right sidebar container
+
+
+
+
+
+
+# NEXT
+
+## Access restricted content (separate function / button):
+
+1. get the user to sign a message (FE)
+  - verifies that they own this account
+
+2. ping the contract at `balanceOf(address)` with the verified address (FE)
+  - returns 1 or more if they own a token
+
+3. generate a jwt and save as a cookie `TOKEN_ACCESS` (BE generation, FE cookie storage)
+
+# hasAuth hook
+
+create a hook that checks if they are valid at page load
+if not - show a modal with button to `Access restricted content`,
+instructions to purchase a token, 
+or list some free stuff

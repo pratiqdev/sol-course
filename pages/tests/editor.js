@@ -1,8 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../../styles/Home.module.css'
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
+import axios from 'axios';
+import { useUserContext } from '../../utils/context';
+import verifyHolder from '../../utils/verifyHolder';
+import { inspect } from 'util';
+import connectionManager from '../../utils/connection';
 
 const ResponsiveImage = (props) => (
   <Image alt={props.alt} layout="responsive" {...props} />
@@ -12,6 +17,32 @@ const ResponsiveImage = (props) => (
 export default function TestEditor(props) {
 
   const [editorContent, setEditorContent] = useState('// ayoooo')
+  const {ctx, setCtx} = useUserContext()
+  const { connect, reset } = connectionManager(ctx, setCtx)
+
+  // const validateToken = async () => {
+    
+  // }
+  
+  // useEffect(()=>{
+
+  //   ;(async ()=>{
+  //     console.log('editor | validating token...')
+  //     await axios.post('/api/verify-jwt', {address: ctx.w3m.provider.selectedAddress ? ctx.w3m.provider.selectedAddress : ctx.w3m.provider.accounts[0]})
+  //   })();
+
+  // }, [ctx])
+
+    useEffect(()=>{
+
+    ;(async ()=>{
+      if(!ctx.connected){
+        connect()
+      }
+      verifyHolder(ctx.address)
+    })();
+
+  }, [ctx])
 
 
 
@@ -46,6 +77,9 @@ export default function TestEditor(props) {
         onChange={setEditorContent}
         theme={'vs-dark'}
       /> 
+
+
+      <pre>{inspect(ctx)}</pre>
 
 
 
