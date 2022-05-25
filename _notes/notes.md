@@ -25,3 +25,22 @@ Examples:
     Questions would be located within the MDX page
 - 
 like apreview panel or something that more functions and interactable content)
+
+
+
+## Useful links:
+
+The Deployed Site
+https://vercel.com/pratiqdev/sol-course
+
+The Repo
+https://github.com/pratiqdev/sol-course
+
+The ChiptosX Contract
+https://etherscan.io/address/0x5955373cc1196fd91a4165c4c5c227b30a3948f9#readContract
+
+Medium article on message signing and verification (with gist)
+https://medium.com/coinmonks/signing-messages-in-ethereum-5517040c2ff1
+
+JWT generation and validation
+https://www.section.io/engineering-education/how-to-build-authentication-api-with-jwt-token-in-nodejs/
