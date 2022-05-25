@@ -3,11 +3,11 @@ import { useState, useEffect, useCallback } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import axios from 'axios'
-import Moralis from 'moralis/dist/moralis.min.js';
 
 import styles from '../styles/Home.module.css'
 import { useUserContext } from '../utils/context'
 import abi from '../utils/abi.json'
+import verifyHolder from '../utils/verifyHolder';
 
 import Web3 from 'web3';
 import Web3Modal from 'web3modal'
@@ -21,6 +21,14 @@ import { inspect } from 'util'
 
 export default function Home(props) {
   const {ctx, setCtx} = useUserContext()
+  const [secret, setSecret] = useState('no-secret')
+
+  axios.get('/api/generate-jwt')
+  .then(x => {
+    console.log('index | axios(generate-jwt):', x)
+    setSecret(x.data.secret)
+  })
+  .catch(err => console.log(err))
 
   const subscribeToProviderEvents = async (provider) => {
     console.log('index | subscribeToProviderEvents')
@@ -57,13 +65,17 @@ export default function Home(props) {
       // Metamask Lock fire an empty accounts array 
       await resetApp();
     } else {
-      console.log('index | changedAccount | connected',)
-      setCtx({ 
-        ...ctx, 
-        w3m: {
-          ...ctx.w3m,
-          address: accounts[0]
-        }
+      console.log('index | changedAccount | connected:', accounts)
+
+      let holderData = await verifyHolder(accounts[0])
+
+      setCtx({
+        ...ctx,
+        chainId: network.chainId,
+        address: accounts[0],
+        connected: true,
+        isHolder: holderData.isHolder,
+        holderToken: holderData.token,
       });
     }
   }
@@ -181,24 +193,26 @@ export default function Home(props) {
       const network = await library.getNetwork();
       
       const address = provider.selectedAddress ? provider.selectedAddress : provider.accounts[0];
+      
+      let holderData = await verifyHolder(address)
 
-      // create a connection to the contract
-      const web3 =  new Web3(Web3.givenProvider)
-      const Contract = await new web3.eth.Contract(abi, '0x5955373cc1196fd91a4165c4c5c227b30a3948f9')
+      // console.log('index | connectWeb3 | holderData:', holderData)
     
       setCtx({
         ...ctx,
         chainId: network.chainId,
         address,
         connected: true,
-        w3m: {
-          provider,
-          library,
-          network,
-          web3Modal,
-          library,
-          Contract,
-        }
+        isHolder: holderData.isHolder,
+        holderToken: holderData.token,
+        // w3m: {
+        //   provider,
+        //   library,
+        //   network,
+        //   web3Modal,
+        //   library,
+        //   Contract,
+        // }
       });
       
       await subscribeToProviderEvents(provider);
@@ -219,27 +233,7 @@ export default function Home(props) {
     
     let data = await axios.get('/api/hello')
     console.log('index | testApi | data:', data)
-    // setCtx({
-    //   ...ctx,
-    //   courses: '???'
-    // })
-  }
 
-
-  const checkIsHolder = async () => {
-    console.log(`index | checkIsHolder...`)
-    let isHolder = await ctx.w3m.Contract.methods
-      .usedAddresses(ctx.address)
-      .call()
-      .then(data => data ? true : false)
-      .catch(err => console.log('index | isHolder | error:', err))
-
-      console.log(`index | checkIsHolder: ${isHolder}`)
-      setCtx({
-        ...ctx,
-        isHolder
-      })
-      return isHolder
   }
 
 
@@ -266,18 +260,19 @@ export default function Home(props) {
       {ctx.connected 
       ?
       <>
-        <p>Chain ID: {ctx?.w3m?.chainId}</p>
-        <p>Address: {ctx?.w3m?.address}</p>
+        <p>Chain ID: {ctx?.chainId}</p>
+        <p>Address: {ctx?.address}</p>
+        <p>Secret: {JSON.stringify(secret)}</p>
         <button onClick={() => resetApp()}>RESET</button>
         <button onClick={() => testApi()}>API TEST</button>
-        <button onClick={() => checkIsHolder()}>IS HOLDER</button>
+        <button onClick={() => verifyHolder(ctx)}>IS HOLDER</button>
       </>
       :
       <button onClick={() => connectWeb3()}>Connect</button>
 
       
     }
-    <pre>{inspect({...ctx, w3m:{}})}</pre>
+    <pre>{inspect(ctx)}</pre>
    
     </div>
   )
