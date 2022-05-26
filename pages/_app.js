@@ -1,5 +1,5 @@
 import '../styles/globals.css'
-import { UserContextWrapper } from '../utils/context'
+import { UserContextWrapper } from '@utils/context'
 import Link from 'next/link'
 
 function MyApp({ Component, pageProps }) {

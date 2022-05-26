@@ -4,10 +4,10 @@ import { Web3Provider } from '@ethersproject/providers';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import Torus from "@toruslabs/torus-embed";
-import { getChainData } from '../helpers/utilities';
-import abi from '../utils/abi.json'
-import verifyHolder from '../utils/verifyHolder';
+import { getChainData } from '../utils/utilities';
 
+import verifyHolder from '@utils/verifyHolder';
+import abi from '@utils/abi.json'
 
 
 

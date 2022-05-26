@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "paths": {
       "@components/*": ["components/*"],
-      "@data/*": ["data/*"],
+      "@utils/*": ["utils/*"],
     },
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     /* Projects */
