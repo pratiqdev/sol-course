@@ -16,12 +16,18 @@
 
 
 
+# QUESTIONS / CONCERNS
+
+- use Drawer component instead of sidebar for course navigation?
+
+
+
 
 
 
 # NEXT
 
-## Access restricted content (separate function / button):
+## X - Access restricted content (separate function / button):
 
 1. get the user to sign a message (FE)
   - verifies that they own this account
@@ -31,7 +37,7 @@
 
 3. generate a jwt and save as a cookie `TOKEN_ACCESS` (BE generation, FE cookie storage)
 
-# hasAuth hook
+# X - hasAuth hook
 
 create a hook that checks if they are valid at page load
 if not - show a modal with button to `Access restricted content`,
@@ -39,7 +45,7 @@ instructions to purchase a token,
 or list some free stuff
 
 
-# Courses List
+# X - Courses List
 
 Create an api page with `getStaticPaths` that gets all course files / front matter
 that can be used to generate an array / object that can be mapped for a 
@@ -86,7 +92,7 @@ progressObject = {
 
 
 
-# Connect an authorize user
+# X - Connect an authorize user
 
 A user should be able to see the course list without logging in (connect wallet)
 and view courses tha are public. Show a small button / link that will take them
