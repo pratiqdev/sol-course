@@ -6,7 +6,7 @@ const UserContext = createContext();
 export function UserContextWrapper({ children }) {
   let initialCtx = {
     chainId: 1,
-    address: '0x00',
+    address: null,
     connected: false,
     isHolder: false,
     holderToken: '' 

@@ -20,6 +20,7 @@
     "@toruslabs/torus-embed": "^1.23.1",
     "@walletconnect/web3-provider": "^1.7.8",
     "axios": "^0.27.2",
+    "bops": "^1.0.1",
     "gray-matter": "^4.0.3",
     "jsonwebtoken": "^8.5.1",
     "moralis": "^1.7.0",

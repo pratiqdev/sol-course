@@ -3,7 +3,8 @@ import jwt from 'jsonwebtoken'
 
 export default function handler(req, res) {
     const jwtSecret = process.env.JWT_SECRET
-    const address = req.body.address
+    const jwtExpiration = process.env.JWT_EXPIRE_TIME || '1m'
+    const { address } = req.body
 
     if(!jwtSecret){
         console.log('generate-jwt | No secret found in env!')
@@ -21,7 +22,7 @@ export default function handler(req, res) {
         { address },
         jwtSecret,
         {
-            expiresIn: "2h",
+            expiresIn: jwtExpiration,
         }
     );
     res.status(200).json(token)

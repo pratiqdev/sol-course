@@ -54,10 +54,14 @@ export default function Home(props) {
       </>
       :
       <button onClick={() => connect()}>Connect</button>
+      
 
       
     }
-    <pre>{inspect(ctx)}</pre>
+    <ul>
+      <li>Downgrade web3modal package due to walletconnect modal bug</li>
+    </ul>
+    <pre>{inspect({...ctx, w3m: 'x'})}</pre>
    
     </div>
   )

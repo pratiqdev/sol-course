@@ -4,7 +4,7 @@ import matter from "gray-matter"
 
 
 
-  const postsDirectory = join(process.cwd(), "mdx")
+  const postsDirectory = join(process.cwd(), "pages/courses")
 
 //////////////////////////////////////////////////
 
