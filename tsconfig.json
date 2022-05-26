@@ -4,6 +4,7 @@
     "paths": {
       "@components/*": ["components/*"],
       "@utils/*": ["utils/*"],
+      "@data/*": ["data/*"],
     },
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     /* Projects */

@@ -1,10 +1,26 @@
 import TestEditor from '@components/editor'
+import Shell from '@components/Shell'
+import Instructions from '@components/Instructions'
 
-<div style={{border: '1px solid red'}}>
+<Shell>
+<Instructions>
+
 # Straight MDX Bro
 
 Mad easy
-</div>
+
+- do
+- lists
+- work
+
+> quick quote here
+> - some guy, 2022
+
+## Another section
+
+Do some things here and stuff
+
+</Instructions>
 
 <TestEditor 
 code={`// custom code defined in 'straight-mdx'`} 
@@ -12,3 +28,4 @@ tests={[
     {test1: 'a test'}
 ]}
 />
+</Shell>

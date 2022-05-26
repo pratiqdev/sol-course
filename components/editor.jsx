@@ -20,13 +20,16 @@ export default function TestEditor(props) {
 
 
   return (
+    <div style={{marginTop: '70px', width: '65vw', height: 'calc(100vh - 70px)'  }}>
+
       <Editor
-        height="60vh"
+        // height="90vh"
         defaultLanguage="sol"
         value={editorContent}
         onChange={setEditorContent}
         theme={'vs-dark'}
         /> 
+    </div>
 
   )
 }

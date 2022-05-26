@@ -2,9 +2,17 @@ import fs from "fs"
 import { join } from "path"
 import matter from "gray-matter"
 
+// const coursesDir = join(process.cwd(), "pages/courses")
+
+// console.log('coursesDir:', coursesDir)
+
+
+
+
 
 
   const postsDirectory = join(process.cwd(), "pages/courses")
+
 
 //////////////////////////////////////////////////
 
