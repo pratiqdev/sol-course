@@ -83,3 +83,16 @@ progressObject = {
   }
 }
 ```
+
+
+
+# Connect an authorize user
+
+A user should be able to see the course list without logging in (connect wallet)
+and view courses tha are public. Show a small button / link that will take them
+to the login / verification page. If an anon user visits a course page that
+requires auth - show a paywall style modal that explains login / connect
+and offers a button that will show `web3modal` and verify the user.
+If a user has connected their walled, but is not permitted to view this course:
+show different paywall content that explains how to get a token - and a list of
+free courses.
