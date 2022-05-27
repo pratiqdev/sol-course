@@ -53,7 +53,6 @@ const connectionManager = (ctx, setCtx) => {
 
       setCtx({
         ...ctx,
-        chainId: network.chainId,
         address: accounts[0],
         connected: true,
         isHolder: holderData.isHolder,

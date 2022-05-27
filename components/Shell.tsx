@@ -32,9 +32,9 @@ const Shell = (props: any) => {
   const currentPage = routerSplit[3]
   //@ts-ignore
   const currentAccIndex = courseList.indexOf(courseList.find((x, i) => x.title.toLowerCase() === currentCategory.toLowerCase().replace('-',' '))) || 0
-  // console.log('currentCategory:', currentCategory)
-  // console.log('currentPage:', currentPage)
-  // console.log('currentIndex:', currentAccIndex)
+  console.log('currentCategory:', currentCategory)
+  console.log('currentPage:', currentPage)
+  console.log('currentIndex:', currentAccIndex)
   const [accordionState, handlers] = useAccordionState({ total: courseList.length, initialItem: currentAccIndex });
 
 
@@ -58,8 +58,8 @@ const Shell = (props: any) => {
                 </div>
             {ctx.navOpen &&
             <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
-              {courseList.map(x => 
-                <Accordion.Item key={x.title} label={x.title} style={{background: currentCategory === x.title.toLowerCase() ? '#335' : '#222', fontSize: '.8rem'}}>
+              {courseList.map((x,i) => 
+                <Accordion.Item key={x.title} label={x.title} style={{background: i === currentAccIndex ? '#335' : '#222', fontSize: '.8rem'}}>
                     {x.courses.map(z => <Box key={z.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', minWidth: '100%','&:hover': { background: '#222'}}}><Link href={`/courses/${z.file}`}>{z.title}</Link></Box>)}
                 </Accordion.Item>
               )}

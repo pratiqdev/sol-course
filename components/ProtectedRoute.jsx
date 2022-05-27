@@ -62,7 +62,9 @@ const ProtectedRoute = (props) => {
     if(expired){
         return(
             <Shell>
-                <Instructions></Instructions>
+                <Instructions>
+                 <h2>Session Expired. Reconnect!</h2>
+                </Instructions>
                 <div style={{
                     width: '100%',
                     height: 'calc(100vh - 70px)',
@@ -82,7 +84,10 @@ const ProtectedRoute = (props) => {
         return(
    
             <Shell>
-                <Instructions></Instructions>
+                <Instructions>
+                    <h2>Not verified...</h2>
+   
+                </Instructions>
                 <div style={{
                     width: '100%',
                     height: 'calc(100vh - 70px)',
