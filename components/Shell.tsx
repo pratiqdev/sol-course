@@ -11,14 +11,33 @@ import {
   Burger,
   useMantineTheme,
   Accordion,
-  Button
+  Button,
+  Box
 } from '@mantine/core';
 import courseList from '@data/courseList';
+import { useUserContext } from '@utils/context';
+import connectionManager from '@utils/connection';
+import { useRouter } from 'next/router';
+import { useAccordionState } from '@mantine/core';
 
 const Shell = (props: any) => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [shrinkNav, setShrinkNav] = useState(false)
+  const { ctx, setCtx } = useUserContext()
+  const { connect } = connectionManager(ctx, setCtx)
+  const router = useRouter()
+  const routerSplit = router.asPath.split('/')
+  const currentCategory = routerSplit[2]
+  const currentPage = routerSplit[3]
+  //@ts-ignore
+  const currentAccIndex = courseList.indexOf(courseList.find((x, i) => x.title.toLowerCase() === currentCategory.toLowerCase().replace('-',' '))) || 0
+  // console.log('currentCategory:', currentCategory)
+  // console.log('currentPage:', currentPage)
+  // console.log('currentIndex:', currentAccIndex)
+  const [accordionState, handlers] = useAccordionState({ total: courseList.length, initialItem: currentAccIndex });
+
+
   return (
     <AppShell
       styles={{
@@ -31,13 +50,17 @@ const Shell = (props: any) => {
     //   asideOffsetBreakpoint="sm"
       fixed
       navbar={
-        <Navbar p="md" hiddenBreakpoint="md" hidden={!opened} width={{sm: 60, lg: shrinkNav ? 60 : '35vw' }}>
-            <Button style={{padding: '5px'}} onClick={()=> setShrinkNav(o => !o)}>{shrinkNav ? `>` : `<`}</Button>
-            {!shrinkNav &&
-            <Accordion>
+        <Navbar p="md" hiddenBreakpoint="md" hidden={!opened} width={{sm: 60, lg: ctx.navOpen ? '20vw' : 60 }}>
+            {/* <Button style={{padding: '5px', width: '2rem'}} onClick={()=> setShrinkNav(o => !o)}>{shrinkNav ? `>` : `<`}</Button> */}
+            <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
+                    {ctx.navOpen && <Text>Courses</Text>}
+                    <Button style={{minWidth: '2rem', padding: '0'}} onClick={() => setCtx({...ctx, navOpen: !ctx.navOpen})}>{!ctx.navOpen ? `>` : `<`}</Button>
+                </div>
+            {ctx.navOpen &&
+            <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
               {courseList.map(x => 
-                <Accordion.Item key={x.title} label={x.title}>
-                    {x.courses.map(z => <Link key={z.file} href={`courses/${z.file}`}>{z.title}</Link>)}
+                <Accordion.Item key={x.title} label={x.title} style={{background: currentCategory === x.title.toLowerCase() ? '#335' : '#222', fontSize: '.8rem'}}>
+                    {x.courses.map(z => <Box key={z.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', minWidth: '100%','&:hover': { background: '#222'}}}><Link href={`/courses/${z.file}`}>{z.title}</Link></Box>)}
                 </Accordion.Item>
               )}
           </Accordion>
@@ -57,7 +80,7 @@ const Shell = (props: any) => {
     //     </Footer>
     //   }
       header={
-        <Header height={70} p="md">
+        <Header fixed height={70}  p="md">
           <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
             <MediaQuery largerThan="md" styles={{ display: 'none' }}>
               <Burger
@@ -69,14 +92,23 @@ const Shell = (props: any) => {
               />
             </MediaQuery>
 
-            <Text>Chiptos Course</Text>
+            <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+              <div style={{width: '100%'}}>
+                <Text>Solidity Courses</Text>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center'}}>
+                <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
+                <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
+                <Button variant='light' onClick={connect}>Connect</Button>
+              </div>
+            </div>
           </div>
         </Header>
       }
     >
     <div style={{display: 'flex', justifyContent: 'stretch', overflow: 'hidden', 
         // marginLeft: shrinkNav ? '60px' : '400px', 
-        marginLeft: '60px',
+        marginLeft: ctx.navOpen ? '20vw' : 60 ,
         }}>
         {props.children}
     </div>

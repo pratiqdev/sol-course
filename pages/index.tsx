@@ -17,11 +17,25 @@ import {
 } from '@mantine/core';
 import courseList from '@data/courseList';
 import { heights } from '@mantine/core/lib/components/Button/Button.styles';
+import connectionManager from '@utils/connection';
+import { useUserContext } from '@utils/context';
+
+
+/*
+Create a fullscreen modal like a game start screen 
+Only show on first start 
+Check a localStorage var
+if started = false => showStart => setStarted false
+
+*/
+
 
 export default function AppShellDemo() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [shrinkNav, setShrinkNav] = useState(false)
+  const { ctx, setCtx } = useUserContext()
+  const { connect } = connectionManager(ctx, setCtx)
   return (
     <AppShell
       styles={{
@@ -72,13 +86,22 @@ export default function AppShellDemo() {
               />
             </MediaQuery>
 
-            <Text>Application header</Text>
+            <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+              <div style={{width: '100%'}}>
+                <Text>Solidity Courses</Text>
+              </div>
+              <div style={{display: 'flex', alignItems: 'center'}}>
+                <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
+                <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
+                <Button variant='light' onClick={connect}>Connect</Button>
+              </div>
+            </div>
           </div>
         </Header>
       }
     >
         <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', border: '1px solid green'}}>
-            <Text>Resize app to see responsive navbar in action</Text>
+            <Text>Basic intro, what is this, quick how to, get started callout</Text>
         </div>
     </AppShell>
   );

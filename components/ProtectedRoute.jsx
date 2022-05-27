@@ -3,6 +3,9 @@ import CONSTANTS from '@utils/constants'
 import axios from 'axios'
 import { useUserContext } from '@utils/context'
 import connectionManager from '@utils/connection'
+import Shell from '@components/Shell'
+import { Button } from '@mantine/core'
+import Instructions from '@components/Instructions'
 
 const ProtectedRoute = (props) => {
     const [verified, setVerified] = useState(false)
@@ -38,9 +41,6 @@ const ProtectedRoute = (props) => {
             setVerified(false)
             return
         }
-
-            
-        
         // console.log('ProtectedRoute | verifyData | posting with token:', token)
         let {data} = await axios.post('/api/verify-jwt', {token, address: ctx.address})
 
@@ -61,24 +61,49 @@ const ProtectedRoute = (props) => {
 
     if(expired){
         return(
-            <>
-                <p>Expired: reconnect.  @ {Date.now()}</p>
-                <button onClick={connect}>Connect</button>
-            </>
+            <Shell>
+                <Instructions></Instructions>
+                <div style={{
+                    width: '100%',
+                    height: 'calc(100vh - 70px)',
+                    marginTop: '70px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                        <h3>Your session has expired!</h3>
+                        <p>Reconnect to your wallet provider to continue...</p>
+                        <Button onClick={connect}>Connect</Button>
+                </div>
+            </Shell>
         )
     }else if(!verified){
         return(
-            <>
-                <p>Verify account... @ {Date.now()}</p>
-                <button onClick={connect}>Connect</button>
-            </>
+   
+            <Shell>
+                <Instructions></Instructions>
+                <div style={{
+                    width: '100%',
+                    height: 'calc(100vh - 70px)',
+                    marginTop: '70px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                        <h3>You must verify your account!</h3>
+                        <p>Connect to your wallet provider to verify this address...</p>
+                        <Button onClick={connect}>Connect</Button>
+                </div>
+            </Shell>
         )
     }else{
         return(
             <>
-                <p>Access granted! @ {Date.now()}</p>
-                <button onClick={reset}>Reset</button>
-                {props.children}
+                <Shell>
+                    {props.children}
+                </Shell>
             </>
         )
     }
