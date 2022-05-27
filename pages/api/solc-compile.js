@@ -72,33 +72,35 @@ export default function handler(req, res) {
     }
 
     const compileSource = async (solc, data) => {
-      const input = {
-          language: 'Solidity',
-          sources: {
-            'code.sol': {
-              content: data || 'contract C { function f() public {  } }'
-              }
-          },
-          settings: {
-            outputSelection: {
-              '*': {
-                  '*': ['*']
-              }
-              }
-          }
-      };
+      return new Promise((res)=>{
+        const input = {
+            language: 'Solidity',
+            sources: {
+              'code.sol': {
+                content: data || 'contract C { function f() public {  } }'
+                }
+            },
+            settings: {
+              outputSelection: {
+                '*': {
+                    '*': ['*']
+                }
+                }
+            }
+        };
 
-      let inputString = JSON.stringify(input)
-      let result = solc.compile(inputString)
-      // let output = JSON.parse(result)
+        let inputString = JSON.stringify(input)
+        let result = solc.compile(inputString)
+        // let output = JSON.parse(result)
 
-      console.log('>> done compiling!')
-      res.status(200).json({ 
-        success: true, 
-        output: result,  
-        version: USE_VERSION, 
-        error: null, 
-        duration: Date.now() - START_TIMESTAMP
+        console.log('>> done compiling!')
+        res({ 
+          success: true, 
+          output: result,  
+          version: USE_VERSION, 
+          error: null, 
+          duration: Date.now() - START_TIMESTAMP
+        })
       })
     }
 
@@ -133,6 +135,9 @@ export default function handler(req, res) {
     loadSolc(USE_VERSION)
     .then(x => {
       compileSource(x.solc, givenCode)
+      .then(z => {
+        res.status(200).json(z)
+      })
     })
     
   
