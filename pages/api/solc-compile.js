@@ -164,3 +164,24 @@ export default async function handler(req, res) {
 
   })
 }
+
+
+
+/*
+POST] /api/solc-compile
+15:05:05:09
+
+>> compiler error! ------------------------------------------
+SyntaxError: Unexpected end of JSON input    
+at JSON.parse (<anonymous>)    
+at sync (/var/task/node_modules/require-from-url/sync.js:17:37)    
+at /var/task/.next/server/pages/api/solc-compile.js:70:44    
+at new Promise (<anonymous>)    
+at handler (/var/task/.next/server/pages/api/solc-compile.js:66:12)    
+at Object.apiResolver (/var/task/node_modules/next/dist/server/api-utils/node.js:185:15)    
+at processTicksAndRejections (node:internal/process/task_queues:96:5)    
+at async NextNodeServer.runApi (/var/task/node_modules/next/dist/server/next-server.js:395:9)    
+at async Object.fn (/var/task/node_modules/next/dist/server/base-server.js:496:37)    
+at async Router.execute (/var/task/node_modules/next/dist/server/router.js:226:36)
+
+*/

@@ -181,7 +181,7 @@ const Courses = () => {
 
             <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
               <div style={{width: '100%'}}>
-                <Text>Solidity Courses</Text>
+                <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>ChiptosX Sol</Button></Link>
               </div>
 
               <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
