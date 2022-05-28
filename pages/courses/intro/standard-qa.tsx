@@ -25,7 +25,8 @@ const CoursePage = () => {
                     },
                     {
                         question: 'Another q & a',
-                        answer: 'flap'
+                        answer: 'flap',
+                        feedback: 'Offer an explanation'
                     },
                     {
                         question: 'A number question... same as text really',
