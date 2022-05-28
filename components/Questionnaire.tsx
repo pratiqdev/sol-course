@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 import { useUserContext } from '@utils/context';
 import { Text, Input, NativeSelect } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
+
 
 const QuestionString = (props:any) => {
   const {index, data} = props
@@ -34,6 +36,8 @@ const Questionnaire = (props:any) => {
   const [editorContent, setEditorContent] = useState(props.code || 'no-code-props')
   const [width, setWidth] = useState('calc(100vw - 120px)')
   const { ctx, setCtx } = useUserContext()
+  const isMobile = useMediaQuery('(max-width: 992px)');
+
 
   useEffect(()=>{
     // ctx.instructionsOpen ? ctx.navOpen ? '60vw' : '40vw' : 'calc(100vw - 120px)'
@@ -92,7 +96,7 @@ const Questionnaire = (props:any) => {
 
 
   return (
-    <div style={{marginTop: '70px', width: width ,height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', padding: '1rem', paddingTop: '.5rem'  }}>
+    <div style={{marginTop: '70px', width: isMobile ? '100%' : width , height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', padding: '1rem', paddingTop: '.5rem'  }}>
       {qas.map((x:any, i:number) => {
         switch(x.type){
           case 'options': return <QuestionOptions data={x} index={i} handleChange={handleChange} />; break;

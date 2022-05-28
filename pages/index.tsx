@@ -44,23 +44,22 @@ export default function AppShellDemo() {
           padding: '0',
         },
     }}
-    //   navbarOffsetBreakpoint="md"
-    // //   asideOffsetBreakpoint="sm"
-    //   fixed
-    //   navbar={
-    //     <Navbar p="md" hiddenBreakpoint="md" hidden={!opened} width={{sm: 60, lg: shrinkNav ? 60 : 300 }}>
-    //         <Button style={{padding: '5px'}} onClick={()=> setShrinkNav(o => !o)}>{shrinkNav ? `>` : `<`}</Button>
-    //         {!shrinkNav &&
-    //         <Accordion>
-    //           {courseList.map(x => 
-    //             <Accordion.Item key={x.title} label={x.title}>
-    //                 {x.courses.map(z => <Link key={z.file} href={`courses/${z.file}`}>{z.title}</Link>)}
-    //             </Accordion.Item>
-    //           )}
-    //       </Accordion>
-    //         }
-    //     </Navbar>
-    //   }
+      navbarOffsetBreakpoint="md"
+      // asideOffsetBreakpoint="sm"
+      fixed={opened}
+      navbar={
+        <MediaQuery largerThan="md" styles={{ display: 'none', background: 'green' }}>
+          <Navbar 
+            p="md"
+            // hiddenBreakpoint="md" 
+            hidden={!opened} 
+            >
+              <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginBottom: 10}}>Courses</Button></Link>
+              <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginBottom: 10}}>Docs</Button></Link>
+              <Button variant='light' onClick={connect}>Connect</Button>
+          </Navbar>
+        </MediaQuery>
+      }
     //   aside={
     //     <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
     //       <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
@@ -90,17 +89,21 @@ export default function AppShellDemo() {
               <div style={{width: '100%'}}>
                 <Text>Solidity Courses</Text>
               </div>
-              <div style={{display: 'flex', alignItems: 'center'}}>
-                <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
-                <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
-                <Button variant='light' onClick={connect}>Connect</Button>
-              </div>
+
+              <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                  <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
+                  <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
+                  <Button variant='light' onClick={connect}>Connect</Button>
+                </div>
+              </MediaQuery>
             </div>
           </div>
         </Header>
       }
     >
         <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', border: '1px solid green'}}>
+            <Text>MENU: {opened.toString()}</Text>
             <Text>Basic intro, what is this, quick how to, get started callout</Text>
         </div>
     </AppShell>

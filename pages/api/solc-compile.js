@@ -4,7 +4,10 @@ import solc from 'solc';
 import { code } from '../../data/node-memory';
 
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
+  return new Promise((resolve)=>{
+
+
   
   let USE_VERSION
   let START_TIMESTAMP = Date.now()
@@ -18,6 +21,7 @@ export default function handler(req, res) {
 
     if(!givenCode){
       res.status(500).json('Must supply code to compile. Recieved:' + req.body)
+      resolve()
       return
   }
 
@@ -72,7 +76,6 @@ export default function handler(req, res) {
     }
 
     const compileSource = async (solc, data) => {
-      return new Promise((res)=>{
         const input = {
             language: 'Solidity',
             sources: {
@@ -90,18 +93,17 @@ export default function handler(req, res) {
         };
 
         let inputString = JSON.stringify(input)
-        let result = solc.compile(inputString)
+        let result = await solc.compile(inputString)
         // let output = JSON.parse(result)
 
         console.log('>> done compiling!')
-        res({ 
+        return { 
           success: true, 
           output: result,  
           version: USE_VERSION, 
           error: null, 
           duration: Date.now() - START_TIMESTAMP
-        })
-      })
+        }
     }
 
 
@@ -137,6 +139,7 @@ export default function handler(req, res) {
       compileSource(x.solc, givenCode)
       .then(z => {
         res.status(200).json(z)
+        resolve()
       })
     })
     
@@ -151,6 +154,7 @@ export default function handler(req, res) {
       error: err,  
       duration: Date.now() - START_TIMESTAMP
     })
+    resolve()
   }
 
 
@@ -158,5 +162,5 @@ export default function handler(req, res) {
 
 
 
-  
+  })
 }

@@ -4,7 +4,8 @@ import { useUserContext } from '@utils/context';
 import {
   Button,
   NativeSelect,
-  Group
+  Group,
+  MediaQuery
 } from '@mantine/core'
 import axios from 'axios';
 import { utimes } from 'fs';
@@ -69,28 +70,60 @@ const CustomEditor = (props:any) => {
 
 
   return (
-    <div style={{marginTop: '70px', width: width, minWidth: width, maxWidth: width, height: 'calc(100vh - 70px)',  }}>
-      {showEditor
-      ? <Editor
-      height="calc(70vh - 70px )"
-      defaultLanguage="sol"
-      value={editorContent}
-      onChange={setEditorContent}
-      theme={'vs-dark'}
-      /> 
-      : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto' }}>{compiledOutput}</pre>
-    }
-        <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
-          <Group spacing="xs" style={{padding: '.5rem'}}>
-            <Button size='xs' variant='filled' color='lime' onClick={handleCompile}>Compile</Button>
-            <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Compiled' : 'Show Editor'}</Button>
-          </Group>
-          <Group spacing="xs" style={{padding: '.5rem'}}>
-            <Button size='xs' variant='filled' color='red'  onClick={()=> setEditorContent(props.code)}>Reset</Button>
-          </Group>
-        </div>
-         <pre style={{padding: '.25rem', height: '27vh', fontSize: '.6rem', overflow: 'auto', paddingBottom: '1rem', whiteSpace: 'pre-wrap'}}>{editorErrors}</pre>
-    </div>
+    <>
+      <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
+
+      <div style={{marginTop: '70px', width: width, minWidth: width, maxWidth: width, height: 'calc(100vh - 70px)',  }}>
+        {showEditor
+        ? <Editor
+        height="calc(70vh - 70px )"
+        defaultLanguage="sol"
+        value={editorContent}
+        onChange={setEditorContent}
+        theme={'vs-dark'}
+        /> 
+        : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto' }}>{compiledOutput}</pre>
+      }
+          <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
+            <Group spacing="xs" style={{padding: '.5rem'}}>
+              <Button size='xs' variant='filled' color='lime' onClick={handleCompile}>Compile</Button>
+              <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Compiled' : 'Show Editor'}</Button>
+            </Group>
+            <Group spacing="xs" style={{padding: '.5rem'}}>
+              <Button size='xs' variant='filled' color='red'  onClick={()=> setEditorContent(props.code)}>Reset</Button>
+            </Group>
+          </div>
+          <pre style={{padding: '.25rem', height: '27vh', fontSize: '.6rem', overflow: 'auto', paddingBottom: '1rem', whiteSpace: 'pre-wrap'}}>{editorErrors}</pre>
+      </div>
+    </MediaQuery>
+
+
+    <MediaQuery largerThan="md" styles={{ display: 'none !important', }}>
+
+      <div style={{width: '100%', height: 'calc(90vh - 70px)',  }}>
+        {showEditor
+        ? <Editor
+        height="calc(70vh - 70px )"
+        defaultLanguage="sol"
+        value={editorContent}
+        onChange={setEditorContent}
+        theme={'vs-dark'}
+        /> 
+        : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto' }}>{compiledOutput}</pre>
+      }
+          <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
+            <Group spacing="xs" style={{padding: '.5rem'}}>
+              <Button size='xs' variant='filled' color='lime' onClick={handleCompile}>Compile (mobile)</Button>
+              <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Compiled' : 'Show Editor'}</Button>
+            </Group>
+            <Group spacing="xs" style={{padding: '.5rem'}}>
+              <Button size='xs' variant='filled' color='red'  onClick={()=> setEditorContent(props.code)}>Reset</Button>
+            </Group>
+          </div>
+          <pre style={{padding: '.25rem', height: '17vh', fontSize: '.6rem', overflow: 'scroll', paddingBottom: '1rem', whiteSpace: 'pre-wrap'}}>{editorErrors}</pre>
+      </div>
+    </MediaQuery>
+    </>
 
   )
 }
