@@ -20,6 +20,7 @@ import { useUserContext } from '@utils/context';
 import connectionManager from '@utils/connection';
 import { useRouter } from 'next/router';
 import { useAccordionState } from '@mantine/core';
+import { ellipseAddress } from '@utils/utilities';
 
 const Shell = (props: any) => {
   const theme = useMantineTheme();
@@ -59,7 +60,8 @@ const Shell = (props: any) => {
       styles={{
         main: {
           background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
-          padding: 0,
+          padding: '0',
+          overflow: 'hidden'
         },
       }}
       navbarOffsetBreakpoint="md"
@@ -129,7 +131,10 @@ const Shell = (props: any) => {
               <div style={{display: 'flex', alignItems: 'center'}}>
                 <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
                 <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
-                <Button variant='light' onClick={connect}>Connect</Button>
+                {!ctx.connected 
+                  ? <Button variant='filled' onClick={connect}>Connect</Button>
+                  : <Button variant='filled'>{ellipseAddress(ctx.address, 4)}</Button>
+                }
               </div>
               </MediaQuery>
             </div>
@@ -137,12 +142,14 @@ const Shell = (props: any) => {
         </Header>
       }
     >
-    <div style={{display: 'flex', justifyContent: 'stretch', overflow: 'hidden', 
-        // marginLeft: shrinkNav ? '60px' : '400px', 
+    <div style={{
+        display: 'flex', 
+        justifyContent: 'stretch', 
         marginLeft: isMobile ? '0' : ctx.navOpen ? '20vw' : 60 ,
-        flexDirection: isMobile ? 'column' : 'row'
+        flexDirection: isMobile ? 'column' : 'row',
+        overflow: isMobile ? 'auto' : 'hidden'
         }}>
-        {props.children}
+        {ctx.connected ? props.children : <div style={{height: '200px', background: 'red', marginTop: '70px'}}>Connect a wallet!</div>}
     </div>
 
     </AppShell>

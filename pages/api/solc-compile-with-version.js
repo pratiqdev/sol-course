@@ -1,11 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 // import requireFromUrl from 'require-from-url/sync.js'
-// import solc from 'solc';
+import solc from 'solc';
 import AVAILABLE_VERSIONS from '@utils/releaseList'
-import '@utils/browser-solc'
 
-export default async function handler(givenCode) {
-  // console.log('pkg:', pkg)
+
+export default async function handler(req, res) {
   return new Promise((resolve)=>{
 
     console.log('/api/solc-compile | starting compilation...')
@@ -14,10 +13,8 @@ export default async function handler(givenCode) {
     let START_TIMESTAMP = Date.now()
     
     try{
-      if (typeof window !== 'undefined') {
-      }
-      // const givenCode = req.body.code
-      // let givenVersion = req.body.version
+      
+      const givenCode = req.body.code
 
       if(!givenCode){
         console.log('/api/solc-compile | no code in body')
@@ -27,11 +24,7 @@ export default async function handler(givenCode) {
         return
     }
 
-  // if(!givenVersion){
-  //     res.status(500).json('Should specify a version - using latest stable. Recieved:' + req.body)
-  // }
 
-    
 
 
 
@@ -42,7 +35,13 @@ export default async function handler(givenCode) {
     const loadSolc = async (_version) => {
       return new Promise((res) => {
         console.log('/api/solc-compile | loadSolc...')
-
+        console.log('/api/solc-compile | loadSolc | current version:', solc.version())
+        
+        let version = solc.version() 
+        res({
+          version,
+          solc
+        })
 
           if(!_version){
               let version = solc.version() 
@@ -79,7 +78,7 @@ export default async function handler(givenCode) {
       })
     }
 
-    const compileSource = async (solc, data) => {
+    const compileSource = async (data) => {
       console.log(`/api/solc-compile | compileSource...`)
       
         const input = {
@@ -100,20 +99,19 @@ export default async function handler(givenCode) {
 
         let inputString = JSON.stringify(input)
         let result = await solc.compile(inputString)
-        // let output = JSON.parse(result)
 
         console.log('/api/solc-compile | compileSource | done compiling!')
         return { 
           success: true, 
           output: result,  
-          version: USE_VERSION, 
+          version: '0.8.14', 
           error: null, 
           duration: Date.now() - START_TIMESTAMP
         }
     }
 
 
-    // console.log(typeof givenCode)
+    console.log(typeof givenCode)
     if(givenCode.includes('pragma solidity')){
       console.log(`/api/solc-compile | pragma found. parsing...`)
       let codeLines = givenCode.split('\n')
@@ -141,40 +139,31 @@ export default async function handler(givenCode) {
       console.log(`/api/solc-compile | no pragma used`)
       USE_VERSION = Object.values(AVAILABLE_VERSIONS)[0]
     }
-    if (typeof window !== 'undefined') {
-      //Load a specific compiler version
-      console.log(window)
-      BrowserSolc.loadVersion("soljson-v0.4.6+commit.2dabbdf0.js", function(compiler) {
-        let source = 'contract x { function g() {} }';
-        let optimize = 1;
-        let result = compiler.compile(source, optimize);
-        console.log(result);
-      });
-    }
 
     
-    // loadSolc(USE_VERSION)
-    // .then(x => {
-    //   console.log(`/api/solc-compile | solc loaded...`)
-    //   compileSource(x.solc, givenCode)
-    //   .then(z => {
-    //     console.log(`/api/solc-compile | code compiled in: ${((Date.now() - START_TIMESTAMP) / 1000).toFixed(2)}`)
-    //     res.status(200).json(z)
-    //     resolve()
-    //   })
-    // })
+    loadSolc(USE_VERSION)
+    .then(x => {
+      console.log(`/api/solc-compile | solc loaded...`)
+      compileSource(givenCode)
+      .then(z => {
+        console.log(`/api/solc-compile | code compiled in: ${((Date.now() - START_TIMESTAMP) / 1000).toFixed(2)}`)
+        res.status(200).json(z)
+        resolve()
+      })
+    })
     
   
   }catch(err){
     console.log('/api/solc-compile | ERROR ------------------------------------------')
     console.log(err)
-    resolve({ 
+    res.status(200).json({ 
       success:false, 
       output: '', 
       version: USE_VERSION, 
       error: err,  
       duration: Date.now() - START_TIMESTAMP
     })
+    resolve()
   }
 
 

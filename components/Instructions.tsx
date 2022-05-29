@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { useUserContext } from '@utils/context'
 import { Button, Text, MediaQuery } from '@mantine/core'
 import { useRouter } from 'next/router'
+import { MDXProvider } from '@mdx-js/react'
+import Blockquote from '@instructions/Blockquote'
+import CodeBlock from '@instructions/CodeBlock'
 
 const Instructions = (props: any) => {
     const { ctx, setCtx } = useUserContext()
@@ -9,6 +12,11 @@ const Instructions = (props: any) => {
     const routerSplit = router.asPath.split('/')
     const currentCategory = routerSplit[2]
     const currentPage = routerSplit[3]
+
+    const components = {
+        blockquote: (props:any) => <Blockquote {...props}/>,
+        code: (props:any) => <CodeBlock {...props}/>,
+    }
 
     return(
         <>
@@ -19,7 +27,12 @@ const Instructions = (props: any) => {
             <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem'}}>
                 <Text>{currentCategory} / {currentPage}</Text>
             </div>
-                {props.children}
+                <span>{props.children}</span>
+
+                {/* <MDXProvider components={components}> */}
+                    {/* <main {...props} /> */}
+                    {/* {props.children} */}
+                {/* </MDXProvider> */}
             </>
         </div>
         </MediaQuery>
@@ -34,7 +47,11 @@ const Instructions = (props: any) => {
                     <Text>{currentCategory} / {currentPage}</Text>
                     <Button style={{minWidth: '2rem', padding: '0'}} onClick={() => setCtx({...ctx, instructionsOpen: !ctx.instructionsOpen})}>{`<`}</Button>
                 </div>
-                    {props.children}
+                <span>{props.children}</span>
+                {/* <MDXProvider components={components}> */}
+                    {/* <main {...props} /> */}
+                    {/* {props.children} */}
+                {/* </MDXProvider> */}
                 </>
             :
                 <>

@@ -19,6 +19,7 @@ import courseList from '@data/courseList';
 import { heights } from '@mantine/core/lib/components/Button/Button.styles';
 import connectionManager from '@utils/connection';
 import { useUserContext } from '@utils/context';
+import { ellipseAddress } from '@utils/utilities';
 
 
 /*
@@ -94,7 +95,10 @@ export default function AppShellDemo() {
                 <div style={{display: 'flex', alignItems: 'center'}}>
                   <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
                   <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
-                  <Button variant='light' onClick={connect}>Connect</Button>
+                  {!ctx.connected 
+                    ? <Button variant='filled' onClick={connect}>Connect</Button>
+                    : <Button variant='filled'>{ellipseAddress(ctx.address, 4)}</Button>
+                  }
                 </div>
               </MediaQuery>
             </div>

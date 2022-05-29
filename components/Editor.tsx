@@ -8,7 +8,6 @@ import {
   MediaQuery
 } from '@mantine/core'
 import axios from 'axios';
-import compile from '@utils/solc-compile-fe'
 
 
 const CustomEditor = (props:any) => {
@@ -52,7 +51,7 @@ const CustomEditor = (props:any) => {
       let numErrors = 0
       if(output.errors && output.errors.length) numErrors = output.errors.length
 
-      let errorContent = `Compiled with version: ${response.data.version.split('+')[0].split('-v')[1]}\n${numErrors ? `${numErrors} ${numErrors > 1 ? 'errors' : 'error'}:\n\n` : 'No errors\n\n'}`
+      let errorContent = `Compiled with version: ${response.data.version} in ${response.data.duration}s\n${numErrors ? `${numErrors} ${numErrors > 1 ? 'errors' : 'error'}:\n\n` : 'No errors\n\n'}`
       if(output.errors && output.errors.length){
         output.errors.forEach((x:any, i:number) => {
           errorContent += `${'-'.repeat(100)}\nERROR ${i+1}: ${x.formattedMessage.replace('--> code.sol:', '')}`
@@ -74,7 +73,7 @@ const CustomEditor = (props:any) => {
     <>
       <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
 
-      <div style={{marginTop: '70px', width: width, minWidth: width, maxWidth: width, height: 'calc(100vh - 70px)',  }}>
+      <div style={{marginTop: '70px', width: width, minWidth: width, maxWidth: width, height: 'calc(100vh - 70px)', maxHeight:  'calc(100vh - 70px)' }}>
         {showEditor
         ? <Editor
         height="calc(70vh - 70px )"
@@ -101,7 +100,7 @@ const CustomEditor = (props:any) => {
 
     <MediaQuery largerThan="md" styles={{ display: 'none !important', }}>
 
-      <div style={{width: '100%', height: 'calc(90vh - 70px)',  }}>
+      <div style={{width: '100%', height: 'calc(90vh - 70px)'}}>
         {showEditor
         ? <Editor
         height="calc(70vh - 70px )"
