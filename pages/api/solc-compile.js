@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 // import requireFromUrl from 'require-from-url/sync.js'
 import solc from 'solc';
-import AVAILABLE_RELEASES from '@utils/releaseList'
+import AVAILABLE_VERSIONS from '@utils/releaseList'
 
 
 export default async function handler(req, res) {
