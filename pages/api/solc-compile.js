@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import requireFromUrl from 'require-from-url/sync.js'
+// import requireFromUrl from 'require-from-url/sync.js'
 import solc from 'solc';
-import { code } from '../../data/node-memory';
+import AVAILABLE_RELEASES from '@utils/releaseList'
 
 
 export default async function handler(req, res) {
@@ -14,10 +14,9 @@ export default async function handler(req, res) {
   
   try{
     
-    const data = requireFromUrl('https://binaries.soliditylang.org/bin/list.js');
+    // const data = requireFromUrl('https://binaries.soliditylang.org/bin/list.js');
     console.log('/api/solc-compile | releases length:', data.releases.length)
 
-    const AVAILABLE_VERSIONS = data.releases
     const givenCode = req.body.code
     let givenVersion = req.body.version
 
