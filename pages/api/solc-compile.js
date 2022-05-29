@@ -15,7 +15,6 @@ export default async function handler(req, res) {
     try{
       
       // const data = requireFromUrl('https://binaries.soliditylang.org/bin/list.js');
-      console.log('/api/solc-compile | releases length:', data.releases.length)
 
       const givenCode = req.body.code
       let givenVersion = req.body.version
@@ -80,7 +79,7 @@ export default async function handler(req, res) {
       })
     }
 
-    const compileSource = async (solc, givenCode) => {
+    const compileSource = async (solc, data) => {
       console.log(`/api/solc-compile | compileSource...`)
       
         const input = {
