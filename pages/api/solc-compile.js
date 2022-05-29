@@ -9,24 +9,24 @@ export default async function handler(req, res) {
 
     console.log('/api/solc-compile | starting compilation...')
   
-  let USE_VERSION
-  let START_TIMESTAMP = Date.now()
-  
-  try{
+    let USE_VERSION
+    let START_TIMESTAMP = Date.now()
     
-    // const data = requireFromUrl('https://binaries.soliditylang.org/bin/list.js');
-    console.log('/api/solc-compile | releases length:', data.releases.length)
+    try{
+      
+      // const data = requireFromUrl('https://binaries.soliditylang.org/bin/list.js');
+      console.log('/api/solc-compile | releases length:', data.releases.length)
 
-    const givenCode = req.body.code
-    let givenVersion = req.body.version
+      const givenCode = req.body.code
+      let givenVersion = req.body.version
 
-    if(!givenCode){
-      console.log('/api/solc-compile | no code in body')
+      if(!givenCode){
+        console.log('/api/solc-compile | no code in body')
 
-      res.status(500).json('Must supply code to compile. Recieved:' + req.body)
-      resolve()
-      return
-  }
+        res.status(500).json('Must supply code to compile. Recieved:' + req.body)
+        resolve()
+        return
+    }
 
   // if(!givenVersion){
   //     res.status(500).json('Should specify a version - using latest stable. Recieved:' + req.body)
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
       })
     }
 
-    const compileSource = async (solc, data) => {
+    const compileSource = async (solc, givenCode) => {
       console.log(`/api/solc-compile | compileSource...`)
       
         const input = {
