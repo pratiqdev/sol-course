@@ -8,7 +8,7 @@ import {
   MediaQuery
 } from '@mantine/core'
 import axios from 'axios';
-import { utimes } from 'fs';
+import compile from '@utils/solc-compile-fe'
 
 
 const CustomEditor = (props:any) => {
@@ -43,6 +43,7 @@ const CustomEditor = (props:any) => {
     setEditorErrors('Compiling code...')
 
     const response = await axios.post('/api/solc-compile', {code: editorContent})
+    // const response = await compile(editorContent)
 
     if(response.data.success){
       // console.log('compile success:', response.data)

@@ -1,10 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 // import requireFromUrl from 'require-from-url/sync.js'
-import solc from 'solc';
+// import solc from 'solc';
 import AVAILABLE_VERSIONS from '@utils/releaseList'
+import '@utils/browser-solc'
 
-
-export default async function handler(req, res) {
+export default async function handler(givenCode) {
+  // console.log('pkg:', pkg)
   return new Promise((resolve)=>{
 
     console.log('/api/solc-compile | starting compilation...')
@@ -13,11 +14,10 @@ export default async function handler(req, res) {
     let START_TIMESTAMP = Date.now()
     
     try{
-      
-      // const data = requireFromUrl('https://binaries.soliditylang.org/bin/list.js');
-
-      const givenCode = req.body.code
-      let givenVersion = req.body.version
+      if (typeof window !== 'undefined') {
+      }
+      // const givenCode = req.body.code
+      // let givenVersion = req.body.version
 
       if(!givenCode){
         console.log('/api/solc-compile | no code in body')
@@ -42,48 +42,40 @@ export default async function handler(req, res) {
     const loadSolc = async (_version) => {
       return new Promise((res) => {
         console.log('/api/solc-compile | loadSolc...')
-        console.log('/api/solc-compile | loadSolc | current version:', solc.version())
-        
-        //~ testing
-        let version = solc.version() 
-        res({
-          version,
-          solc
-        })
-        //~ testing
 
-          // if(!_version){
-          //     let version = solc.version() 
-          //     res({
-          //         version,
-          //         solc
-          //     })
-          // }
-          // console.log(`/api/solc-compile | loadSolc | loading version: ${_version}`)
 
-          // const cleanVersion = _version
-          //     .replace('soljson-', '')
-          //     .replace('.js', '')
+          if(!_version){
+              let version = solc.version() 
+              res({
+                  version,
+                  solc
+              })
+          }
+          console.log(`/api/solc-compile | loadSolc | loading version: ${_version}`)
 
-          // solc.loadRemoteVersion(cleanVersion, async (err, solcSnapshot) => {
-          //   if (err) {
-          //         console.log(`/api/solc-compile | loadSolc | could not load version: ${cleanVersion}`)
-          //         let version = solc.version()
-          //         res({
-          //             version,
-          //             solc,
-          //         })
-          //     }else{
+          const cleanVersion = _version
+              .replace('soljson-', '')
+              .replace('.js', '')
 
-          //         console.log(`/api/solc-compile | loadSolc | loaded version: ${cleanVersion}`)
+          solc.loadRemoteVersion(cleanVersion, async (err, solcSnapshot) => {
+            if (err) {
+                  console.log(`/api/solc-compile | loadSolc | could not load version: ${cleanVersion}`)
+                  let version = solc.version()
+                  res({
+                      version,
+                      solc,
+                  })
+              }else{
+
+                  console.log(`/api/solc-compile | loadSolc | loaded version: ${cleanVersion}`)
                   
-          //         let version = solcSnapshot.version()
-          //         res({
-          //             version,
-          //             solc: solcSnapshot
-          //           })
-          //     }
-          // });
+                  let version = solcSnapshot.version()
+                  res({
+                      version,
+                      solc: solcSnapshot
+                    })
+              }
+          });
       })
     }
 
@@ -149,31 +141,40 @@ export default async function handler(req, res) {
       console.log(`/api/solc-compile | no pragma used`)
       USE_VERSION = Object.values(AVAILABLE_VERSIONS)[0]
     }
+    if (typeof window !== 'undefined') {
+      //Load a specific compiler version
+      console.log(window)
+      BrowserSolc.loadVersion("soljson-v0.4.6+commit.2dabbdf0.js", function(compiler) {
+        let source = 'contract x { function g() {} }';
+        let optimize = 1;
+        let result = compiler.compile(source, optimize);
+        console.log(result);
+      });
+    }
 
     
-    loadSolc(USE_VERSION)
-    .then(x => {
-      console.log(`/api/solc-compile | solc loaded...`)
-      compileSource(x.solc, givenCode)
-      .then(z => {
-        console.log(`/api/solc-compile | code compiled in: ${((Date.now() - START_TIMESTAMP) / 1000).toFixed(2)}`)
-        res.status(200).json(z)
-        resolve()
-      })
-    })
+    // loadSolc(USE_VERSION)
+    // .then(x => {
+    //   console.log(`/api/solc-compile | solc loaded...`)
+    //   compileSource(x.solc, givenCode)
+    //   .then(z => {
+    //     console.log(`/api/solc-compile | code compiled in: ${((Date.now() - START_TIMESTAMP) / 1000).toFixed(2)}`)
+    //     res.status(200).json(z)
+    //     resolve()
+    //   })
+    // })
     
   
   }catch(err){
     console.log('/api/solc-compile | ERROR ------------------------------------------')
     console.log(err)
-    res.status(200).json({ 
+    resolve({ 
       success:false, 
       output: '', 
       version: USE_VERSION, 
       error: err,  
       duration: Date.now() - START_TIMESTAMP
     })
-    resolve()
   }
 
 
