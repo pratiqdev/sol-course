@@ -13,8 +13,12 @@ a {
 
 * {
   box-sizing: border-box;
+  /* margin: 0; */
+  /* padding: 0; */
   /* border: 1px solid grey */
 }
+
+
 
 main{
   display: flex;
@@ -25,6 +29,7 @@ main{
 span blockquote{
   background: #334;
   padding: 0.1rem .5rem;
+  padding-top: .3rem;
   margin-left: 1rem;
   border-radius: .25rem;
   border-left: 4px solid rgb(93, 93, 116);
@@ -45,8 +50,13 @@ span blockquote[data-variant='error']{
   border-color: rgb(230, 8, 8);
 }
 
+span h1, span h2, span h3, span h4{
+  color:white
+}
+
 span a{
-  color:#66f;
+  color:rgb(115, 150, 247);
+  font-weight: bold;
   /* text-decoration: underline; */
 }
 span a:hover{
@@ -60,7 +70,8 @@ span code{
   border-radius: .25rem;
 }
 
-span pre{
-  margin: 0;
-  padding: 0rem;
+.prism-code{
+  padding: .25rem .5rem;
+  border-radius: .5rem;
+  font-size: .8rem;
 }

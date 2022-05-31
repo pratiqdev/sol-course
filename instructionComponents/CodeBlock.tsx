@@ -1,4 +1,9 @@
 import Highlight, { defaultProps } from "prism-react-renderer";
+import dracula from 'prism-react-renderer/themes/vsDark';
+import Prism from "prism-react-renderer/prism";
+//@ts-ignore
+(typeof global !== "undefined" ? global : window).Prism = Prism;
+require("prismjs/components/prism-solidity");
 
 const exampleCode = `
 (function someDemo() {
@@ -11,11 +16,10 @@ return () => <App />;
 
 
 const CodeBlock = (props:any) => {
-    console.log('codeblock props:', props)
     return(
-        <Highlight {...defaultProps} code={props.code || ''} language={props.lang || 'sol'}>
+        <Highlight {...defaultProps} theme={dracula} code={props.code || ''} language={props.lang  || 'sol'}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className} style={style}>
+          <pre className={className || 'codeblock'} style={style}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (

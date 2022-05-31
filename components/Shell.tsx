@@ -21,6 +21,7 @@ import connectionManager from '@utils/connection';
 import { useRouter } from 'next/router';
 import { useAccordionState } from '@mantine/core';
 import { ellipseAddress } from '@utils/utilities';
+import AccessContainer from '@components/AccessContainer'
 
 const Shell = (props: any) => {
   const theme = useMantineTheme();
@@ -149,7 +150,9 @@ const Shell = (props: any) => {
         flexDirection: isMobile ? 'column' : 'row',
         overflow: isMobile ? 'auto' : 'hidden'
         }}>
-        {ctx.connected ? props.children : <div style={{height: '200px', background: 'red', marginTop: '70px'}}>Connect a wallet!</div>}
+          <AccessContainer restricted={props.restricted}>
+            {props.children}
+          </AccessContainer>
     </div>
 
     </AppShell>

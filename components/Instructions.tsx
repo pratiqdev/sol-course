@@ -28,18 +28,22 @@ const Instructions = (props: any) => {
                 <Text>{currentCategory} / {currentPage}</Text>
             </div>
                 <span>{props.children}</span>
-
-                {/* <MDXProvider components={components}> */}
-                    {/* <main {...props} /> */}
-                    {/* {props.children} */}
-                {/* </MDXProvider> */}
             </>
         </div>
         </MediaQuery>
 
 
         <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
-        <div style={{ padding: '10px', paddingTop: '0', marginTop: '70px', width: ctx.instructionsOpen ? 'calc(45vw - 60px)' : '60px', background: '#222', minHeight: 'calc(100vh - 70px)'}}>
+        <div style={{
+            padding: '10px', 
+            paddingTop: '0', 
+            paddingRight: '15px',
+            marginTop: '70px', 
+            width: ctx.instructionsOpen ? 'calc(45vw - 60px)' : '60px', 
+            background: '#222', 
+            maxHeight: 'calc(100vh - 70px)',
+            overflow: 'auto',
+            }}>
             {ctx.instructionsOpen 
             ?
                 <>
@@ -48,10 +52,6 @@ const Instructions = (props: any) => {
                     <Button style={{minWidth: '2rem', padding: '0'}} onClick={() => setCtx({...ctx, instructionsOpen: !ctx.instructionsOpen})}>{`<`}</Button>
                 </div>
                 <span>{props.children}</span>
-                {/* <MDXProvider components={components}> */}
-                    {/* <main {...props} /> */}
-                    {/* {props.children} */}
-                {/* </MDXProvider> */}
                 </>
             :
                 <>
