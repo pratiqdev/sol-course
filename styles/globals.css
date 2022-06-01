@@ -75,3 +75,7 @@ span code{
   border-radius: .5rem;
   font-size: .8rem;
 }
+
+.mantine-Modal-header{
+  font-weight: bold;
+}

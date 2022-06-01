@@ -1,59 +1,16 @@
 # TODO
 
--/ setup github repo
--/ deploy to vercel (and commit frequently for testing)
--/ add `Web3Modal` 
--/ ping ChiptosX contract to check if user is holder (if on mainnet)
-- generate JWT with expiration, or some method of secure access
-- add Mantine (create toast for every event)
-- add getStaticPaths post slug setup from portfolio site
-- test server-side api pages with compilation scripts
-- create 5 tutorial pages (2 private) and test access
-- create components with collapsing views:
-  - left sidebar tutorial nav
-  - center sidebar tutorial content
-  - right sidebar container
+# 1 - Question validation and feedback setup
+
+- setup q&a validation
+- show feedback on incorrect answers (after submission)
+- tally and display score
+- store answers in mongo (on submission)
+- fetch answers from mongo (if already submitted)
+- disable submit button if submitted already and no new changes to save
 
 
-
-# QUESTIONS / CONCERNS
-
-- use Drawer component instead of sidebar for course navigation?
-
-
-
-
-
-
-# NEXT
-
-## X - Access restricted content (separate function / button):
-
-1. get the user to sign a message (FE)
-  - verifies that they own this account
-
-2. ping the contract at `balanceOf(address)` with the verified address (FE)
-  - returns 1 or more if they own a token
-
-3. generate a jwt and save as a cookie `TOKEN_ACCESS` (BE generation, FE cookie storage)
-
-# X - hasAuth hook
-
-create a hook that checks if they are valid at page load
-if not - show a modal with button to `Access restricted content`,
-instructions to purchase a token, 
-or list some free stuff
-
-
-# X - Courses List
-
-Create an api page with `getStaticPaths` that gets all course files / front matter
-that can be used to generate an array / object that can be mapped for a 
-usable list of cards / links for the user to see and navigate courses.
-Can also be used to generate the sidebar nav.
-
-
-# Course completion status
+# 2 - Course completion status
 
 > requires connection to mongo
 
@@ -89,16 +46,3 @@ progressObject = {
   }
 }
 ```
-
-
-
-# X - Connect an authorize user
-
-A user should be able to see the course list without logging in (connect wallet)
-and view courses tha are public. Show a small button / link that will take them
-to the login / verification page. If an anon user visits a course page that
-requires auth - show a paywall style modal that explains login / connect
-and offers a button that will show `web3modal` and verify the user.
-If a user has connected their walled, but is not permitted to view this course:
-show different paywall content that explains how to get a token - and a list of
-free courses.

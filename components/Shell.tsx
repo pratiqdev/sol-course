@@ -23,7 +23,12 @@ import { useAccordionState } from '@mantine/core';
 import { ellipseAddress } from '@utils/utilities';
 import AccessContainer from '@components/AccessContainer'
 
-const Shell = (props: any) => {
+interface ShellProps{
+  restricted?: any;
+  children?: any;
+}
+
+const Shell = (props: ShellProps) => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [shrinkNav, setShrinkNav] = useState(false)

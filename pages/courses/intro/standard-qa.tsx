@@ -21,22 +21,54 @@ const CoursePage = () => {
                 qas={[
                     {
                         question: 'A question!!!',
-                        answer: 'blaps'
+                        answer: 'blaps',
+                        feedback: {
+                            response:'The answer is "blaps". Check that thing for more answers',
+                            suggestion: 'Check out that thing for more answers about "A question!!!"',
+                            links: {
+                                'google': 'https://google.com',
+                                'etherscan':'https://etherscan.io'
+                            }
+                        }
+
                     },
                     {
                         question: 'Another q & a',
                         answer: 'flap',
-                        feedback: 'Offer an explanation'
+                        feedback: {
+                            response:'The answer is "flap". Check that thing for more answers',
+                            suggestion: 'Check out that thing for more answers about "A question!!!"',
+                            links: {
+                                'google': 'https://google.com',
+                                'etherscan':'https://etherscan.io'
+                            }
+                        }
                     },
                     {
                         question: 'A number question... same as text really',
-                        answer: '42'
+                        answer: '42',
+                        feedback: {
+                            response:'The answer is "42". Check that thing for more answers',
+                            suggestion: 'Check out that thing for more answers about "A question!!!"',
+                            links: {
+                                'google': 'https://google.com',
+                                'etherscan':'https://etherscan.io'
+                            }
+                        }
                     },
                     {
                         type: 'options',
                         question: 'A multiple choice dropdown',
                         options: ['option one!', 'option two...', 'option thr33'],
-                        answer: 'option one!'
+                        answer: 'option one!',
+                        feedback: {
+                            response:'The answer is "option one!". Check that thing for more answers',
+                            suggestion: 'Check out that thing for more answers about "A question!!!"',
+                            links: {
+                                'google': 'https://google.com',
+                                'etherscan':'https://etherscan.io'
+                            }
+                        }
                     },
                 ]}
             />

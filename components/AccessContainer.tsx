@@ -103,7 +103,7 @@ const AccessContainer = (props:AccessContainerProps) => {
     }else{
         return(
             <>
-                <Modal centered open={showConnectModal} title='Connect a Wallet'>
+                <Modal centered open={showConnectModal && !props.restricted} title='Connect a Wallet'>
                     <p>
                         Course progress will not be saved and advanced courses cannot be accessed without connecting a wallet!
                     </p>
