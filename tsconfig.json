@@ -6,6 +6,7 @@
       "@instructions/*": ["instructionComponents/*"],
       "@utils/*": ["utils/*"],
       "@data/*": ["data/*"],
+      "@schemas/*": ["schemas/*"],
     },
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
     /* Projects */

@@ -26,6 +26,7 @@ import AccessContainer from '@components/AccessContainer'
 interface ShellProps{
   restricted?: any;
   children?: any;
+  categoryIndex: number;
 }
 
 const Shell = (props: ShellProps) => {
@@ -39,11 +40,11 @@ const Shell = (props: ShellProps) => {
   const currentCategory = routerSplit[2]
   const currentPage = routerSplit[3]
   //@ts-ignore
-  const currentAccIndex = courseList.indexOf(courseList.find((x, i) => x.title.toLowerCase() === currentCategory.toLowerCase().replace('-',' '))) || 0
+  // const currentAccIndex = courseList.indexOf(courseList.find((x, i) => x.title.toLowerCase() === currentCategory.toLowerCase().replace('-',' '))) || 0
   console.log('currentCategory:', currentCategory)
   console.log('currentPage:', currentPage)
-  console.log('currentIndex:', currentAccIndex)
-  const [accordionState, handlers] = useAccordionState({ total: courseList.length, initialItem: currentAccIndex });
+  console.log('currentIndex:', props.categoryIndex)
+  const [accordionState, handlers] = useAccordionState({ total: Object.entries(courseList).length, initialItem: props.categoryIndex });
   const isMobile = useMediaQuery('(max-width: 992px)');
 
   let fixedNav = true
@@ -86,9 +87,13 @@ const Shell = (props: ShellProps) => {
                   </div>
               {ctx.navOpen &&
               <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
-                {courseList.map((x,i) => 
-                  <Accordion.Item key={x.title} label={x.title} style={{background: i === currentAccIndex ? '#335' : '#222', fontSize: '.8rem'}}>
-                      {x.courses.map(z => <Box key={z.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', minWidth: '100%','&:hover': { background: '#222'}}}><Link href={`/courses/${z.file}`}>{z.title}</Link></Box>)}
+                {Object.entries(courseList).map(([categoryUri, categoryObject],i) => 
+                  <Accordion.Item key={categoryObject.title} label={categoryObject.title} style={{background: i === props.categoryIndex ? '#335' : '#222', fontSize: '.8rem'}}>
+                      {Object.entries(categoryObject.courses).map(([courseUri, courseObject]) => 
+                        <Box key={courseObject.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', minWidth: '100%','&:hover': { background: '#222'}}}>
+                          <Link href={`/courses/${courseObject.file}`}>{courseObject.title}</Link>
+                        </Box>
+                      )}
                   </Accordion.Item>
                 )}
             </Accordion>
@@ -102,9 +107,13 @@ const Shell = (props: ShellProps) => {
             <Button variant='light' sx={{marginBottom: 10}} onClick={connect}>Connect</Button>
          
               <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
-                {courseList.map((x,i) => 
-                  <Accordion.Item key={x.title} label={x.title} style={{background: i === currentAccIndex ? '#335' : '#222', fontSize: '.8rem'}}>
-                      {x.courses.map(z => <Box key={z.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', minWidth: '100%','&:hover': { background: '#222'}}}><Link href={`/courses/${z.file}`}>{z.title}</Link></Box>)}
+              {Object.entries(courseList).map(([categoryUri, categoryObject],i) => 
+                  <Accordion.Item key={categoryObject.title} label={categoryObject.title} style={{background: i === props.categoryIndex ? '#335' : '#222', fontSize: '.8rem'}}>
+                      {Object.entries(categoryObject.courses).map(([courseUri, courseObject]) => 
+                        <Box key={courseObject.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', minWidth: '100%','&:hover': { background: '#222'}}}>
+                          <Link href={`/courses/${courseObject.file}`}>{courseObject.title}</Link>
+                        </Box>
+                      )}
                   </Accordion.Item>
                 )}
             </Accordion>

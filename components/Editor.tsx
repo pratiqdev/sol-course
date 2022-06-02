@@ -54,7 +54,7 @@ const CustomEditor = (props:any) => {
       let errorContent = `Compiled with version: ${response.data.version} in ${response.data.duration}s\n${numErrors ? `${numErrors} ${numErrors > 1 ? 'errors' : 'error'}:\n\n` : 'No errors\n\n'}`
       if(output.errors && output.errors.length){
         output.errors.forEach((x:any, i:number) => {
-          errorContent += `${'-'.repeat(100)}\nERROR ${i+1}: ${x.formattedMessage.replace('--> code.sol:', '')}`
+          errorContent += `${'-'.repeat(100)}\nERROR ${i+1} (${x.errorCode}): ${x.formattedMessage.replace('--> code.sol:', '')}`
         })
       }
       if(output.contracts){

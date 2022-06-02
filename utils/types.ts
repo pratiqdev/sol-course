@@ -17,3 +17,28 @@ export interface IChainData {
   native_currency: IAssetData;
   explorer?: string;
 }
+
+
+export interface ICourseObject {
+  /** Title of the course - displayed in nav */
+  title: string;
+  /** Relative path to the file containing this course */
+  file: string; 
+}
+
+export interface ICourseCategoryObject {
+  /** The title of the category */
+  title: string;
+  /** Description for the category - appears on course cards */
+  description: string;
+  /** Difficulty of this category */
+  difficulty: number;
+  /** Boolean used to show / hide the restricted badge on course categories */
+  restricted: boolean;
+  /** Array of course objects */
+  courses: {[key: string]: ICourseObject}
+}
+
+export interface ICourseListObject {
+  [key: string]: ICourseCategoryObject
+}

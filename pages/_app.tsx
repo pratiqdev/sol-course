@@ -4,11 +4,13 @@ import Link from 'next/link'
 import { AppProps } from 'next/app'
 import { MantineProvider } from '@mantine/core';
 import { Global } from '@mantine/core';
+import InitialProgressLoader from '@components/InitialProgressLoader';
 
 const App = (props: AppProps) => {
   const { Component, pageProps } = props
   return (
     <UserContextWrapper>
+      {/* <InitialProgressLoader /> */}
       <MantineProvider
         withGlobalStyles
         withNormalizeCSS

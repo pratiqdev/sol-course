@@ -6,7 +6,7 @@ import Questionnaire from '@components/Questionnaire'
 const CoursePage = () => {
 
     return(
-        <Shell>
+        <Shell categoryIndex={0}>
             <Instructions>
                 <h2>Intro - standard.tsx</h2>
 

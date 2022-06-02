@@ -22,6 +22,7 @@ import connectionManager from '@utils/connection';
 import { useUserContext } from '@utils/context';
 import CourseCard from '@components/CourseCard'
 import { ellipseAddress } from '@utils/utilities'
+import useProgress from '@utils/hooks/useProgress';
 
 
 
@@ -41,6 +42,8 @@ const Courses = () => {
   const { ctx, setCtx } = useUserContext()
   const { connect } = connectionManager(ctx, setCtx)
   const isMobile = useMediaQuery('(max-width: 992px)');
+
+  const {progress} = useProgress(ctx.address)
   
   return (
     <AppShell
@@ -113,7 +116,7 @@ const Courses = () => {
     >
         <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', padding: '1rem'}}>
              <Grid style={{alignItems: 'stretch', flexDirection: isMobile ? 'column' : 'row'}}>
-                 {courseList.map(x => <Grid.Col key={x.title} span={isMobile ? 12 : 4}><CourseCard data={x} /></Grid.Col>)}
+                 {Object.entries(courseList).map(([categoryKey, categoryObject], index) => <Grid.Col key={categoryObject.title} span={isMobile ? 12 : 4}><CourseCard data={categoryObject} dataUri={categoryKey}/></Grid.Col>)}
              </Grid>
          </div>
     </AppShell>

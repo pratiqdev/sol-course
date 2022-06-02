@@ -9,7 +9,7 @@ import Image from '@instructions/Image'
 const CoursePage = () => {
 
     return(
-        <Shell restricted>
+        <Shell restricted categoryIndex={1}>
 
             
 <Instructions>

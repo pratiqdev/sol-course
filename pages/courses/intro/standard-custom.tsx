@@ -5,7 +5,7 @@ import CustomAside from '@components/CustomAside'
 const CoursePage = () => {
 
     return(
-        <Shell>
+        <Shell categoryIndex={0}>
             <Instructions>
                 <h2>Intro - custom component (tsx)</h2>
 

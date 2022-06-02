@@ -64,13 +64,31 @@ const Questionnaire = (props:QuestionnaireProps) => {
       setValue(e.target.value)
       props.handleChange(index, e.target.value)
       setCorrect(responses[index].answer.toLowerCase().trim() === e.target.value.toLowerCase().trim())
-      console.log('QUESTIONNAIRE | QuestionString | correct:', e.target.value, responses[index].answer.toLowerCase().trim() === e.target.value.toLowerCase().trim())
+      console.log(
+        'QUESTIONNAIRE | QuestionString | correct:', 
+        e.target.value, 
+        responses[index].answer.toLowerCase().trim() === e.target.value.toLowerCase().trim()
+      )
+    }
+
+    useEffect(()=>{
+      if(wasSubmitted){
+        setCorrect(responses[index].answer.toLowerCase().trim() === value.toLowerCase().trim())
+      }
+    }, [wasSubmitted])
+
+    let outlineColor = '2px solid transparent'
+    if(wasSubmitted && !correct){
+      outlineColor = '2px solid red'
+    }
+    if(wasSubmitted && correct){
+      outlineColor = '2px solid green'
     }
     
     return(
       <div style={{marginBottom: '1rem'}}>
         <Text>{index + 1} - {data.question}</Text>
-        <Input defaultValue={value} onChange={handleLocalChange}/>
+        <Input style={{outline: outlineColor, borderRadius: '.25rem'}} defaultValue={value} onChange={handleLocalChange}/>
         {wasSubmitted && !correct &&
           <small style={{color: 'red'}}>{data.feedback.response}</small>
         }
@@ -243,8 +261,8 @@ const Questionnaire = (props:QuestionnaireProps) => {
     <div style={{marginTop: '70px', width: isMobile ? '100%' : width , height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', padding: '1rem', paddingTop: '.5rem'  }}>
       {responses.map((x:any, i:number) => {
         switch(x.type){
-          case 'options': return <QuestionOptions data={x} index={i} handleChange={handleChange} />; break;
-          default: return <QuestionString data={x} index={i} handleChange={handleChange} />
+          case 'options': return <QuestionOptions data={x} index={i} key={x.question} handleChange={handleChange} />; break;
+          default: return <QuestionString data={x} index={i} key={x.question} handleChange={handleChange} />
         }
       })}
       <Button style={{marginTop: '2rem'}} onClick={handleSubmit}>Submit</Button>

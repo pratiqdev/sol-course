@@ -20,5 +20,6 @@
 
 ---
 
-## 6/1 - 2hr
+## 6/1 - 3hr
 2hr - Setup validation and feedback for questionnaire
+1hr - Added mongodb connection

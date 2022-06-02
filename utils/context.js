@@ -9,7 +9,7 @@ export function UserContextWrapper({ children }) {
     address: null,
     connected: false,
     isHolder: false,
-    navOpen: false,
+    navOpen: true,
     instructionsOpen: true
   }
   const [ctx, setCtx] = useState(initialCtx)
