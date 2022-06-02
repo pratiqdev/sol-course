@@ -7,14 +7,14 @@ import useProgress from '@utils/hooks/useProgress';
 
 const InitialProgressLoader = () => {
     const { ctx, setCtx } = useUserContext()
-    const { refreshProgress } = useProgress(ctx.address)
+    const { refresh } = useProgress(ctx.address)
 
 
 
     useEffect(()=>{
         if(ctx.connected && ctx.address){
             console.log('INITIAL PROGRESS LOADER | CONNECTED')
-            refreshProgress()
+            refresh()
         }
     },[ctx.connected, ctx.address])
 
