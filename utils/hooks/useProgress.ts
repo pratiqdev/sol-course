@@ -9,7 +9,12 @@ const useProgress = (userAddress: string) => {
     const [refreshTrigger, setRefreshTrigger] = useState(false)
 
     const refresh = () => userAddress && setRefreshTrigger(b => !b)
-    
+
+    const reset = () => {
+        setProgress({})
+        setRefreshTrigger(b => !b)
+    }
+
     const updateProgress = async (cb: any) => {
         if(!userAddress) return
         try{
@@ -63,6 +68,7 @@ const useProgress = (userAddress: string) => {
     return {
         progress,
         refresh,
+        reset,
         updateProgress,
         setLatestCategory,
         setLatestCourse,

@@ -16,12 +16,11 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import courseList from '@data/courseList';
-import { useUserContext } from '@utils/context';
-import connectionManager from '@utils/connection';
 import { useRouter } from 'next/router';
 import { useAccordionState } from '@mantine/core';
 import { ellipseAddress } from '@utils/utilities';
 import AccessContainer from '@components/AccessContainer'
+import useConnectionManager from '@utils/hooks/useConnectionManager'
 
 interface ShellProps{
   restricted?: any;
@@ -33,8 +32,7 @@ const Shell = (props: ShellProps) => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [shrinkNav, setShrinkNav] = useState(false)
-  const { ctx, setCtx } = useUserContext()
-  const { connect } = connectionManager(ctx, setCtx)
+  const { ctx, setCtx, connect } = useConnectionManager()
   const router = useRouter()
   const routerSplit = router.asPath.split('/')
   const currentCategory = routerSplit[2]
@@ -68,7 +66,7 @@ const Shell = (props: ShellProps) => {
         main: {
           background: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0],
           padding: '0',
-          overflow: 'hidden'
+          overflow: 'hidden',
         },
       }}
       navbarOffsetBreakpoint="md"
@@ -78,7 +76,7 @@ const Shell = (props: ShellProps) => {
 
       navbar={
         <>
-        <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
+        <MediaQuery smallerThan="md" styles={{ display: 'none !important'}}>
           <Navbar p="md" hiddenBreakpoint="md" hidden={!opened} width={{md: ctx.navOpen ? '20vw' : 60 }}>
               {/* <Button style={{padding: '5px', width: '2rem'}} onClick={()=> setShrinkNav(o => !o)}>{shrinkNav ? `>` : `<`}</Button> */}
               <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -100,7 +98,7 @@ const Shell = (props: ShellProps) => {
               }
           </Navbar>
         </MediaQuery>
-        <MediaQuery largerThan="md" styles={{ display: 'none !important', }}>
+        <MediaQuery largerThan="md" styles={{ display: 'none !important',}}>
           <Navbar p="md" hiddenBreakpoint="md" hidden={!opened} width={{md: ctx.navOpen ? '20vw' : 60 }}>
             <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginBottom: 10}}>Courses</Button></Link>
             <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginBottom: 10}}>Docs</Button></Link>
@@ -146,9 +144,9 @@ const Shell = (props: ShellProps) => {
               <div style={{display: 'flex', alignItems: 'center'}}>
                 <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
                 <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
-                {!ctx.connected 
+                {(!ctx.connected)
                   ? <Button variant='filled' onClick={connect}>Connect</Button>
-                  : <Button variant='filled'>{ellipseAddress(ctx.address, 4)}</Button>
+                  : <Button variant='filled'>{ellipseAddress(ctx.address || '', 4)}</Button>
                 }
               </div>
               </MediaQuery>

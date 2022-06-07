@@ -1,5 +1,13 @@
 # TODO
 
+DO MORE TESTS WITH METAMASK AND COINBASE WALLET
+WALLET ADDRESS IS SHOWING EVEN IF SIGNATURE IS DENIED - CHANGE THIS SO SIGNATURE 
+IS REQUIRED FOR ANY VISUAL REPRESENTATION OF ACCESS.
+
+metamask denied signature is still allowing access!
+
+
+
 # 1 - Question validation and feedback setup
 
 - setup q&a validation

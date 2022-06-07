@@ -9,6 +9,7 @@ export function UserContextWrapper({ children }) {
     address: null,
     connected: false,
     isHolder: false,
+    isVerified: false,
     navOpen: true,
     instructionsOpen: true
   }

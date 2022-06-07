@@ -4,10 +4,16 @@ import axios from 'axios'
 import bops from 'bops'
 import CONSTANTS from '@utils/constants'
 
-const verifyAddress = async (_address) => {
+interface IVerfifiedDataStruct {
+  isHolder: boolean;
+  isVerified: boolean;
+  message: string;
+}
+const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => {
 
   let globalSignature
   const web3 =  new Web3(Web3.givenProvider)
+  //@ts-ignore
   const Contract = await new web3.eth.Contract(abi, '0x5955373cc1196fd91a4165c4c5c227b30a3948f9')
   const message = 'Message used for signature'
 
@@ -23,11 +29,13 @@ const verifyAddress = async (_address) => {
   // attempt to sign a message thru metamask
   // does this work thru any provider?
   const signMessage = async () => {
+    console.log('verifyAddress | signMessage | provider:', window.ethereum)
     try {
         const from = _address;
         console.log('from : ' + from);
         const msg = `0x${bops.from(message, 'utf8').toString('hex')}`;
         console.log('msg : ' + msg);
+        const ethereum = window.ethereum
         const sign = await ethereum.request({
             method: 'personal_sign',
             params: [msg, from, 'Random text'],
@@ -68,6 +76,7 @@ const verifyAddress = async (_address) => {
       console.log('Address could not be verified')
       return {
         isHolder: false,
+        isVerified: false,
         message: 'This address could not be verified...'
       }
     }
@@ -85,18 +94,21 @@ const verifyAddress = async (_address) => {
         console.log('set localStorage item:', storageItem)
         return {
           isHolder: true,
+          isVerified: true,
           message: 'Address verified as ChiptosX owner',
         }
     }else{
       return {
         isHolder: false,
+        isVerified: true,
         message: 'This address is not a ChiptosX owner...'
       }
     }
   }catch(err){
-    console.log(err)
+    console.log('VERIFY ADDRESS ERROR:',err)
     return {
       isHolder: false,
+      isVerified: false,
       message: 'This address could not be verified...'
     }
   }

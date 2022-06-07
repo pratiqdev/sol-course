@@ -79,3 +79,43 @@ span code{
 .mantine-Modal-header{
   font-weight: bold;
 }
+
+.web3modal-modal-container{
+  /* background: red; */
+  padding-top: 80px !important;
+}
+
+
+@media only screen and (max-width: 992px) {
+  .web3modal-modal-container{
+    /* background: green; */
+  }
+  .web3modal-provider-wrapper,
+  .web3modal-provider-icon,
+  .web3modal-provider-description
+  {
+    font-size: 1rem !important;
+  }
+  .web3modal-provider-name
+  {
+    font-size: 1.2rem !important;
+  }
+}
+
+
+
+.quik-menu{
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  padding: 10px;
+}
+
+.quik-menu > * {
+  margin-top: 10px;
+}
+
+
+hr{
+  width: 100%;
+}

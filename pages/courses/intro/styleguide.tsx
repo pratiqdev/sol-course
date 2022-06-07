@@ -5,7 +5,6 @@ import Instructions from '@components/Instructions'
 import CodeBlock from '@instructions/CodeBlock'
 import Blockquote from '@instructions/Blockquote'
 import Image from '@instructions/Image'
-import constants from '@data/constants'
 
 const CoursePage = () => {
 
@@ -14,9 +13,9 @@ const CoursePage = () => {
 
             
 <Instructions>
-<h2>Getting Started</h2>
+<h2>Style Guide</h2>
 
-<p>Welcome to {constants.SITE_NAME}</p>
+<p>These are the instructions</p>
 
 <p>Custom components are <b>easier</b> to use in <i>plain</i> TSX instead of MDX</p>
 

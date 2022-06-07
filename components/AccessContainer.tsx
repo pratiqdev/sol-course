@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react'
 import CONSTANTS from '@utils/constants'
 import axios from 'axios'
-import { useUserContext } from '@utils/context'
-import connectionManager from '@utils/connection'
-import Shell from '@components/Shell'
 import { Button } from '@mantine/core'
 import Modal from '@components/Modal'
+import useConnectionManager from '@utils/hooks/useConnectionManager'
 
 interface AccessContainerProps {
     restricted?: boolean;
@@ -15,49 +13,54 @@ interface AccessContainerProps {
 const AccessContainer = (props:AccessContainerProps) => {
     const [verified, setVerified] = useState(false)
     const [expired, setExpired] = useState(false)
-    const {ctx, setCtx} = useUserContext()
-    const { connect, reset } = connectionManager(ctx, setCtx)
+    const {ctx, setCtx, connect, reset} = useConnectionManager()
+    // const { connect, reset } = connectionManager(ctx, setCtx)
     const [showConnectModal, setShowConnectModal] = useState(true)
 
     const verifyData = async () => {
         let tokenData = localStorage.getItem(CONSTANTS.JWT_STORAGE_KEY) || null
-        console.log('ProtectedRoute | verifyData:', tokenData)
+        console.log('ACCESS | STORED TOKEN:', tokenData)
 
         if(!tokenData){
-            console.log('ProtectedRoute | verifyData | No tokenData found:', tokenData)
+            console.log('ACCESS | No tokenData found:', tokenData)
             setVerified(false)
             return
         }
         const { expiration, token } = JSON.parse(tokenData)
 
         if(!token){
-            console.log('ProtectedRoute | verifyData | No token in tokenData:', token)
+            console.log('ACCESS | No token in tokenData:', token)
             setVerified(false)
             return
         }
 
         if(!expiration){
-            console.log('ProtectedRoute | verifyData | No expiration in tokenData:', expiration)
+            console.log('ACCESS | No expiration in tokenData:', expiration)
             setVerified(false)
             return
         }
 
         if(!ctx.address){
-            console.log('ProtectedRoute | verifyData | No address in ctx:', ctx.address)
+            console.log('ACCESS | No address in ctx:', ctx.address)
             setVerified(false)
             return
         }
         // console.log('ProtectedRoute | verifyData | posting with token:', token)
         let {data} = await axios.post('/api/verify-jwt', {token, address: ctx.address})
 
-        console.log(`ProtectedRoute | verifyData | token ${token}, tokenVerified: ${JSON.stringify(data, null, 2)}`)
+        console.log(`ACCESS | token ${token}, tokenVerified: ${JSON.stringify(data, null, 2)}`)
 
         if(data.verified && data.reason == 'verified'){
+            console.log('ACCESS | VERIFIED')
             setVerified(true)
             setExpired(false)
-        }
-        if(data.reason === 'expired'){
+        }else if(data.reason === 'expired'){
+            console.log('ACCESS | EXPIRED')
             setExpired(true)
+        }else{
+            console.log('ACCESS | DENIED')
+            setVerified(false)
+            setExpired(false)
         }
     }
 

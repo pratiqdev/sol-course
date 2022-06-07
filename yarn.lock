@@ -1488,6 +1488,11 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.5.tgz#db5a11bf66bdab39569719555b0f76e138d7bd64"
   integrity sha512-9X2obfABZuDVLCgPK9aX0a/x4jaOEweTTWE2+9sr0Qqqevj2Uv5XorvusThmc9XGYpS9yI+fhh8RTafBtGposw==
 
+"@pratiq/hooks@1.0.31":
+  version "1.0.31"
+  resolved "https://registry.yarnpkg.com/@pratiq/hooks/-/hooks-1.0.31.tgz#f6d6ab5def02397827b23233308b0ebbea00cf2f"
+  integrity sha512-lM9hYos+wK+mxszFSXfItIR3yEooDJA+IYreX/v9s63o/LvVN8I9HbvMz5AvV2B/KAjN39s7i5IAmtplj0WQrQ==
+
 "@radix-ui/number@0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@radix-ui/number/-/number-0.1.0.tgz#73ad13d5cc5f75fa5e147d72e5d5d5e50d688256"
@@ -8715,10 +8720,10 @@ web3@^1.7.3:
     web3-shh "1.7.3"
     web3-utils "1.7.3"
 
-web3modal@^1.9.7:
-  version "1.9.7"
-  resolved "https://registry.npmjs.org/web3modal/-/web3modal-1.9.7.tgz"
-  integrity sha512-z3XfY7cV8GwGvHP3WvrSxPU6/7ocwVyiU77U/Lxoa53AUSsOKl01V8ErZ8CkJSH41C3YgzwBaOETj0rC9uFBKg==
+web3modal@1.9.6:
+  version "1.9.6"
+  resolved "https://registry.yarnpkg.com/web3modal/-/web3modal-1.9.6.tgz#ace73e46f8a1a24ae553fd196e035ba1f5c44c8d"
+  integrity sha512-Kb05om51YTB60WEH+5HUCGDzs0S5lFJlT0uebwzA3QZhJbX9x6rj1aSWn/UnZ54H5vM9fuxdnrZMu7FcN8y3qw==
   dependencies:
     detect-browser "^5.1.0"
     prop-types "^15.7.2"

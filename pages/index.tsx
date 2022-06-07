@@ -17,7 +17,7 @@ import {
 } from '@mantine/core';
 import courseList from '@data/courseList';
 import { heights } from '@mantine/core/lib/components/Button/Button.styles';
-import connectionManager from '@utils/connection';
+import useConnectionManager from '@utils/hooks/useConnectionManager';
 import { useUserContext } from '@utils/context';
 import { ellipseAddress } from '@utils/utilities';
 
@@ -35,8 +35,7 @@ export default function AppShellDemo() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [shrinkNav, setShrinkNav] = useState(false)
-  const { ctx, setCtx } = useUserContext()
-  const { connect } = connectionManager(ctx, setCtx)
+  const { connect, ctx, setCtx} = useConnectionManager()
   return (
     <AppShell
       styles={{
@@ -107,8 +106,13 @@ export default function AppShellDemo() {
       }
     >
         <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', border: '1px solid green'}}>
-            <Text>MENU: {opened.toString()}</Text>
             <Text>Basic intro, what is this, quick how to, get started callout</Text>
+            <div className='quik-menu'>
+              <Link href='/courses' passHref><Button variant='light' component='a'>Courses</Button></Link>
+              <Link href='/tests/access-test' passHref><Button variant='light' component='a' >Access Test</Button></Link>
+              <Link href='/tests/progress-test' passHref><Button variant='light' component='a' >Storage Test</Button></Link>
+
+            </div>
         </div>
     </AppShell>
   );

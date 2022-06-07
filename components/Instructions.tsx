@@ -42,6 +42,7 @@ const Instructions = (props: any) => {
             width: ctx.instructionsOpen ? 'calc(45vw - 60px)' : '60px', 
             background: '#222', 
             maxHeight: 'calc(100vh - 70px)',
+            minHeight: 'calc(100vh - 70px)',
             overflow: 'auto',
             }}>
             {ctx.instructionsOpen 

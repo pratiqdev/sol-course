@@ -25,3 +25,9 @@
 1hr - Added mongodb connection
 2hr - Setup mongodb integration with custom useProgress hook
  
+## 6/6 - 3hr
+1hr - Fixed bugs with connectionManager and tested (with metamask only)
+2hr - Added coinbase config and tested connection (was missing infuraId env var)
+
+> discovered known issue with chrome extensions using both coinbase and metamask providers
+> https://github.com/NoahZinsmeister/web3-react/issues/300

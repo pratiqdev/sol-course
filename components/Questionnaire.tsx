@@ -3,8 +3,11 @@ import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 import { useUserContext } from '@utils/context';
 import { Text, Input, NativeSelect, Button } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import Modal from '@components/Modal'
-import next from 'next';
+import { format } from 'path';
+import useConnectionManager from '@utils/connection';
+import { json } from 'stream/consumers';
+
+
 interface Question {
   /** The type of input to render */
   type?: 'string' | 'options';
@@ -25,14 +28,16 @@ interface Question {
   }
 }
 interface QuestionnaireProps {
-  qas: Question[]
+  qas: Question[],
+  dataKey: string;
 }
 
 
 const Questionnaire = (props:QuestionnaireProps) => {
 
   const [width, setWidth] = useState('calc(100vw - 120px)')
-  const { ctx, setCtx } = useUserContext()
+  // const { ctx, setCtx } = useUserContext()
+  const { ctx, setCtx, progress, updateProgress } = useConnectionManager()
   const isMobile = useMediaQuery('(max-width: 992px)');
 
   const [wasSubmitted, setWasSubmitted] = useState(false)
@@ -148,6 +153,11 @@ const Questionnaire = (props:QuestionnaireProps) => {
       setWidth('40vw')
     }
   }, [ctx])
+
+
+  useEffect(()=>{
+    
+  }, [ctx.connected])
 
 
 
@@ -286,6 +296,7 @@ const Questionnaire = (props:QuestionnaireProps) => {
           </div>
         </Modal>
       } */}
+      <pre>{JSON.stringify(progress, null, 2)}</pre>
     </div>
 
   )
