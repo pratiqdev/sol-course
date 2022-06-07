@@ -18,7 +18,7 @@ import {
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import courseList from '@data/courseList';
-import connectionManager from '@utils/connection';
+import useConnectionManager from '@utils/hooks/useConnectionManager';
 import { useUserContext } from '@utils/context';
 import CourseCard from '@components/CourseCard'
 import { ellipseAddress } from '@utils/utilities'
@@ -39,11 +39,9 @@ const Courses = () => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [shrinkNav, setShrinkNav] = useState(false)
-  const { ctx, setCtx } = useUserContext()
-  const { connect } = connectionManager(ctx, setCtx)
+  const { ctx, setCtx, connect, progress } = useConnectionManager()
   const isMobile = useMediaQuery('(max-width: 992px)');
 
-  const {progress} = useProgress(ctx.address)
   
   return (
     <AppShell

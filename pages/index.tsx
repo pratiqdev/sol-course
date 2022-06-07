@@ -13,13 +13,20 @@ import {
   Accordion,
   Button,
   Container,
-  Box
+  Box,
+  ActionIcon
 } from '@mantine/core';
 import courseList from '@data/courseList';
 import { heights } from '@mantine/core/lib/components/Button/Button.styles';
 import useConnectionManager from '@utils/hooks/useConnectionManager';
 import { useUserContext } from '@utils/context';
 import { ellipseAddress } from '@utils/utilities';
+
+import {
+  Settings,
+  Home2
+} from 'tabler-icons-react'
+import Blocky from '@components/Blocky';
 
 
 /*
@@ -85,19 +92,27 @@ export default function AppShellDemo() {
               />
             </MediaQuery>
 
-            <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
-              <div style={{width: '100%'}}>
-                <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>ChiptosX Sol</Button></Link>
+            <div style={{display: 'flex', alignItems: 'center', width: '100%', flexWrap: 'nowrap'}}>
+
+              <div style={{width: '100%', display: 'flex'}}>
+                {/* <Link href='/' passHref><ActionIcon><Home2 size={18}/></ActionIcon></Link> */}
+              <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>Home</Button></Link>
+
+                <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
+                  <div style={{display: 'flex', }}>
+                    <Link href='/courses' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
+                    <Link href='/docs' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
+                  </div>
+                </MediaQuery>
               </div>
 
               <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
                 <div style={{display: 'flex', alignItems: 'center'}}>
-                  <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
-                  <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
                   {!ctx.connected 
-                    ? <Button variant='filled' onClick={connect}>Connect</Button>
-                    : <Button variant='filled'>{ellipseAddress(ctx.address, 4)}</Button>
+                    ? <Button variant='filled' onClick={connect} sx={{marginRight: '10px'}}>Connect</Button>
+                    : <Button variant='filled'  sx={{marginRight: '10px'}}>{ellipseAddress(ctx.address, 4)}</Button>
                   }
+                  <Blocky />
                 </div>
               </MediaQuery>
             </div>
@@ -105,8 +120,9 @@ export default function AppShellDemo() {
         </Header>
       }
     >
-        <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', border: '1px solid green'}}>
+        <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', }}>
             <Text>Basic intro, what is this, quick how to, get started callout</Text>
+
             <div className='quik-menu'>
               <Link href='/courses' passHref><Button variant='light' component='a'>Courses</Button></Link>
               <Link href='/tests/access-test' passHref><Button variant='light' component='a' >Access Test</Button></Link>
