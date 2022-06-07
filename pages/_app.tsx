@@ -1,5 +1,5 @@
 import '../styles/globals.css'
-import { UserContextWrapper } from '@utils/context'
+import { GlobalContextWrapper } from '@utils/context'
 import { AppProps } from 'next/app'
 import { MantineProvider } from '@mantine/core';
 import { Global } from '@mantine/core';
@@ -7,7 +7,7 @@ import { Global } from '@mantine/core';
 const App = (props: AppProps) => {
   const { Component, pageProps } = props
   return (
-    <UserContextWrapper>
+    <GlobalContextWrapper>
       <MantineProvider
         withGlobalStyles
         withNormalizeCSS
@@ -33,7 +33,7 @@ const App = (props: AppProps) => {
       />
       <Component {...pageProps} />
     </MantineProvider>
-    </UserContextWrapper>
+    </GlobalContextWrapper>
   )
 }
 

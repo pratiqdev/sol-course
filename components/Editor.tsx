@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
-import { useUserContext } from '@utils/context';
+import useConnectionManager from '@utils/hooks/useConnectionManager';
 import {
   Button,
   NativeSelect,
@@ -8,16 +8,31 @@ import {
   MediaQuery
 } from '@mantine/core'
 import axios from 'axios';
+import { ICodeTest } from '@utils/interfaces';
 
 
-const CustomEditor = (props:any) => {
+/**
+ * Grab the editor code from the progress object if it exists
+ */
 
-  const [editorContent, setEditorContent] = useState(props.code || 'no-code-props')
+interface ICustomEditorProps{
+  URI: string;
+  code: string;
+  tests: ICodeTest[]
+}
+
+const CustomEditor = (props:ICustomEditorProps) => {
+
+  let [categoryUri, courseUri] = props.URI.split('/')
+
+
+
+  const [editorContent, setEditorContent] = useState<string|undefined>(props.code || 'no-code-props')
   const [editorErrors, setEditorErrors] = useState('You must compile your code first...')
   const [compiledOutput, setCompiledOutput] = useState('You must compile your code first...')
   const [showEditor, setShowEditor] = useState(true)
   const [width, setWidth] = useState('calc(100vw - 120px)')
-  const { ctx, setCtx } = useUserContext()
+  const { ctx, setCtx, progress, updateProgress } = useConnectionManager()
 
   useEffect(()=>{
     // ctx.instructionsOpen ? ctx.navOpen ? '60vw' : '40vw' : 'calc(100vw - 120px)'
@@ -37,6 +52,43 @@ const CustomEditor = (props:any) => {
       setWidth('40vw')
     }
   }, [ctx])
+
+  const handleCodeUpdate = (code) => {
+    setEditorContent(code)
+    // updateProgress((prog:any) => ({
+    //   ...prog, 
+    //   prog[categoryUri][courseUri]: {
+    //     ...prog[categoryUri][courseUri],
+    //     code,
+    //   }
+    // }))
+
+    // updateProgress((currentProg:any)=> ({
+    //   ...currentProg,
+    // }))
+
+    updateProgress((p:any) => ({
+        ...p, 
+        categoryUri: {
+            ...p[categoryUri],
+            courseUri:{
+                ...p[categoryUri][courseUri],
+                stat: 'some stat',
+                code: 'some code???'
+            }
+        }
+    }))
+
+
+  }
+
+  const handleTests = (errorContent: string) => {
+    props.tests.forEach((test)=>{
+      
+      
+    })
+    setEditorErrors(errorContent)
+  }
 
   const handleCompile = async () => {
     setEditorErrors('Compiling code...')
@@ -63,10 +115,37 @@ const CustomEditor = (props:any) => {
         setCompiledOutput('Errors during compilation...')
       }
       setEditorErrors(errorContent)
+      handleTests(errorContent)
     }else{
       console.log(response)
     }
   }
+
+  useEffect(()=>{
+    if(ctx.address){
+      console.log('EDITOR | OG PROGRESS:', progress)
+      if(categoryUri in progress){
+        console.log('EDITOR | found category progress')
+        if(courseUri in progress[categoryUri]){
+          console.log('EDITOR | found course progress')
+          if('code' in progress[categoryUri][courseUri]){
+            console.log('EDITOR | found code progress')
+            setEditorContent(progress[categoryUri][courseUri].code)
+            
+          }
+          
+        }else{
+          console.log('EDITOR | created course progress')
+          progress[categoryUri][courseUri] = {}
+        }
+      }else{
+        console.log('EDITOR | created category progress')
+        progress[categoryUri] = {}
+      }
+      updateProgress(progress)
+      console.log('EDITOR | set new progress object:', progress)
+    }
+  },[ctx.address])
 
 
   return (

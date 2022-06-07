@@ -10,16 +10,17 @@ interface AccessContainerProps {
     children?: any;
 }
 
+
 const AccessContainer = (props:AccessContainerProps) => {
     const [verified, setVerified] = useState(false)
     const [expired, setExpired] = useState(false)
     const {ctx, setCtx, connect, reset} = useConnectionManager()
-    // const { connect, reset } = connectionManager(ctx, setCtx)
     const [showConnectModal, setShowConnectModal] = useState(true)
+
 
     const verifyData = async () => {
         let tokenData = localStorage.getItem(CONSTANTS.JWT_STORAGE_KEY) || null
-        console.log('ACCESS | STORED TOKEN:', tokenData)
+        console.log('ACCESS | FOUND STORAGE TOKEN:', tokenData)
 
         if(!tokenData){
             console.log('ACCESS | No tokenData found:', tokenData)
@@ -66,7 +67,7 @@ const AccessContainer = (props:AccessContainerProps) => {
 
     useEffect(()=>{
         verifyData()
-    }, [ctx])
+    }, [ctx.address])
 
     if(props.restricted && expired){
         return(

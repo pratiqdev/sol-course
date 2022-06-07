@@ -87,10 +87,21 @@ const myFunction = (arg) => {
 </Instructions>
 
             <Editor 
-            storage='intro/standard'
+            URI='INTRO/GETTING_STARTED'
             code={`// custom code defined in 'standard' - non-mdx file (tsx)`} 
             tests={[
-                {test1: 'a test'}
+                {
+                    uri: 'INTRO/GETTING_STARTED/TEST_1',
+                    type: 'error_type?',
+                    title: 'Missing Keyword "uint64"',
+                    message: 'This is a long form message for this error type/situation',
+                    feedback:{
+                        suggestion: 'Learn about *this* before taking the test',
+                        links:{
+                            'https://google.com/images/cats': 'Cat Pictures to Study'
+                        }
+                    }
+                }
             ]}
             />
         </Shell>

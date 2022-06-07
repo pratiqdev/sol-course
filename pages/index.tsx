@@ -19,7 +19,7 @@ import {
 import courseList from '@data/courseList';
 import { heights } from '@mantine/core/lib/components/Button/Button.styles';
 import useConnectionManager from '@utils/hooks/useConnectionManager';
-import { useUserContext } from '@utils/context';
+import { useGlobalContext } from '@utils/context';
 import { ellipseAddress } from '@utils/utilities';
 
 import {

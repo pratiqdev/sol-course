@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useUserContext } from '@utils/context'
+import { useGlobalContext } from '@utils/context'
 import { Button, Text, MediaQuery } from '@mantine/core'
 import { useRouter } from 'next/router'
 import { MDXProvider } from '@mdx-js/react'
@@ -7,7 +7,7 @@ import Blockquote from '@instructions/Blockquote'
 import CodeBlock from '@instructions/CodeBlock'
 
 const Instructions = (props: any) => {
-    const { ctx, setCtx } = useUserContext()
+    const { ctx, setCtx } = useGlobalContext()
     const router = useRouter()
     const routerSplit = router.asPath.split('/')
     const currentCategory = routerSplit[2]

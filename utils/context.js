@@ -1,9 +1,9 @@
 // src/context/state.js
 import { createContext, useContext, useState } from 'react';
 
-const UserContext = createContext();
+const GlobalContext = createContext();
 
-export function UserContextWrapper({ children }) {
+export function GlobalContextWrapper({ children }) {
   let initialCtx = {
     chainId: 1,
     address: null,
@@ -11,18 +11,19 @@ export function UserContextWrapper({ children }) {
     isHolder: false,
     isVerified: false,
     navOpen: true,
-    instructionsOpen: true
+    instructionsOpen: true,
+    progress: {}
   }
   const [ctx, setCtx] = useState(initialCtx)
   
 
   return (
-    <UserContext.Provider value={{ctx, setCtx}}>
+    <GlobalContext.Provider value={{ctx, setCtx}}>
       {children}
-    </UserContext.Provider>
+    </GlobalContext.Provider>
   );
 }
 
-export function useUserContext() {
-  return useContext(UserContext);
+export function useGlobalContext() {
+  return useContext(GlobalContext);
 }

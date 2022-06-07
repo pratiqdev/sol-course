@@ -3,37 +3,20 @@ import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 import { Text, Input, NativeSelect, Button } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import useConnectionManager from '@utils/hooks/useConnectionManager';
+import { IQuestionField } from '@utils/interfaces'
 
 
-interface Question {
-  /** The type of input to render */
-  type?: 'string' | 'options';
-  /** The question that appears in the questionnaire */
-  question: string;
-  /** The correct answer. Matched lowercase and whitespace trimmed */
-  answer: string;
-  /** Array of options for dropdown menu */
-  options?: string[];
-  /** User feedback for this question */
-  feedback: {
-    /** Shows feedback under the question if answered incorrectly */
-    response: string;
-    /** Shows before the course final test for study suggestions */
-    suggestion?: string;
-    /** Related links that can provide more info for the user */
-    links?: {[key: string]: string;}
-  }
-}
 interface QuestionnaireProps {
-  qas: Question[],
+  qas: IQuestionField[],
   dataKey: string;
+  URI: string;
 }
 
 
 const Questionnaire = (props:QuestionnaireProps) => {
 
   const [width, setWidth] = useState('calc(100vw - 120px)')
-  // const { ctx, setCtx } = useUserContext()
+  // const { ctx, setCtx } = useGlobalContext()
   const { ctx, setCtx, progress, updateProgress } = useConnectionManager()
   const isMobile = useMediaQuery('(max-width: 992px)');
 

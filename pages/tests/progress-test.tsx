@@ -1,4 +1,4 @@
-import { useUserContext } from "@utils/context";
+import { useGlobalContext } from "@utils/context";
 import { useState } from "react";
 import useConnectionManager from "@utils/hooks/useConnectionManager";
 
@@ -35,6 +35,33 @@ const ProgressUpdateTester = () => {
                 <button onClick={()=> updateProgress(() => ({'new-progress':'was updated again!!'}))}>Update 2 (cb unused)</button>
                 <button onClick={()=> updateProgress(() => ({}))}>Update 3 (cb empty)</button>
                 <button onClick={()=> updateProgress((p:any) =>({...p, 'test-3':'new tuple'}))}>Update 4 (cb spread)</button>
+
+                <button onClick={()=> updateProgress((p:any) =>
+                    ({
+                        ...p, 
+                        'INTRO': {
+                            ...p['INTRO'],
+                            'GETTING_STARTED':{
+                                ...p['INTRO']['GETTING_STARTED'],
+                                stat: 'some stat',
+                                code: 'some code???'
+                            }
+                        }
+                    })
+                )}>Update 5 (code)</button>
+
+                <button onClick={()=> updateProgress((p:any) =>
+                    ({
+                        ...p, 
+                        'INTRO': {
+                            ...p['INTRO'],
+                            'GETTING_STARTED':{
+                                ...p['INTRO']['GETTING_STARTED'],
+                                code: 'new code!!'
+                            }
+                        }
+                    })
+                )}>Update 6 (code change)</button>
 
 
             <button onClick={()=> updateProgress({'reset':'progress'})}>Reset Progress (no cb)</button>

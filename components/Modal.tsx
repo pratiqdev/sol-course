@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Modal, Button, Group } from '@mantine/core';
-import { useUserContext } from '@utils/context';
+import { useGlobalContext } from '@utils/context';
 
 const CustomModal = (props:any) => {
   const [opened, setOpened] = useState(props.open ? true : false);
-  const {ctx, setCtx} = useUserContext()
+  const {ctx, setCtx} = useGlobalContext()
 
   useEffect(()=>{
     setOpened(props.open)

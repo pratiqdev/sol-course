@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
-import { useUserContext } from '@utils/context';
+import { useGlobalContext } from '@utils/context';
 
 
 const CustomAside = (props:any) => {
 
   const [editorContent, setEditorContent] = useState(props.code || 'no-code-props')
   const [width, setWidth] = useState('calc(100vw - 120px)')
-  const { ctx, setCtx } = useUserContext()
+  const { ctx, setCtx } = useGlobalContext()
 
   useEffect(()=>{
     // ctx.instructionsOpen ? ctx.navOpen ? '60vw' : '40vw' : 'calc(100vw - 120px)'

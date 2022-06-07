@@ -9,14 +9,14 @@ import { getChainData } from '../utilities';
 import axios from 'axios'
 
 import verifyAddress from '@utils/verifyAddress';
-import { useUserContext } from '../context';
+import { useGlobalContext } from '../context';
 
 
 
 
 const useConnectionManager = () => {
 
-  const {ctx, setCtx} = useUserContext()
+  const {ctx, setCtx} = useGlobalContext()
 
   const [progress, setProgress] = useState<any>({})
   const [latestCategoryState, setLatestCategoryState] = useState<any>()
@@ -152,7 +152,8 @@ const useConnectionManager = () => {
   };
 
   const resetApp = async () => {
-    setProgress({})
+    // setProgress({})
+    setCtx({...ctx, progress: {}})
     setRefreshTrigger(b => !b)  
     console.log('index | resetApp')
     localStorage.removeItem("WEB3_CONNECT_CACHED_PROVIDER");
@@ -249,6 +250,9 @@ const useConnectionManager = () => {
           if(typeof cb === 'function'){
               console.log('cb function?')
               const progressObject = cb(progress)
+              // setCtx({...ctx, progress: progressObject})
+              setProgress(progressObject)
+              
               await axios.post('/api/set-progress', {userAddress: ctx.address, data:{progressObject}})
           }else{
               console.log('reset?')
@@ -287,6 +291,8 @@ const useConnectionManager = () => {
           if(ctx.address){
               const { data } = await axios.post('/api/get-progress', {userAddress: ctx.address})
               setProgress(data.progressObject)
+              // setCtx({...ctx, progress: data.progressObject})
+
               setLatestCategoryState(data.latestCategory)
               setLatestCourseState(data.latestCourse)
           }
