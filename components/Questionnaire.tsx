@@ -1,11 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
-import { useUserContext } from '@utils/context';
 import { Text, Input, NativeSelect, Button } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { format } from 'path';
-import useConnectionManager from '@utils/connection';
-import { json } from 'stream/consumers';
+import useConnectionManager from '@utils/hooks/useConnectionManager';
 
 
 interface Question {

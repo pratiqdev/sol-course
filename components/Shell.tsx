@@ -39,23 +39,23 @@ const Shell = (props: ShellProps) => {
   const currentPage = routerSplit[3]
   //@ts-ignore
   // const currentAccIndex = courseList.indexOf(courseList.find((x, i) => x.title.toLowerCase() === currentCategory.toLowerCase().replace('-',' '))) || 0
-  console.log('currentCategory:', currentCategory)
-  console.log('currentPage:', currentPage)
-  console.log('currentIndex:', props.categoryIndex)
+  // console.log('currentCategory:', currentCategory)
+  // console.log('currentPage:', currentPage)
+  // console.log('currentIndex:', props.categoryIndex)
   const [accordionState, handlers] = useAccordionState({ total: Object.entries(courseList).length, initialItem: props.categoryIndex });
   const isMobile = useMediaQuery('(max-width: 992px)');
 
   let fixedNav = true
   if(opened && isMobile){
-    console.log('AAA')
+    // console.log('AAA')
     fixedNav = true
   }else if(!opened && isMobile){
-    console.log('BBB')
+    // console.log('BBB')
     fixedNav = false
   }else if(opened && !isMobile){
-    console.log('CCC')
+    // console.log('CCC')
   }else{
-    console.log('DDD')
+    // console.log('DDD')
     fixedNav = true
   }
 
