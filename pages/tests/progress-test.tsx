@@ -15,6 +15,7 @@ const ProgressUpdateTester = () => {
         latestCourse, 
         latestCategory, 
         updateProgress, 
+        resetProgress,
         refresh, 
         setLatestCategory, 
         setLatestCourse 
@@ -31,6 +32,7 @@ const ProgressUpdateTester = () => {
             <hr />
 
             <div className="quik-menu">
+                <button onClick={resetProgress}>Reset Progress</button>
                 <button onClick={()=> updateProgress((p:any) =>({...p, 'new-progress':'was updated!!'}))}>Update 1 (cb spread)</button>
                 <button onClick={()=> updateProgress(() => ({'new-progress':'was updated again!!'}))}>Update 2 (cb unused)</button>
                 <button onClick={()=> updateProgress(() => ({}))}>Update 3 (cb empty)</button>
@@ -40,9 +42,7 @@ const ProgressUpdateTester = () => {
                     ({
                         ...p, 
                         'INTRO': {
-                            ...p['INTRO'],
                             'GETTING_STARTED':{
-                                ...p['INTRO']['GETTING_STARTED'],
                                 stat: 'some stat',
                                 code: 'some code???'
                             }

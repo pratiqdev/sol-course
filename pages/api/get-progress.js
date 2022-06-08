@@ -17,7 +17,7 @@ export default async function handler(req, res) {
           progressObject: {} 
         })
         
-        res.status(200).json({})
+        res.status(200).json(null)
     }
   }catch(err){
     console.log(err)

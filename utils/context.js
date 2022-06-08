@@ -12,7 +12,9 @@ export function GlobalContextWrapper({ children }) {
     isVerified: false,
     navOpen: true,
     instructionsOpen: true,
-    progress: {}
+    progress: {
+      someStat: '99'
+    }
   }
   const [ctx, setCtx] = useState(initialCtx)
   

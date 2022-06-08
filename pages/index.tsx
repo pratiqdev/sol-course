@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link'
 import {
   AppShell,
@@ -36,6 +36,49 @@ Check a localStorage var
 if started = false => showStart => setStarted false
 
 */
+
+const Debugger = (props) => {
+  const { 
+    ctx, 
+    setCtx, 
+    
+    connect, 
+    reset, 
+    
+    progress, 
+    latestCourse, 
+    latestCategory, 
+    updateProgress, 
+    refresh, 
+    setLatestCategory, 
+    setLatestCourse 
+} = useConnectionManager()
+
+  const [open, setOpen] = useState(true)
+
+  const [progressState, setProgressState] = useState('empty')
+  const [contextState, setContextState] = useState('empty')
+
+  useEffect(()=>{
+    let context = {...ctx}
+    delete context['w3m']
+    setContextState(JSON.stringify(context, null, 2))
+    setProgressState(JSON.stringify(progress, null, 2))
+
+  },[ctx, progress])
+  
+
+  return(
+    <div className={open ? 'debugger-open' : 'debugger-closed'} onClick={()=>setOpen(b=>!b)}>
+        <h4>Context</h4>
+        <pre>{contextState}</pre>
+        <hr/>
+        <h4>Progress</h4>
+        <pre>{progressState}</pre>
+    </div>
+  )
+}
+
 
 
 export default function AppShellDemo() {

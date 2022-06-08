@@ -32,7 +32,7 @@ const Shell = (props: ShellProps) => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [shrinkNav, setShrinkNav] = useState(false)
-  const { ctx, setCtx, connect } = useConnectionManager()
+  const { ctx, setCtx, connect, checkCompletion } = useConnectionManager()
   const router = useRouter()
   const routerSplit = router.asPath.split('/')
   const currentCategory = routerSplit[2]
@@ -87,10 +87,13 @@ const Shell = (props: ShellProps) => {
               <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
                 {Object.entries(courseList).map(([categoryUri, categoryObject],i) => 
                   <Accordion.Item key={categoryObject.title} label={categoryObject.title} style={{background: i === props.categoryIndex ? '#335' : '#222', fontSize: '.8rem'}}>
-                      {Object.entries(categoryObject.courses).map(([courseUri, courseObject]) => 
-                        <Box key={courseObject.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', minWidth: '100%','&:hover': { background: '#222'}}}>
-                          <Link href={`/courses/${courseObject.file}`}>{courseObject.title}</Link>
-                        </Box>
+                      {Object.entries(categoryObject.courses).map(([courseUri, courseObject]) => {
+                        let complete = checkCompletion(`${courseObject.file}/${courseObject.title}`)
+                        return(
+                          <Box key={courseObject.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', minWidth: '100%','&:hover': { background: '#222'}}}>
+                            <Link href={`/courses/${courseObject.file}`}><>{courseObject.title} / {complete.toString()}</></Link>
+                          </Box>
+                        )}
                       )}
                   </Accordion.Item>
                 )}

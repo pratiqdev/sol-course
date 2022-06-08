@@ -9,6 +9,7 @@ import {
 } from '@mantine/core'
 import axios from 'axios';
 import { ICodeTest } from '@utils/interfaces';
+import { language } from 'gray-matter';
 
 
 /**
@@ -23,16 +24,19 @@ interface ICustomEditorProps{
 
 const CustomEditor = (props:ICustomEditorProps) => {
 
-  let [categoryUri, courseUri] = props.URI.split('/')
+  // let [categoryUri, courseUri] = props.URI.split('/')
+
+  const { URI, code, tests} = props
 
 
 
-  const [editorContent, setEditorContent] = useState<string|undefined>(props.code || 'no-code-props')
+  const [editorContent, setEditorContent] = useState<string|undefined>('loading...')
   const [editorErrors, setEditorErrors] = useState('You must compile your code first...')
   const [compiledOutput, setCompiledOutput] = useState('You must compile your code first...')
+  const [doneLoading, setDoneLoading] = useState(false)
   const [showEditor, setShowEditor] = useState(true)
   const [width, setWidth] = useState('calc(100vw - 120px)')
-  const { ctx, setCtx, progress, updateProgress } = useConnectionManager()
+  const { ctx, setCtx, refresh, checkStorage, updateProgress } = useConnectionManager()
 
   useEffect(()=>{
     // ctx.instructionsOpen ? ctx.navOpen ? '60vw' : '40vw' : 'calc(100vw - 120px)'
@@ -53,34 +57,41 @@ const CustomEditor = (props:ICustomEditorProps) => {
     }
   }, [ctx])
 
-  const handleCodeUpdate = (code) => {
+
+
+
+
+
+
+
+  const handleCodeUpdate = (code: string) => {
+    // if(!doneLoading){
+    //   console.log('STORE | cant update code while loading...')
+    //   return;
+    // }
     setEditorContent(code)
-    // updateProgress((prog:any) => ({
-    //   ...prog, 
-    //   prog[categoryUri][courseUri]: {
-    //     ...prog[categoryUri][courseUri],
-    //     code,
-    //   }
-    // }))
 
-    // updateProgress((currentProg:any)=> ({
-    //   ...currentProg,
-    // }))
+    let newProg = {...ctx.progress}
 
-    updateProgress((p:any) => ({
-        ...p, 
-        categoryUri: {
-            ...p[categoryUri],
-            courseUri:{
-                ...p[categoryUri][courseUri],
-                stat: 'some stat',
-                code: 'some code???'
-            }
+    if(ctx.address && ctx.progress){
+      if(URI in newProg){
+          newProg[URI]['code'] = code || 'where is the code?'
+        }else{
+          newProg[URI] = {}
         }
-    }))
+    }else{
+      newProg[URI] = {}
+    }
+
+    updateProgress((p) => ({...p, ...newProg}))
 
 
   }
+
+
+
+
+
 
   const handleTests = (errorContent: string) => {
     props.tests.forEach((test)=>{
@@ -121,32 +132,36 @@ const CustomEditor = (props:ICustomEditorProps) => {
     }
   }
 
-  useEffect(()=>{
-    if(ctx.address){
-      console.log('EDITOR | OG PROGRESS:', progress)
-      if(categoryUri in progress){
-        console.log('EDITOR | found category progress')
-        if(courseUri in progress[categoryUri]){
-          console.log('EDITOR | found course progress')
-          if('code' in progress[categoryUri][courseUri]){
-            console.log('EDITOR | found code progress')
-            setEditorContent(progress[categoryUri][courseUri].code)
-            
-          }
-          
-        }else{
-          console.log('EDITOR | created course progress')
-          progress[categoryUri][courseUri] = {}
-        }
-      }else{
-        console.log('EDITOR | created category progress')
-        progress[categoryUri] = {}
-      }
-      updateProgress(progress)
-      console.log('EDITOR | set new progress object:', progress)
-    }
-  },[ctx.address])
 
+
+
+  const handleLoadCodeFromStore = async () => {
+    if(!ctx.connected || !ctx.address || !ctx.progress){
+      console.log('STORE | cant load store without connecting / address / progress...')
+      setEditorContent(props.code)
+      return;
+    }
+
+
+    console.log('store loaded...')
+    if(URI in ctx.progress && 'code' in ctx.progress[URI]){
+      console.log('EDITOR | STORE | loading code from store:', ctx.progress[URI].code)
+      setEditorContent(ctx.progress[URI].code)
+      // setDoneLoading(true)
+    }else{
+      console.log('EDITOR | STORE | no code in store??', ctx)
+    }
+  }
+
+
+
+
+
+
+  useEffect(()=>{ 
+    handleLoadCodeFromStore()
+  },[ctx.address, ctx.connected, ctx.isVerified])
+ 
 
   return (
     <>
@@ -158,7 +173,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
         height="calc(70vh - 70px )"
         defaultLanguage="sol"
         value={editorContent}
-        onChange={setEditorContent}
+        onChange={(c) => handleCodeUpdate(c || '')}
         theme={'vs-dark'}
         /> 
         : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto' }}>{compiledOutput}</pre>
@@ -166,10 +181,12 @@ const CustomEditor = (props:ICustomEditorProps) => {
           <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
             <Group spacing="xs" style={{padding: '.5rem'}}>
               <Button size='xs' variant='filled' color='lime' onClick={handleCompile}>Compile</Button>
+              {/* <Button size='xs' variant='filled' color='lime' onClick={()=>console.log(ctx.progress)}>Log Prog</Button> */}
+              {/* <Button size='xs' variant='filled' color='lime' onClick={checkStorage}>Check Store</Button> */}
               <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Compiled' : 'Show Editor'}</Button>
             </Group>
             <Group spacing="xs" style={{padding: '.5rem'}}>
-              <Button size='xs' variant='filled' color='red'  onClick={()=> setEditorContent(props.code)}>Reset</Button>
+              <Button size='xs' variant='filled' color='red'  onClick={()=> handleCodeUpdate(props.code)}>Reset</Button>
             </Group>
           </div>
           <pre style={{padding: '.25rem', height: '27vh', fontSize: '.6rem', overflow: 'auto', paddingBottom: '1rem', whiteSpace: 'pre-wrap'}}>{editorErrors}</pre>
@@ -185,7 +202,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
         height="calc(70vh - 70px )"
         defaultLanguage="sol"
         value={editorContent}
-        onChange={setEditorContent}
+        onChange={(c) => handleCodeUpdate(c || '')}
         theme={'vs-dark'}
         /> 
         : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto' }}>{compiledOutput}</pre>
