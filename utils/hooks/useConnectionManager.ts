@@ -320,15 +320,20 @@ const useConnectionManager = () => {
 
   const checkCompletion = (URI) => {
     if(!ctx.address || !ctx.progress){
-      console.log('STORE | completion | cant check without address or progress')
+      // console.log('STORE | completion | cant check without address or progress')
       return 0;
     }
 
     if(URI in ctx.progress){
-      console.log('uri found in progress object')
-      return 2
+      if(ctx.progress[URI].complete){
+        // console.log('COMPLETION | complete')
+        return 3
+      }else{
+        // console.log('COMPLETION | uri found in progress object')
+        return 2
+      }
     }else{
-      console.log('no uri in progress object')
+      // console.log('COMPLETION | no uri in progress object')
       return 1
     }
 

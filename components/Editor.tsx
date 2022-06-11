@@ -36,7 +36,8 @@ const CustomEditor = (props:ICustomEditorProps) => {
   const [doneLoading, setDoneLoading] = useState(false)
   const [showEditor, setShowEditor] = useState(true)
   const [width, setWidth] = useState('calc(100vw - 120px)')
-  const { ctx, setCtx, refresh, checkStorage, updateProgress } = useConnectionManager()
+  const [testPassed, setTestPassed] = useState(false)
+  const { ctx, setCtx, progress, refresh, checkStorage, updateProgress } = useConnectionManager()
 
   useEffect(()=>{
     // ctx.instructionsOpen ? ctx.navOpen ? '60vw' : '40vw' : 'calc(100vw - 120px)'
@@ -75,7 +76,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
     if(ctx.address && ctx.progress){
       if(URI in newProg){
-          newProg[URI]['code'] = code || 'where is the code?'
+          newProg[URI]['code'] = code
         }else{
           newProg[URI] = {}
         }
@@ -94,7 +95,25 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
 
   const handleTests = (errorContent: string) => {
-    props.tests.forEach((test)=>{
+    props.tests.forEach((test:any, i: number)=>{
+      const reg = new RegExp(test.regex, 'gi');
+
+      if(reg.test(editorContent || '')){
+        setTestPassed(false)
+
+        
+        
+      errorContent += `${'-'.repeat(100)}\nTEST ERROR ${i+1} (${test.type})}`
+      
+      errorContent += 
+`
+${test.title}
+${test.message}
+
+`
+}else{
+  setTestPassed(true)
+}
       
       
     })
@@ -117,7 +136,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
       let errorContent = `Compiled with version: ${response.data.version} in ${response.data.duration}s\n${numErrors ? `${numErrors} ${numErrors > 1 ? 'errors' : 'error'}:\n\n` : 'No errors\n\n'}`
       if(output.errors && output.errors.length){
         output.errors.forEach((x:any, i:number) => {
-          errorContent += `${'-'.repeat(100)}\nERROR ${i+1} (${x.errorCode}): ${x.formattedMessage.replace('--> code.sol:', '')}`
+          errorContent += `${'-'.repeat(100)}\nCOMPILE ERROR ${i+1} (${x.errorCode}): ${x.formattedMessage.replace('--> code.sol:', '')}`
         })
       }
       if(output.contracts){
@@ -125,7 +144,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
       }else{
         setCompiledOutput('Errors during compilation...')
       }
-      setEditorErrors(errorContent)
+      // setEditorErrors(errorContent)
       handleTests(errorContent)
     }else{
       console.log(response)
@@ -136,7 +155,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
 
   const handleLoadCodeFromStore = async () => {
-    if(!ctx.connected || !ctx.address || !ctx.progress){
+    if(!ctx.connected || !ctx.address || !progress){
       console.log('STORE | cant load store without connecting / address / progress...')
       setEditorContent(props.code)
       return;
@@ -144,7 +163,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
 
     console.log('store loaded...')
-    if(URI in ctx.progress && 'code' in ctx.progress[URI]){
+    if(URI in progress && 'code' in progress[URI]){
       console.log('EDITOR | STORE | loading code from store:', ctx.progress[URI].code)
       setEditorContent(ctx.progress[URI].code)
       // setDoneLoading(true)

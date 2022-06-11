@@ -1,7 +1,7 @@
 
 
 export interface IQuestionField {
-  uri: string;
+  // uri: string;
   /** The type of input to render */
   type?: 'string' | 'options';
   /** The question that appears in the questionnaire */
@@ -25,7 +25,8 @@ export interface IQuestionField {
  * Tests for user editor input
  */
 export interface ICodeTest {
-  uri: string;
+  // uri: string;
+  regex: string;
   /** The type of error found */
   type: string;
   /** A short error message */

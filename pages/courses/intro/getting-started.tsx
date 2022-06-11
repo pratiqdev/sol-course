@@ -87,11 +87,11 @@ const myFunction = (arg) => {
 </Instructions>
 
             <Editor 
-            URI='INTRO/GETTING_STARTED'
+            URI='intro/getting-started' // should match file path
             code={`// custom code defined in 'standard' - non-mdx file (tsx)`} 
             tests={[
                 {
-                    uri: 'INTRO/GETTING_STARTED/TEST_1',
+                    regex: 'uint64',
                     type: 'error_type?',
                     title: 'Missing Keyword "uint64"',
                     message: 'This is a long form message for this error type/situation',

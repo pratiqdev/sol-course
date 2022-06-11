@@ -18,7 +18,7 @@ const CoursePage = () => {
             </Instructions>
 
             <Questionnaire 
-                dataKey='standard-qa'
+                uri='intro/standard-qa'
                 qas={[
                     {
                         question: 'A question!!!',
