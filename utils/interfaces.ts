@@ -3,7 +3,7 @@
 export interface IQuestionField {
   // uri: string;
   /** The type of input to render */
-  type?: 'string' | 'options';
+  type?: 'string' | 'options' | 'boolean';
   /** The question that appears in the questionnaire */
   question: string;
   /** The correct answer. Matched lowercase and whitespace trimmed */
@@ -12,6 +12,7 @@ export interface IQuestionField {
   options?: string[];
   /** User feedback for this question */
   feedback: {
+    title: string;
     /** Shows feedback under the question if answered incorrectly */
     response: string;
     /** Shows before the course final test for study suggestions */
@@ -24,7 +25,7 @@ export interface IQuestionField {
 export interface IFinalQuestions {
   // uri: string;
   /** The type of input to render */
-  type?: 'string' | 'options';
+  type?: 'string' | 'options' | 'boolean';
   /** The question that appears in the questionnaire */
   question: string;
   /** The correct answer. Matched lowercase and whitespace trimmed */
@@ -51,6 +52,8 @@ export interface ICodeTest {
   message?: string;
   /** User feedback for test failure */
   feedback: {
+    /** Title used to prevent dupes in suggestion object */
+    title: string;
     /** Suggestions displayed before course end test */
     suggestion?: string;
     /** Links provide resources to user */

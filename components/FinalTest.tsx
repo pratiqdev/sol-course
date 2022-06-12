@@ -4,6 +4,7 @@ import { Text, Input, NativeSelect, Button } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import useConnectionManager from '@utils/hooks/useConnectionManager';
 import { IFinalQuestions } from '@utils/interfaces'
+import courseList from '@data/courseList'
 
 
 interface QuestionnaireProps {
@@ -20,17 +21,17 @@ const FinalTest = (props:QuestionnaireProps) => {
   const {categoryUri, courseUri} = props
 
   const [width, setWidth] = useState('calc(100vw - 120px)')
-  // const { ctx, setCtx } = useGlobalContext()
-  const { ctx, setCtx, progress, updateProgress } = useConnectionManager()
+  const { ctx, useUriStore} = useConnectionManager()
+  const [store, setStore] = useUriStore(props.categoryUri, props.courseUri)
+  const [catStore, setCatStore] = useUriStore(props.categoryUri)
   const isMobile = useMediaQuery('(max-width: 992px)');
 
   const [wasSubmitted, setWasSubmitted] = useState(false)
   const [score, setScore] = useState(0)
   const [maxScore, setMaxScore] = useState(0)
-  const [responseIndex, setResponseIndex] = useState(0)
   const [responses, setResponses] = useState<any>([])
-  const [stableResponses, setStableResponses] = useState<any>([])
   const [showSuggestions, setShowSuggestions] = useState(true)
+  const [categoryComplete, setCategoryComplete] = useState(false)
 
 
 
@@ -63,7 +64,7 @@ const FinalTest = (props:QuestionnaireProps) => {
 
     // set "wasSubmitted" from progress[uri]
     useEffect(()=>{
-      if(progress && progress[categoryUri] && progress[categoryUri][courseUri]?.wasSubmitted){
+      if(store.wasSubmitted){
         setWasSubmitted(true)
       }
     },[])
@@ -122,7 +123,7 @@ const FinalTest = (props:QuestionnaireProps) => {
     }
 
     useEffect(()=>{
-      if(progress[categoryUri][courseUri]?.wasSubmitted){
+      if(store?.wasSubmitted){
         setWasSubmitted(true)
       }
     },[])
@@ -178,7 +179,7 @@ const FinalTest = (props:QuestionnaireProps) => {
   const handleLoadQasFromStore = async () => {
 
     console.log('FinalTest | LOADING STORE')
-    if(!ctx.connected || !ctx.address || !ctx.progress){
+    if(!ctx.connected || !ctx.address || !store){
       console.log('FinalTest | STORE | cant load store without connecting / address / progress...')
 
       let tempResponses:any[] = []
@@ -198,26 +199,21 @@ const FinalTest = (props:QuestionnaireProps) => {
 
 
     console.log('FinalTest | store loaded...')
-    if(
-      ctx.progress 
-      && categoryUri in ctx.progress 
-      && courseUri in ctx.progress[categoryUri] 
-      && 'qas' in ctx.progress[categoryUri][courseUri]
-    ){
-      console.log('FinalTest | STORE | loading code from store:', ctx.progress[categoryUri][courseUri].qas)
+    if('qas' in store){
+      console.log('FinalTest | STORE | loading code from store:', store)
       // setEditorContent(ctx.progress[uri].code)
       let loadedScore = 0
       let tempResponses:any[] = []
       props.qas.forEach((q:any, i:number) => {
 
-        if(q.answer.toLowerCase().trim() === ctx.progress[categoryUri][courseUri].qas[i].givenAnswer.toLowerCase().trim()){
+        if(q.answer.toLowerCase().trim() === store.qas[i].givenAnswer.toLowerCase().trim()){
           loadedScore++
         }
 
 
         tempResponses.push({
           ...q,
-          givenAnswer: ctx.progress[categoryUri][courseUri]?.qas[i]?.givenAnswer || '',
+          givenAnswer: store?.qas[i]?.givenAnswer || '',
           // isCorrect: false,
         })
         setResponses(tempResponses)
@@ -228,13 +224,19 @@ const FinalTest = (props:QuestionnaireProps) => {
     }else{
       console.log('FinalTest | STORE | no qas in store??', ctx)
 
-      let newProg = {...ctx.progress}
+      let tempResponses:any[] = []
+      props.qas.forEach((q:any, i:number) => {
+        tempResponses.push({
+          ...q,
+          givenAnswer: '',
+            // isCorrect: false,
+        })
+        setResponses(tempResponses)
+      })
 
-      if(ctx.progress && categoryUri in newProg && courseUri in newProg[categoryUri]){
-        newProg[categoryUri][courseUri].qas = []
-      }
 
-      updateProgress((p) => ({...p, ...newProg}))
+
+      setStore((s:any)=> ({...s, qas: tempResponses}))
 
     }
   }
@@ -243,10 +245,34 @@ const FinalTest = (props:QuestionnaireProps) => {
 
 
 
+  const checkAllComplete = () => {
+    console.log('CAC | Checking all courses are complete before test...')
+    let totalCourses = Object.entries(courseList[categoryUri].courses).length - 1 // dont include the test iin this calc
+    
+    let completeCourses = 0
+    Object.entries(catStore).forEach((item:any) => {
+      if(item[1].complete){ 
+        console.log('CAC | found complete course:', item[0])
+        completeCourses ++
+      }
+    })
+    console.log('CAC | courses:', {totalCourses, completeCourses})
+
+    setCategoryComplete(totalCourses === completeCourses)
+
+  }
+
+
+
+
+ 
 
   useEffect(()=>{
-    handleLoadQasFromStore()
-  }, [ctx.address])
+    if(ctx.address && Object.entries(catStore).length){
+      handleLoadQasFromStore()
+      checkAllComplete()
+    } 
+  }, [ctx.address, catStore])
 
 
 
@@ -305,7 +331,7 @@ const FinalTest = (props:QuestionnaireProps) => {
       }
     }
 
-    updateProgress((p) => ({...p, ...newProg}))
+    // updateProgress((p) => ({...p, ...newProg}))
 
 
   }
@@ -357,33 +383,44 @@ const FinalTest = (props:QuestionnaireProps) => {
 
 
   return (
-    <div style={{marginTop: '70px', width: '100%' , height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', padding: '1rem', paddingTop: '.5rem', overflow: 'auto', border: '1px solid red'  }}>
-      <h2 style={{margin: '0'}}>{props.title}</h2>
-      <p style={{margin: '0'}}>{props.subtitle}</p>
-      <div>
-        <Button size='sm' onClick={()=>setShowSuggestions(b => !b)}>{showSuggestions ? 'Hide Suggestions' : 'Show Suggestions'}</Button>
-      </div>
-      <hr />
+    <div style={{marginTop: '70px', width: '100%' , height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', padding: '1rem', paddingTop: '.5rem', overflow: 'auto'  }}>
+      <small>{props.categoryUri} / {props.courseUri}</small>
+      <h2 style={{margin: '0', marginTop: '1rem'}}>{props.title}</h2>
 
-      {showSuggestions 
+      {!categoryComplete 
       ? <>
-          <p>Suggestions:</p>
-          <pre style={{fontSize: '.6rem'}}>
-            {JSON.stringify(ctx.progress, null, 2)}
-          </pre>
+      <h3>You must complete all courses in this category to take the test.</h3>
       </>
       : <>
-        {responses.map((x:any, i:number) => {
-          console.log('FinalTest | remapping responses')
-          switch(x.type){
-            case 'options': return <QuestionOptions data={x} index={i} key={x.question} handleChange={handleChange} />; break;
-            default: return <QuestionString data={x} index={i} key={x.question} handleChange={handleChange} />
-          }
-        })}
-        <Button size='md' style={{marginTop: '2rem', minHeight: '2rem'}} onClick={handleSubmit}>Submit</Button>
-        {wasSubmitted && <p>SCORE: {score} / {maxScore}</p>}
 
-        <pre>{JSON.stringify(progress[categoryUri], null, 2)}</pre>
+          <p style={{margin: '0'}}>{props.subtitle}</p>
+          <div>
+            <Button size='sm' onClick={()=>setShowSuggestions(b => !b)}>{showSuggestions ? 'Hide Suggestions' : 'Show Suggestions'}</Button>
+          </div>
+          <hr />
+
+
+
+        {showSuggestions 
+        ? <>
+            <p>Suggestions:</p>
+            <pre style={{fontSize: '.6rem'}}>
+              {JSON.stringify(catStore.feedback, null, 2)}
+            </pre>
+        </>
+        : <>
+          {responses.map((x:any, i:number) => {
+            console.log('FinalTest | remapping responses')
+            switch(x.type){
+              case 'options': return <QuestionOptions data={x} index={i} key={x.question} handleChange={handleChange} />; break;
+              default: return <QuestionString data={x} index={i} key={x.question} handleChange={handleChange} />
+            }
+          })}
+          <Button size='md' style={{marginTop: '2rem', minHeight: '2rem'}} onClick={handleSubmit}>Submit</Button>
+          {wasSubmitted && <p>SCORE: {score} / {maxScore}</p>}
+
+          {/* <pre>{JSON.stringify(store, null, 2)}</pre> */}
+        </>}
       </>}
 
     </div>

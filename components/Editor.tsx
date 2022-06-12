@@ -40,6 +40,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
   const [testPassed, setTestPassed] = useState(false)
   const { ctx, useUriStore } = useConnectionManager()
   const [store, setStore] = useUriStore(props.categoryUri, props.courseUri)
+  const [catStore, setCatStore] = useUriStore(props.categoryUri)
 
   useEffect(()=>{
     // ctx.instructionsOpen ? ctx.navOpen ? '60vw' : '40vw' : 'calc(100vw - 120px)'
@@ -118,19 +119,15 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
     let numErrors = 0;
     let errorContent = ''
-    let suggestionsAccum: any[] = []
+    let feedback: any = catStore.feedback || {}
 
     
 
     const response = await axios.post('/api/solc-compile', {code: editorContent})
-    // const response = await compile(editorContent)
 
     if(response.data.success){
-      // console.log('compile success:', response.data)
-      // console.log('compiled output:', JSON.stringify(JSON.parse(response.data.output), null, 2))
       let output = JSON.parse(response.data.output)
 
-      // let errorContent = `Compiled with version: ${response.data.version} in ${response.data.duration}s\n${numErrors ? `${numErrors} ${numErrors > 1 ? 'errors' : 'error'}:\n\n` : 'No errors\n\n'}`
       if(output.errors && output.errors.length){
         output.errors.forEach((x:any, i:number) => {
           numErrors++
@@ -156,7 +153,8 @@ const CustomEditor = (props:ICustomEditorProps) => {
         ){
           numErrors++
           errorContent += `${'-'.repeat(100)}\n[${numErrors}] TEST ERROR (${test.type})\n${test.title}\n${test.message}\n\n`
-          suggestionsAccum.push(test.feedback)
+          feedback[test.feedback.title] = test.feedback
+
         }
         
       })
@@ -166,25 +164,10 @@ const CustomEditor = (props:ICustomEditorProps) => {
       setTestPassed(numErrors === 0)
 
       console.log('CODE | compile/test success - save to progress')
-      // let newProg = {...ctx.progress}
-
-      // if(ctx.address && ctx.progress && URI in newProg){
-      //   newProg[URI].complete = numErrors === 0
-      //   if('suggestions' in newProg[URI]){
-      //     newProg[URI].suggestions.push(...suggestionsAccum)
-      //   }else{
-      //     newProg[URI].suggestions = suggestionsAccum
-      //   }
-      // }
-      
-      // updateProgress((p) => ({...p, ...newProg}))
 
 
-      let newProg = {...ctx.progress}
-
-      let currentSuggestionsAccumulator = store.suggestions || []
-      currentSuggestionsAccumulator.push(...suggestionsAccum)
-      setStore((s:any) => ({...s, suggestions: currentSuggestionsAccumulator}))
+      setStore((s:any) => ({...s, complete: numErrors === 0}))
+      setCatStore((s:any)=>({...s, feedback}))
   
 
 
@@ -205,8 +188,8 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
 
   useEffect(()=>{ 
-    setEditorContent(store.code || 'no-store-code?')
-  },[ctx.address, ctx.connected, ctx.isVerified])
+    setEditorContent(store.code || props.code)
+  },[ctx.address, ctx.connected, ctx.isVerified, store])
  
 
   return (

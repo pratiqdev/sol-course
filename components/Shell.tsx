@@ -92,7 +92,7 @@ const Shell = (props: ShellProps) => {
 
                         return(
                           <Box key={courseObject.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', marginLeft: '-10px', marginRight: '-10px',cursor: 'pointer', minWidth: '100%', borderBottom: '1px solid transparent', '&:hover': { borderBottom: '1px solid #555'}}}>
-                            <StatusBadge file={courseObject.file}/> <Link href={`/courses/${courseObject.file}`}>{courseObject.title}</Link>
+                            <StatusBadge path={courseObject.file}/> <Link href={`/courses/${courseObject.file}`}>{courseObject.title}</Link>
                           </Box>
                         )}
 

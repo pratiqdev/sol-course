@@ -16,7 +16,11 @@ const CoursePage = () => {
 
             </Instructions>
 
-            <CustomAside style={{padding: '1rem', paddingTop: '0', backgroundImage: 'linear-gradient(45deg, #555, #99c, #222)'}}>
+            <CustomAside 
+                categoryUri='intro'
+                courseUri='standard-custom'
+                style={{padding: '1rem', paddingTop: '0', backgroundImage: 'linear-gradient(45deg, #555, #99c, #222)'}}
+                >
                 <h1>Fully custom components...</h1>
                 <img src='https://placekitten.com/400/600' alt='cats' />
             </CustomAside>

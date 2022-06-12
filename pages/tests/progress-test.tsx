@@ -15,7 +15,7 @@ const ProgressUpdateTester = () => {
         useUriStore,
     } = useConnectionManager()
 
-    const [store, setStore] = useUriStore('intro')
+    const [store, setStore] = useUriStore('intro', 'standard-qa')
 
     
     return(
@@ -31,9 +31,10 @@ const ProgressUpdateTester = () => {
             <div className="quik-menu">
                 {/* <button onClick={resetProgress}>Reset Progress</button> */}
                 <button onClick={()=>setStore((s:any) => ({...s, 'newState':'here'}))}>Set Progress</button>
+                <button onClick={()=>setStore((s:any) => s)}>Check Progress</button>
             </div>
    
-            <pre>{JSON.stringify(store, null, 2)}</pre>
+            <pre style={{fontSize: '.6rem'}}>{JSON.stringify({...store}, null, 2)}</pre>
         </>
     )
 }

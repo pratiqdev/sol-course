@@ -14,7 +14,7 @@ const CoursePage = () => {
 
             
 <Instructions>
-<h2>Getting Started</h2>
+<h2>Markdown Style Guide</h2>
 
 <p>Welcome to {constants.SITE_NAME}</p>
 
@@ -109,6 +109,7 @@ contract HelloWorld {
                     title: 'Missing: string public greet = "Hello, World!"',
                     message: 'Add this code to the contract',
                     feedback:{
+                        title: 'Cats',
                         suggestion: 'Learn about *this* before taking the test',
                         links:{
                             'https://google.com/images/cats': 'Cat Pictures to Study'
@@ -122,9 +123,10 @@ contract HelloWorld {
                     title: 'Single quotes not allowed',
                     message: 'Use double quotes instead of single quotes',
                     feedback:{
+                        title: 'Dogs',
                         suggestion: 'Learn about *this* before taking the test',
                         links:{
-                            'https://google.com/images/cats': 'Cat Pictures to Study'
+                            'https://google.com/images/dogs': 'Dog Pictures to Study'
                         }
                     }
                 }

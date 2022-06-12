@@ -25,6 +25,8 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
   }
 
 
+  // const msg = `0x${bops.from(message, 'utf8').toString('hex')}`;
+  const msg = `Welcome to the Chiptos Solidity Course! Verify your address to access courses`;
 
   // attempt to sign a message thru metamask
   // does this work thru any provider?
@@ -33,7 +35,6 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
     try {
         const from = _address;
         console.log('from : ' + from);
-        const msg = `0x${bops.from(message, 'utf8').toString('hex')}`;
         console.log('msg : ' + msg);
         const ethereum = window.ethereum
         const sign = await ethereum.request({
@@ -52,7 +53,6 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
   const verifyMessage = async () => {
     try {
         const from = _address;
-        const msg = `0x${bops.from(message, 'utf8').toString('hex')}`;
         const recoveredAddr = web3.eth.accounts.recover(msg, globalSignature);
         console.log('recoveredAddr : ' + recoveredAddr);
 
