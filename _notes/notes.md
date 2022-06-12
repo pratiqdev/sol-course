@@ -13,6 +13,9 @@
 # Convert hex message to actual welcome emssage for signature
 
 
+# Move zindex of web3modal or connect modal so that web3modal is on top!
+
+
 # Convert error to blockquotes / stylized
 
 
