@@ -31,6 +31,8 @@ export interface IFinalQuestions {
   answer: string;
   /** Array of options for dropdown menu */
   options?: string[];
+  /** A simple explanation of the solution */
+  feedback: string;
 }
 
 /**
