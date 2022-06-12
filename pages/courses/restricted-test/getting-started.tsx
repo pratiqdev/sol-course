@@ -85,11 +85,48 @@ const myFunction = (arg) => {
 
 </Instructions>
 
-            <Editor 
-            storage='intro/standard'
-            code={`// custom code defined in 'standard' - non-mdx file (tsx)`} 
+<Editor 
+            categoryUri='restricted-test'
+            courseUri='getting-started'
+            code={
+`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.14;
+
+// ADD TO CONTRACT: 
+// string public greet = 'Hello, World!'
+// tests have to ignore comments ^^^
+
+contract HelloWorld {
+    // -here-
+}`
+        } 
             tests={[
-                {test1: 'a test'}
+                {
+                    regex: 'string public greet = "Hello, World!"',
+                    exist: true,
+                    type: 'KEYWORD',
+                    title: 'Missing: string public greet = "Hello, World!"',
+                    message: 'Add this code to the contract',
+                    feedback:{
+                        suggestion: 'Learn about *this* before taking the test',
+                        links:{
+                            'https://google.com/images/cats': 'Cat Pictures to Study'
+                        }
+                    }
+                },
+                {
+                    regex: `'`,
+                    exist: false,
+                    type: 'SYNTAX',
+                    title: 'Single quotes not allowed',
+                    message: 'Use double quotes instead of single quotes',
+                    feedback:{
+                        suggestion: 'Learn about *this* before taking the test',
+                        links:{
+                            'https://google.com/images/cats': 'Cat Pictures to Study'
+                        }
+                    }
+                }
             ]}
             />
         </Shell>
