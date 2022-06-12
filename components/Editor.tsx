@@ -238,7 +238,11 @@ const CustomEditor = (props:ICustomEditorProps) => {
     console.log('store loaded...')
     // if(categoryUri in progress && 'code' in progress[URI]){
       // console.log('EDITOR | STORE | loading code from store:', ctx.progress[URI].code)
-      setEditorContent(ctx.progress[categoryUri][courseUri]?.code || props.code)
+      if(ctx.progress && ctx.progress[categoryUri] && ctx.progress[categoryUri][courseUri]){
+        setEditorContent(ctx.progress[categoryUri][courseUri]?.code || props.code)
+      }else{
+        setEditorContent(props.code)
+      }
       // setDoneLoading(true)
     // }else{
     //   console.log('EDITOR | STORE | no code in store??', ctx)

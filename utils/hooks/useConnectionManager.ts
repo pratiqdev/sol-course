@@ -295,7 +295,9 @@ const useConnectionManager = () => {
       const { data } = await axios.post('/api/get-progress', {userAddress: ctx.address})
       // setProgress(data.progressObject)
       console.log('STORE | refresh progress ctx:', data.progressObject)
-      setCtx({...ctx, progress: data.progressObject})
+      if(data && data.progressObject){
+        setCtx({...ctx, progress: data.progressObject})
+      }
       
       setLatestCategoryState(data.latestCategory)
       setLatestCourseState(data.latestCourse)

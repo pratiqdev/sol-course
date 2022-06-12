@@ -8,13 +8,14 @@ import { IQuestionField } from '@utils/interfaces'
 
 interface QuestionnaireProps {
   qas: IQuestionField[],
-  uri: string;
+  categoryUri: string;
+  courseUri: string;
 }
 
 
 const Questionnaire = (props:QuestionnaireProps) => {
 
-  const {uri} = props
+  const {categoryUri, courseUri} = props
 
   const [width, setWidth] = useState('calc(100vw - 120px)')
   // const { ctx, setCtx } = useGlobalContext()
@@ -59,7 +60,7 @@ const Questionnaire = (props:QuestionnaireProps) => {
 
     // set "wasSubmitted" from progress[uri]
     useEffect(()=>{
-      if(progress[uri]?.wasSubmitted){
+      if(ctx.progress && ctx.progress[categoryUri] && ctx.progress[categoryUri][courseUri]?.wasSubmitted){
         setWasSubmitted(true)
       }
     },[])
@@ -117,7 +118,7 @@ const Questionnaire = (props:QuestionnaireProps) => {
     }
 
     useEffect(()=>{
-      if(progress[uri]?.wasSubmitted){
+      if(ctx.progress && ctx.progress[categoryUri] && ctx.progress[categoryUri][courseUri]?.wasSubmitted){
         setWasSubmitted(true)
       }
     },[])
@@ -213,21 +214,25 @@ const Questionnaire = (props:QuestionnaireProps) => {
 
 
     console.log('QAS | store loaded...')
-    if(uri in progress && 'qas' in progress[uri]){
-      console.log('QAS | STORE | loading code from store:', progress[uri].qas)
+    if(
+      ctx.progress 
+      && categoryUri in ctx.progress 
+      && courseUri in ctx.progress[categoryUri] 
+      && 'qas' in progress[categoryUri][courseUri]){
+      console.log('QAS | STORE | loading code from store:', progress[categoryUri][courseUri].qas)
       // setEditorContent(ctx.progress[uri].code)
       let loadedScore = 0
       let tempResponses:any[] = []
       props.qas.forEach((q:any, i:number) => {
 
-        if(q.answer.toLowerCase().trim() === progress[uri].qas[i].givenAnswer.toLowerCase().trim()){
+        if(q.answer.toLowerCase().trim() === progress[categoryUri][courseUri].qas[i].givenAnswer.toLowerCase().trim()){
           loadedScore++
         }
 
 
         tempResponses.push({
           ...q,
-          givenAnswer: progress[uri].qas[i].givenAnswer || '',
+          givenAnswer: progress[categoryUri][courseUri]?.qas[i].givenAnswer || '',
           // isCorrect: false,
         })
         setResponses(tempResponses)
@@ -238,12 +243,22 @@ const Questionnaire = (props:QuestionnaireProps) => {
     }else{
       console.log('QAS | STORE | no qas in store??', ctx)
 
+      let tempResponses:any[] = []
+      props.qas.forEach((q:any, i:number) => {
+        tempResponses.push({
+          ...q,
+          givenAnswer: progress[categoryUri][courseUri].qas[i].givenAnswer || '',
+          // isCorrect: false,
+        })
+        setResponses(tempResponses)
+      })
+
       let newProg = {...ctx.progress}
 
       if(ctx.address && ctx.progress){
-        if(uri in newProg){
-            newProg[uri] = {}
-            newProg[uri]['qas'] = []
+        if(categoryUri in newProg && courseUri in newProg[categoryUri]){
+            newProg[categoryUri] = {}
+            newProg[categoryUri][courseUri]['qas'] = []
           }else{
             newProg[uri] = {}
           }
@@ -262,6 +277,9 @@ const Questionnaire = (props:QuestionnaireProps) => {
 
 
   useEffect(()=>{
+    //~ create a function in the connection manager that will create
+    //~ a category / course object if they do not exist 
+
     handleLoadQasFromStore()
   }, [ctx.address])
 

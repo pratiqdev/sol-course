@@ -63,10 +63,11 @@ const FinalTest = (props:QuestionnaireProps) => {
 
     // set "wasSubmitted" from progress[uri]
     useEffect(()=>{
-      if(progress[categoryUri][courseUri]?.wasSubmitted){
+      if(progress && progress[categoryUri] && progress[categoryUri][courseUri]?.wasSubmitted){
         setWasSubmitted(true)
       }
     },[])
+
 
     useEffect(()=>{
       if(wasSubmitted){
