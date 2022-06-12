@@ -3,18 +3,21 @@ import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
 import { Text, Input, NativeSelect, Button } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import useConnectionManager from '@utils/hooks/useConnectionManager';
-import { IQuestionField } from '@utils/interfaces'
+import { IFinalQuestions } from '@utils/interfaces'
 
 
 interface QuestionnaireProps {
-  qas: IQuestionField[],
-  uri: string;
+  qas: IFinalQuestions[],
+  categoryUri: string;
+  courseUri: string;
+  title: string;
+  subtitle: string;
 }
 
 
-const Questionnaire = (props:QuestionnaireProps) => {
+const FinalTest = (props:QuestionnaireProps) => {
 
-  const {uri} = props
+  const {categoryUri, courseUri} = props
 
   const [width, setWidth] = useState('calc(100vw - 120px)')
   // const { ctx, setCtx } = useGlobalContext()
@@ -27,6 +30,7 @@ const Questionnaire = (props:QuestionnaireProps) => {
   const [responseIndex, setResponseIndex] = useState(0)
   const [responses, setResponses] = useState<any>([])
   const [stableResponses, setStableResponses] = useState<any>([])
+  const [showSuggestions, setShowSuggestions] = useState(true)
 
 
 
@@ -45,13 +49,13 @@ const Questionnaire = (props:QuestionnaireProps) => {
     const [correct, setCorrect] = useState(false)
     
     const handleLocalChange = (e:any) => {
-      console.log('QAS | QuestionString | handleLocalChange...')
+      console.log('FinalTest | QuestionString | handleLocalChange...')
       
       setValue(e.target.value)
       props.handleChange(index, e.target.value)
       setCorrect(responses[index].answer.toLowerCase().trim() === e.target.value.toLowerCase().trim())
       console.log(
-        'QAS | QuestionString | correct:', 
+        'FinalTest | QuestionString | correct:', 
         e.target.value, 
         responses[index].answer.toLowerCase().trim() === e.target.value.toLowerCase().trim()
       )
@@ -59,7 +63,7 @@ const Questionnaire = (props:QuestionnaireProps) => {
 
     // set "wasSubmitted" from progress[uri]
     useEffect(()=>{
-      if(progress[uri]?.wasSubmitted){
+      if(progress[categoryUri][courseUri]?.wasSubmitted){
         setWasSubmitted(true)
       }
     },[])
@@ -83,7 +87,7 @@ const Questionnaire = (props:QuestionnaireProps) => {
         <Text>{index + 1} - {data.question}</Text>
         <Input style={{outline: outlineColor, borderRadius: '.25rem'}} defaultValue={value} onChange={handleLocalChange}/>
         {wasSubmitted && !correct &&
-          <small style={{color: 'red'}}>{data.feedback.response}</small>
+          <small style={{color: 'red'}}>{data.feedback}</small>
         }
       </div>
     )
@@ -104,20 +108,20 @@ const Questionnaire = (props:QuestionnaireProps) => {
 
 
     const handleLocalChange = (e:any) => {
-      console.log('QAS | QuestionString | handleLocalChange...')
+      console.log('FinalTest | QuestionString | handleLocalChange...')
       
       setValue(e.target.value)
       props.handleChange(index, e.target.value)
       setCorrect(responses[index].answer.toLowerCase().trim() === e.target.value.toLowerCase().trim())
       console.log(
-        'QAS | QuestionString | correct:', 
+        'FinalTest | QuestionString | correct:', 
         e.target.value, 
         responses[index].answer.toLowerCase().trim() === e.target.value.toLowerCase().trim()
       )
     }
 
     useEffect(()=>{
-      if(progress[uri]?.wasSubmitted){
+      if(progress[categoryUri][courseUri]?.wasSubmitted){
         setWasSubmitted(true)
       }
     },[])
@@ -148,7 +152,7 @@ const Questionnaire = (props:QuestionnaireProps) => {
           style={{outline: outlineColor, borderRadius: '.25rem'}}
         />
         {wasSubmitted && !correct &&
-          <small style={{color: 'red'}}>{data.feedback.response}</small>
+          <small style={{color: 'red'}}>{data.feedback}</small>
         }
       </>
     )
@@ -164,37 +168,17 @@ const Questionnaire = (props:QuestionnaireProps) => {
 
 
 
-  //+ control questionnaire width on mount /////////////////////////////////////
-  useEffect(()=>{
-    // ctx.instructionsOpen ? ctx.navOpen ? '60vw' : '40vw' : 'calc(100vw - 120px)'
-    if(!ctx.navOpen && !ctx.instructionsOpen){
-      setWidth('calc(100vw - 120px)')
-    }
-    
-    if(ctx.navOpen && !ctx.instructionsOpen){
-      setWidth('calc(80vw - 60px)')
-    }
-    
-    if(!ctx.navOpen && ctx.instructionsOpen){
-      setWidth('calc(60vw - 60px)')
-    }
-    
-    if(ctx.navOpen && ctx.instructionsOpen){
-      setWidth('40vw')
-    }
-  }, [ctx.navOpen, ctx.instructionsOpen])
-
-
-
 
 
 
 
   //+ Load qas from store //////////////////////////////////////////////////////
+  //+ This will allow users to traverse the site in search of the correct answer
   const handleLoadQasFromStore = async () => {
-    console.log('QAS | LOADING STORE')
+
+    console.log('FinalTest | LOADING STORE')
     if(!ctx.connected || !ctx.address || !ctx.progress){
-      console.log('QAS | STORE | cant load store without connecting / address / progress...')
+      console.log('FinalTest | STORE | cant load store without connecting / address / progress...')
 
       let tempResponses:any[] = []
       props.qas.forEach((q:any, i:number) => {
@@ -212,22 +196,27 @@ const Questionnaire = (props:QuestionnaireProps) => {
     }
 
 
-    console.log('QAS | store loaded...')
-    if(uri in progress && 'qas' in progress[uri]){
-      console.log('QAS | STORE | loading code from store:', progress[uri].qas)
+    console.log('FinalTest | store loaded...')
+    if(
+      ctx.progress 
+      && categoryUri in ctx.progress 
+      && courseUri in ctx.progress[categoryUri] 
+      && 'qas' in ctx.progress[categoryUri][courseUri]
+    ){
+      console.log('FinalTest | STORE | loading code from store:', ctx.progress[categoryUri][courseUri].qas)
       // setEditorContent(ctx.progress[uri].code)
       let loadedScore = 0
       let tempResponses:any[] = []
       props.qas.forEach((q:any, i:number) => {
 
-        if(q.answer.toLowerCase().trim() === progress[uri].qas[i].givenAnswer.toLowerCase().trim()){
+        if(q.answer.toLowerCase().trim() === ctx.progress[categoryUri][courseUri].qas[i].givenAnswer.toLowerCase().trim()){
           loadedScore++
         }
 
 
         tempResponses.push({
           ...q,
-          givenAnswer: progress[uri].qas[i].givenAnswer || '',
+          givenAnswer: ctx.progress[categoryUri][courseUri]?.qas[i]?.givenAnswer || '',
           // isCorrect: false,
         })
         setResponses(tempResponses)
@@ -236,19 +225,12 @@ const Questionnaire = (props:QuestionnaireProps) => {
       setScore(loadedScore)
       // setDoneLoading(true)
     }else{
-      console.log('QAS | STORE | no qas in store??', ctx)
+      console.log('FinalTest | STORE | no qas in store??', ctx)
 
       let newProg = {...ctx.progress}
 
-      if(ctx.address && ctx.progress){
-        if(uri in newProg){
-            newProg[uri] = {}
-            newProg[uri]['qas'] = []
-          }else{
-            newProg[uri] = {}
-          }
-      }else{
-        newProg[uri] = {}
+      if(ctx.progress && categoryUri in newProg && courseUri in newProg[categoryUri]){
+        newProg[categoryUri][courseUri].qas = []
       }
 
       updateProgress((p) => ({...p, ...newProg}))
@@ -286,10 +268,10 @@ const Questionnaire = (props:QuestionnaireProps) => {
   //+ submit and validate the answers 
   //+///////////////////////////////////////////////////////////////////////////
   const handleSubmit = () => {
-    console.log('QAS | handleSubmit...')
+    console.log('FinalTest | handleSubmit...')
 
     setWasSubmitted(true)
-    console.log('QAS | submit Responses:',responses)
+    console.log('FinalTest | submit Responses:',responses)
 
 
 
@@ -297,25 +279,25 @@ const Questionnaire = (props:QuestionnaireProps) => {
     let localScore = 0
     props.qas.forEach((q:any, i:number) => {
       if(responses[i]){
-        console.log(`QAS | found index ${i} in ${responses}`)
+        console.log(`FinalTest | found index ${i} in ${responses}`)
         if(responses[i].givenAnswer === q.answer){
           localScore += 1
         }
       }else{
-        console.log(`QAS | could not find index ${i} in ${responses}`)
+        console.log(`FinalTest | could not find index ${i} in ${responses}`)
       }
     })
-    console.log('QAS | score:', localScore)
+    console.log('FinalTest | score:', localScore)
     setScore(localScore)
 
     // update the progress object with user responses
     let newProg = {...ctx.progress}
 
-    if(newProg && newProg && uri in newProg){
+    if(newProg && categoryUri in newProg){
       // newProg[uri].wasSubmitted = true
       // newProg[]
       // newProg[uri]['qas'] = responses
-      newProg[uri] = {
+      newProg[categoryUri][courseUri] = {
         complete: localScore === props.qas.length,
         wasSubmitted: true,
         qas: responses,
@@ -346,24 +328,25 @@ const Questionnaire = (props:QuestionnaireProps) => {
   //+ Update the store on input / on change
   //+///////////////////////////////////////////////////////////////////////////
   const handleChange = (index:number, answer:string) => {
-    console.log('QAS | handleChange...')
+    console.log('FinalTest | handleChange...')
 
     // console.log(index, answer)
     let tempResponses = responses
     tempResponses[index].givenAnswer = answer
-    console.log('QAS | set responses:',tempResponses)
+    console.log('FinalTest | set responses:',tempResponses)
     setResponses(tempResponses)
-    let newProg = {...ctx.progress}
+    // prog only updated on submit
+    // let newProg = {...ctx.progress}
 
-    if(ctx.address && ctx.progress){
-      if(uri in newProg){
-          newProg[uri]['qas'] = tempResponses
-        }else{
-          newProg[uri] = {}
-        }
-    }else{
-      newProg[uri] = {}
-    }
+    // if(ctx.address && ctx.progress){
+    //   if(categoryUri in newProg &&){
+    //       newProg[uri]['qas'] = tempResponses
+    //     }else{
+    //       newProg[uri] = {}
+    //     }
+    // }else{
+    //   newProg[uri] = {}
+    // }
 
     // updateProgress((p) => ({...p, ...newProg}))
   }
@@ -373,20 +356,37 @@ const Questionnaire = (props:QuestionnaireProps) => {
 
 
   return (
-    <div style={{marginTop: '70px', width: isMobile ? '100%' : width , height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', padding: '1rem', paddingTop: '.5rem', overflow: 'auto'  }}>
-      {responses.map((x:any, i:number) => {
-        console.log('QAS | remapping responses')
-        switch(x.type){
-          case 'options': return <QuestionOptions data={x} index={i} key={x.question} handleChange={handleChange} />; break;
-          default: return <QuestionString data={x} index={i} key={x.question} handleChange={handleChange} />
-        }
-      })}
-      <Button size='md' style={{marginTop: '2rem', minHeight: '2rem'}} onClick={handleSubmit}>Submit</Button>
-      {wasSubmitted && <p>SCORE: {score} / {maxScore}</p>}
+    <div style={{marginTop: '70px', width: '100%' , height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', padding: '1rem', paddingTop: '.5rem', overflow: 'auto', border: '1px solid red'  }}>
+      <h2 style={{margin: '0'}}>{props.title}</h2>
+      <p style={{margin: '0'}}>{props.subtitle}</p>
+      <div>
+        <Button size='sm' onClick={()=>setShowSuggestions(b => !b)}>{showSuggestions ? 'Hide Suggestions' : 'Show Suggestions'}</Button>
+      </div>
+      <hr />
 
-      <pre>{JSON.stringify(progress[uri], null, 2)}</pre>
+      {showSuggestions 
+      ? <>
+          <p>Suggestions:</p>
+          <pre style={{fontSize: '.6rem'}}>
+            {JSON.stringify(ctx.progress, null, 2)}
+          </pre>
+      </>
+      : <>
+        {responses.map((x:any, i:number) => {
+          console.log('FinalTest | remapping responses')
+          switch(x.type){
+            case 'options': return <QuestionOptions data={x} index={i} key={x.question} handleChange={handleChange} />; break;
+            default: return <QuestionString data={x} index={i} key={x.question} handleChange={handleChange} />
+          }
+        })}
+        <Button size='md' style={{marginTop: '2rem', minHeight: '2rem'}} onClick={handleSubmit}>Submit</Button>
+        {wasSubmitted && <p>SCORE: {score} / {maxScore}</p>}
+
+        <pre>{JSON.stringify(progress[categoryUri], null, 2)}</pre>
+      </>}
+
     </div>
 
   )
 }
-export default Questionnaire
+export default FinalTest

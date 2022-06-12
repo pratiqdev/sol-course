@@ -179,7 +179,7 @@ const useConnectionManager = () => {
   };
 
   const connectWeb3 = async () => {
-    setCtx({...ctx, navOpen: false})
+    setCtx({...ctx, navOpen: false, connecting: true})
     console.log('index | connectWeb3')
 
     try{
@@ -207,6 +207,7 @@ const useConnectionManager = () => {
           chainId: network.chainId,
           address,
           connected: true,
+          connecting: false,
           isVerified: holderData.isVerified,
           isHolder: holderData.isHolder,
           progress: data?.progressObject || null,
@@ -223,6 +224,7 @@ const useConnectionManager = () => {
           chainId: network.chainId,
           address: null,
           connected: false,
+          connecting: false,
           isVerified: false,
           isHolder: false,
           w3m: {

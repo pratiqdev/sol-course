@@ -8,13 +8,12 @@ export function GlobalContextWrapper({ children }) {
     chainId: 1,
     address: null,
     connected: false,
+    connecting: false,
     isHolder: false,
     isVerified: false,
     navOpen: true,
     instructionsOpen: true,
-    progress: {
-      someStat: '99'
-    }
+    progress: {}
   }
   const [ctx, setCtx] = useState(initialCtx)
   

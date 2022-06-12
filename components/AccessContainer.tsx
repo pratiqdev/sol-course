@@ -112,7 +112,7 @@ const AccessContainer = (props:AccessContainerProps) => {
                         Course progress will not be saved and advanced courses cannot be accessed without connecting a wallet!
                     </p>
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                    <Button onClick={connect}>Connect</Button>
+                    <Button onClick={connect} loading={ctx.connecting}>Connect</Button>
                     <Button onClick={()=>setShowConnectModal(false)}>Continue Anonymously</Button>
                     </div>
                 </Modal>

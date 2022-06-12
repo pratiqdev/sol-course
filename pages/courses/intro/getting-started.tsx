@@ -87,14 +87,40 @@ const myFunction = (arg) => {
 </Instructions>
 
             <Editor 
-            URI='intro/getting-started' // should match file path
-            code={`// custom code defined in 'standard' - non-mdx file (tsx)`} 
+            categoryUri='intro'
+            courseUri='getting-started'
+            code={
+`// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.14;
+
+// ADD TO CONTRACT: 
+// string public greet = 'Hello, World!'
+// tests have to ignore comments ^^^
+
+contract HelloWorld {
+    // -here-
+}`
+        } 
             tests={[
                 {
-                    regex: 'uint64',
-                    type: 'error_type?',
-                    title: 'Missing Keyword "uint64"',
-                    message: 'This is a long form message for this error type/situation',
+                    regex: 'string public greet = "Hello, World!"',
+                    exist: true,
+                    type: 'KEYWORD',
+                    title: 'Missing: string public greet = "Hello, World!"',
+                    message: 'Add this code to the contract',
+                    feedback:{
+                        suggestion: 'Learn about *this* before taking the test',
+                        links:{
+                            'https://google.com/images/cats': 'Cat Pictures to Study'
+                        }
+                    }
+                },
+                {
+                    regex: `'`,
+                    exist: false,
+                    type: 'SYNTAX',
+                    title: 'Single quotes not allowed',
+                    message: 'Use double quotes instead of single quotes',
                     feedback:{
                         suggestion: 'Learn about *this* before taking the test',
                         links:{

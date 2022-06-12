@@ -14,7 +14,7 @@ const ProgressAssembler = (props) => {
   } = useConnectionManager()
 
   useEffect(()=>{
-    assembleProgressObject()
+    // assembleProgressObject() //~
   }, [ctx.address])
   
   return null

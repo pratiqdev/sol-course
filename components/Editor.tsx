@@ -17,7 +17,8 @@ import { language } from 'gray-matter';
  */
 
 interface ICustomEditorProps{
-  URI: string;
+  categoryUri: string;
+  courseUri: string;
   code: string;
   tests: ICodeTest[]
 }
@@ -26,14 +27,14 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
   // let [categoryUri, courseUri] = props.URI.split('/')
 
-  const { URI, code, tests} = props
+  const { categoryUri, courseUri, code, tests} = props
 
 
 
-  const [editorContent, setEditorContent] = useState<string|undefined>('loading...')
+  const [editorContent, setEditorContent] = useState<string>('loading...')
   const [editorErrors, setEditorErrors] = useState('You must compile your code first...')
   const [compiledOutput, setCompiledOutput] = useState('You must compile your code first...')
-  const [doneLoading, setDoneLoading] = useState(false)
+  const [compiling, setCompiling] = useState(false)
   const [showEditor, setShowEditor] = useState(true)
   const [width, setWidth] = useState('calc(100vw - 120px)')
   const [testPassed, setTestPassed] = useState(false)
@@ -74,14 +75,13 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
     let newProg = {...ctx.progress}
 
-    if(ctx.address && ctx.progress){
-      if(URI in newProg){
-          newProg[URI]['code'] = code
-        }else{
-          newProg[URI] = {}
+    if(ctx.address){
+      if(categoryUri in newProg && courseUri in newProg[categoryUri]){
+          newProg[categoryUri][courseUri].code = code
+       }else{
+          newProg[categoryUri] = {}
+          newProg[categoryUri][courseUri] = {}
         }
-    }else{
-      newProg[URI] = {}
     }
 
     updateProgress((p) => ({...p, ...newProg}))
@@ -93,35 +93,51 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
 
 
+  /**
+   * test a string for regex match
+   * returns true if regex found
+   * returns false if regex not found (or found in comment)
+   */
+  const doesRegexExist = (str: string, reg: string) => {
+    let RESULT = false
+    if(str.search(reg)){
+      // console.log('CODE | found regex. Checking for comment...')
+      // regex found -> make sure its not a comment
 
-  const handleTests = (errorContent: string) => {
-    props.tests.forEach((test:any, i: number)=>{
-      const reg = new RegExp(test.regex, 'gi');
+      const lines = str.split('\n')
+      lines.forEach((line:any, lineIndex:number) => {
+        let regIndex = line.search(reg)
+        let comIndex = line.search('//')
 
-      if(reg.test(editorContent || '')){
-        setTestPassed(false)
+        if(regIndex >= 0 && comIndex === -1){
+          // console.log('CODE | found reg with no comment')
+          RESULT = true
+        }
 
-        
-        
-      errorContent += `${'-'.repeat(100)}\nTEST ERROR ${i+1} (${test.type})}`
-      
-      errorContent += 
-`
-${test.title}
-${test.message}
+        if(comIndex >= 0 && regIndex >=0 && comIndex > regIndex){
+          // console.log('CODE | found reg before comment')
+          RESULT = true;
+        }
 
-`
-}else{
-  setTestPassed(true)
-}
-      
-      
-    })
-    setEditorErrors(errorContent)
+      })
+
+    }
+
+    return RESULT
   }
 
+
+
+
   const handleCompile = async () => {
+    setCompiling(true)
     setEditorErrors('Compiling code...')
+
+    let numErrors = 0;
+    let errorContent = ''
+    let suggestionsAccum: any[] = []
+
+    
 
     const response = await axios.post('/api/solc-compile', {code: editorContent})
     // const response = await compile(editorContent)
@@ -130,25 +146,82 @@ ${test.message}
       // console.log('compile success:', response.data)
       // console.log('compiled output:', JSON.stringify(JSON.parse(response.data.output), null, 2))
       let output = JSON.parse(response.data.output)
-      let numErrors = 0
-      if(output.errors && output.errors.length) numErrors = output.errors.length
 
-      let errorContent = `Compiled with version: ${response.data.version} in ${response.data.duration}s\n${numErrors ? `${numErrors} ${numErrors > 1 ? 'errors' : 'error'}:\n\n` : 'No errors\n\n'}`
+      // let errorContent = `Compiled with version: ${response.data.version} in ${response.data.duration}s\n${numErrors ? `${numErrors} ${numErrors > 1 ? 'errors' : 'error'}:\n\n` : 'No errors\n\n'}`
       if(output.errors && output.errors.length){
         output.errors.forEach((x:any, i:number) => {
-          errorContent += `${'-'.repeat(100)}\nCOMPILE ERROR ${i+1} (${x.errorCode}): ${x.formattedMessage.replace('--> code.sol:', '')}`
+          numErrors++
+          errorContent += `${'-'.repeat(100)}\n[${i+1}] COMPILE ERROR (${x.errorCode})\n${x.formattedMessage.replace('--> code.sol:', '')}`
         })
       }
+
+
       if(output.contracts){
         setCompiledOutput(JSON.stringify(output.contracts['code.sol'], null, 2))
       }else{
-        setCompiledOutput('Errors during compilation...')
+        setCompiledOutput('Errors during compilation. Fix errors and compile again to see output.')
       }
-      // setEditorErrors(errorContent)
-      handleTests(errorContent)
+
+      
+      props.tests.forEach((test:any, i: number)=>{
+        const reg = new RegExp(test.regex, 'gi');
+        let exists = doesRegexExist(editorContent, test.regex)
+
+        if(
+          (test.exist && !exists)
+          || (!test.exist && exists)
+        ){
+          numErrors++
+          errorContent += `${'-'.repeat(100)}\n[${numErrors}] TEST ERROR (${test.type})\n${test.title}\n${test.message}\n\n`
+          suggestionsAccum.push(test.feedback)
+        }
+        
+      })
+      let errorHeading = `Compiled with version: ${response.data.version} in ${response.data.duration}s\n${numErrors ? `${numErrors} ${numErrors > 1 ? 'errors' : 'error'}:\n\n` : 'No errors\n\n'}`
+
+      setEditorErrors(errorHeading + errorContent)
+      setTestPassed(numErrors === 0)
+
+      console.log('CODE | compile/test success - save to progress')
+      // let newProg = {...ctx.progress}
+
+      // if(ctx.address && ctx.progress && URI in newProg){
+      //   newProg[URI].complete = numErrors === 0
+      //   if('suggestions' in newProg[URI]){
+      //     newProg[URI].suggestions.push(...suggestionsAccum)
+      //   }else{
+      //     newProg[URI].suggestions = suggestionsAccum
+      //   }
+      // }
+      
+      // updateProgress((p) => ({...p, ...newProg}))
+
+
+      let newProg = {...ctx.progress}
+
+      if(ctx.address){
+        if(categoryUri in newProg && courseUri in newProg[categoryUri]){
+          newProg[categoryUri][courseUri].complete = numErrors === 0
+          if('suggestions' in newProg[categoryUri]){
+            newProg[categoryUri].suggestions.push(...suggestionsAccum)
+          }else{
+            newProg[categoryUri].suggestions = suggestionsAccum
+          }
+        }else{
+          newProg[categoryUri] = {}
+        }
+      }
+  
+      updateProgress((p) => ({...p, ...newProg}))
+
+
+
+
+
     }else{
       console.log(response)
     }
+    setCompiling(false)
   }
 
 
@@ -163,13 +236,13 @@ ${test.message}
 
 
     console.log('store loaded...')
-    if(URI in progress && 'code' in progress[URI]){
-      console.log('EDITOR | STORE | loading code from store:', ctx.progress[URI].code)
-      setEditorContent(ctx.progress[URI].code)
+    // if(categoryUri in progress && 'code' in progress[URI]){
+      // console.log('EDITOR | STORE | loading code from store:', ctx.progress[URI].code)
+      setEditorContent(ctx.progress[categoryUri][courseUri]?.code || props.code)
       // setDoneLoading(true)
-    }else{
-      console.log('EDITOR | STORE | no code in store??', ctx)
-    }
+    // }else{
+    //   console.log('EDITOR | STORE | no code in store??', ctx)
+    // }
   }
 
 
@@ -199,7 +272,7 @@ ${test.message}
       }
           <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
             <Group spacing="xs" style={{padding: '.5rem'}}>
-              <Button size='xs' variant='filled' color='lime' onClick={handleCompile}>Compile</Button>
+              <Button size='xs' variant='filled' color='lime' onClick={handleCompile} loading={compiling}>Compile</Button>
               {/* <Button size='xs' variant='filled' color='lime' onClick={()=>console.log(ctx.progress)}>Log Prog</Button> */}
               {/* <Button size='xs' variant='filled' color='lime' onClick={checkStorage}>Check Store</Button> */}
               <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Compiled' : 'Show Editor'}</Button>
@@ -228,7 +301,7 @@ ${test.message}
       }
           <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
             <Group spacing="xs" style={{padding: '.5rem'}}>
-              <Button size='xs' variant='filled' color='lime' onClick={handleCompile}>Compile (mobile)</Button>
+              <Button size='xs' variant='filled' color='lime' onClick={handleCompile} loading={compiling}>Compile (mobile)</Button>
               <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Compiled' : 'Show Editor'}</Button>
             </Group>
             <Group spacing="xs" style={{padding: '.5rem'}}>

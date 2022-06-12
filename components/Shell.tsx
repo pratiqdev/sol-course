@@ -87,25 +87,16 @@ const Shell = (props: ShellProps) => {
               {ctx.navOpen &&
               <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
                 {Object.entries(courseList).map(([categoryUri, categoryObject],i) => 
-                  <Accordion.Item key={categoryObject.title} label={categoryObject.title} style={{background: i === props.categoryIndex ? '#335' : '#222', fontSize: '.8rem'}}>
+                  <Accordion.Item key={categoryObject.title} label={categoryObject.title} style={{background: i === props.categoryIndex ? '#223' : '#222', fontSize: '.8rem'}}>
                       {Object.entries(categoryObject.courses).map(([courseUri, courseObject]) => {
 
-                        // let status = () => {
-                        //   console.log(`SHELL | Checking completion of progress[${courseObject.file}]`)
-                        //   let complete = checkCompletion(courseObject.file)
-                        //   switch(complete){
-                        //     case 0: return '(No User)';
-                        //     case 1: return '(No Progress)';
-                        //     case 2: return '(Not Complete)';
-                        //     case 3: return '(Complete)';
-                        //   }
-                          
-                        // }
                         return(
-                          <Box key={courseObject.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', cursor: 'pointer', minWidth: '100%','&:hover': { background: '#222'}}}>
+                          <Box key={courseObject.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', marginLeft: '-10px', marginRight: '-10px',cursor: 'pointer', minWidth: '100%', borderBottom: '1px solid transparent', '&:hover': { borderBottom: '1px solid #555'}}}>
                             <StatusBadge file={courseObject.file}/> <Link href={`/courses/${courseObject.file}`}>{courseObject.title}</Link>
                           </Box>
                         )}
+
+
                       )}
                   </Accordion.Item>
                 )}
@@ -160,7 +151,7 @@ const Shell = (props: ShellProps) => {
                 <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
                 <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
                 {(!ctx.connected)
-                  ? <Button variant='filled' onClick={connect}>Connect</Button>
+                  ? <Button variant='filled' onClick={connect} loading={ctx.connecting}>Connect</Button>
                   : <Button variant='filled'>{ellipseAddress(ctx.address || '', 4)}</Button>
                 }
               </div>

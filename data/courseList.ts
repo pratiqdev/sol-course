@@ -23,6 +23,11 @@ const courseList: ICourseListObject = {
                 title: 'custom components (tsx)',
                 file: 'intro/standard-custom',
                 data: null
+            },
+            '1-4-intro-test':{
+                title: 'Intro Test',
+                file: 'intro/intro-test',
+                data: null
             }
         }
     },

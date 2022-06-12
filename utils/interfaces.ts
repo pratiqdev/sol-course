@@ -21,12 +21,26 @@ export interface IQuestionField {
   }
 }
 
+export interface IFinalQuestions {
+  // uri: string;
+  /** The type of input to render */
+  type?: 'string' | 'options';
+  /** The question that appears in the questionnaire */
+  question: string;
+  /** The correct answer. Matched lowercase and whitespace trimmed */
+  answer: string;
+  /** Array of options for dropdown menu */
+  options?: string[];
+}
+
 /**
  * Tests for user editor input
  */
 export interface ICodeTest {
   // uri: string;
   regex: string;
+  /** Should this code exist or not exist */
+  exist: boolean;
   /** The type of error found */
   type: string;
   /** A short error message */
