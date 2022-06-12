@@ -38,7 +38,8 @@ const CustomEditor = (props:ICustomEditorProps) => {
   const [showEditor, setShowEditor] = useState(true)
   const [width, setWidth] = useState('calc(100vw - 120px)')
   const [testPassed, setTestPassed] = useState(false)
-  const { ctx, setCtx, progress, refresh, checkStorage, updateProgress } = useConnectionManager()
+  const { ctx, useUriStore } = useConnectionManager()
+  const [store, setStore] = useUriStore(props.categoryUri, props.courseUri)
 
   useEffect(()=>{
     // ctx.instructionsOpen ? ctx.navOpen ? '60vw' : '40vw' : 'calc(100vw - 120px)'
@@ -67,26 +68,8 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
 
   const handleCodeUpdate = (code: string) => {
-    // if(!doneLoading){
-    //   console.log('STORE | cant update code while loading...')
-    //   return;
-    // }
     setEditorContent(code)
-
-    let newProg = {...ctx.progress}
-
-    if(ctx.address){
-      if(categoryUri in newProg && courseUri in newProg[categoryUri]){
-          newProg[categoryUri][courseUri].code = code
-       }else{
-          newProg[categoryUri] = {}
-          newProg[categoryUri][courseUri] = {}
-        }
-    }
-
-    updateProgress((p) => ({...p, ...newProg}))
-
-
+    setStore((p) => ({...p, code}))
   }
 
 
@@ -199,20 +182,10 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
       let newProg = {...ctx.progress}
 
-      if(ctx.address){
-        if(categoryUri in newProg && courseUri in newProg[categoryUri]){
-          newProg[categoryUri][courseUri].complete = numErrors === 0
-          if('suggestions' in newProg[categoryUri]){
-            newProg[categoryUri].suggestions.push(...suggestionsAccum)
-          }else{
-            newProg[categoryUri].suggestions = suggestionsAccum
-          }
-        }else{
-          newProg[categoryUri] = {}
-        }
-      }
+      let currentSuggestionsAccumulator = store.suggestions || []
+      currentSuggestionsAccumulator.push(...suggestionsAccum)
+      setStore((s:any) => ({...s, suggestions: currentSuggestionsAccumulator}))
   
-      updateProgress((p) => ({...p, ...newProg}))
 
 
 
@@ -227,35 +200,12 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
 
 
-  const handleLoadCodeFromStore = async () => {
-    if(!ctx.connected || !ctx.address || !progress){
-      console.log('STORE | cant load store without connecting / address / progress...')
-      setEditorContent(props.code)
-      return;
-    }
-
-
-    console.log('store loaded...')
-    // if(categoryUri in progress && 'code' in progress[URI]){
-      // console.log('EDITOR | STORE | loading code from store:', ctx.progress[URI].code)
-      if(ctx.progress && ctx.progress[categoryUri] && ctx.progress[categoryUri][courseUri]){
-        setEditorContent(ctx.progress[categoryUri][courseUri]?.code || props.code)
-      }else{
-        setEditorContent(props.code)
-      }
-      // setDoneLoading(true)
-    // }else{
-    //   console.log('EDITOR | STORE | no code in store??', ctx)
-    // }
-  }
-
-
 
 
 
 
   useEffect(()=>{ 
-    handleLoadCodeFromStore()
+    setEditorContent(store.code || 'no-store-code?')
   },[ctx.address, ctx.connected, ctx.isVerified])
  
 

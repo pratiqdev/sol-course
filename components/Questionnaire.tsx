@@ -255,16 +255,16 @@ const Questionnaire = (props:QuestionnaireProps) => {
 
       let newProg = {...ctx.progress}
 
-      if(ctx.address && ctx.progress){
-        if(categoryUri in newProg && courseUri in newProg[categoryUri]){
-            newProg[categoryUri] = {}
-            newProg[categoryUri][courseUri]['qas'] = []
-          }else{
-            newProg[uri] = {}
-          }
-      }else{
-        newProg[uri] = {}
-      }
+      // if(ctx.address && ctx.progress){
+      //   if(categoryUri in newProg && courseUri in newProg[categoryUri]){
+      //       newProg[categoryUri] = {}
+      //       newProg[categoryUri][courseUri]['qas'] = []
+      //     }else{
+      //       newProg[uri] = {}
+      //     }
+      // }else{
+      //   newProg[uri] = {}
+      // }
 
       updateProgress((p) => ({...p, ...newProg}))
 
@@ -329,16 +329,16 @@ const Questionnaire = (props:QuestionnaireProps) => {
     // update the progress object with user responses
     let newProg = {...ctx.progress}
 
-    if(newProg && newProg && uri in newProg){
-      // newProg[uri].wasSubmitted = true
-      // newProg[]
-      // newProg[uri]['qas'] = responses
-      newProg[uri] = {
-        complete: localScore === props.qas.length,
-        wasSubmitted: true,
-        qas: responses,
-      }
-    }
+    // if(newProg && newProg && uri in newProg){
+    //   // newProg[uri].wasSubmitted = true
+    //   // newProg[]
+    //   // newProg[uri]['qas'] = responses
+    //   newProg[uri] = {
+    //     complete: localScore === props.qas.length,
+    //     wasSubmitted: true,
+    //     qas: responses,
+    //   }
+    // }
 
     updateProgress((p) => ({...p, ...newProg}))
 
@@ -373,15 +373,15 @@ const Questionnaire = (props:QuestionnaireProps) => {
     setResponses(tempResponses)
     let newProg = {...ctx.progress}
 
-    if(ctx.address && ctx.progress){
-      if(uri in newProg){
-          newProg[uri]['qas'] = tempResponses
-        }else{
-          newProg[uri] = {}
-        }
-    }else{
-      newProg[uri] = {}
-    }
+    // if(ctx.address && ctx.progress){
+    //   if(uri in newProg){
+    //       newProg[uri]['qas'] = tempResponses
+    //     }else{
+    //       newProg[uri] = {}
+    //     }
+    // }else{
+    //   newProg[uri] = {}
+    // }
 
     // updateProgress((p) => ({...p, ...newProg}))
   }
@@ -402,7 +402,7 @@ const Questionnaire = (props:QuestionnaireProps) => {
       <Button size='md' style={{marginTop: '2rem', minHeight: '2rem'}} onClick={handleSubmit}>Submit</Button>
       {wasSubmitted && <p>SCORE: {score} / {maxScore}</p>}
 
-      <pre>{JSON.stringify(progress[uri], null, 2)}</pre>
+      {/* <pre>{JSON.stringify(progress[uri], null, 2)}</pre> */}
     </div>
 
   )

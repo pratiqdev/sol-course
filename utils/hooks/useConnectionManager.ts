@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Web3 from 'web3';
-import Web3Modal from 'web3modal'
+import Web3Modal, { local } from 'web3modal'
 import { Web3Provider } from '@ethersproject/providers';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
@@ -201,42 +201,25 @@ const useConnectionManager = () => {
 
       const { data } = await axios.post('/api/get-progress', {userAddress: address})
 
-      if(holderData.isVerified){
-        setCtx({
-          ...ctx,
-          chainId: network.chainId,
-          address,
-          connected: true,
-          connecting: false,
-          isVerified: holderData.isVerified,
-          isHolder: holderData.isHolder,
-          progress: data?.progressObject || null,
-          w3m: {
-            provider,
-            library,
-            network,
-            web3Modal,
-          }
-        });
-      }else{
-        setCtx({
-          ...ctx,
-          chainId: network.chainId,
-          address: address,
-          connected: true,
-          connecting: false,
-          isVerified: false,
-          isHolder: false,
-          w3m: {
-            provider,
-            library,
-            network,
-            web3Modal,
-          }
-        });
-      }
+      setCtx({
+        ...ctx,
+        chainId: network.chainId,
+        address,
+        connected: true,
+        connecting: false,
+        isVerified: holderData.isVerified,
+        isHolder: holderData.isHolder,
+        progress: data?.progressObject || null,
+        w3m: {
+          provider,
+          library,
+          network,
+          web3Modal,
+        }
+      });
 
-      refresh()
+
+      // refresh()
       
       await subscribeToProviderEvents(provider);
       
@@ -255,69 +238,69 @@ const useConnectionManager = () => {
   //+ PROGRESS MANAGER /////////////////////////////////////////////////////////
 
 
-  const assembleProgressObject = () => {
-    if(!ctx.address) return; 
+  // const assembleProgressObject = () => {
+  //   if(!ctx.address) return; 
 
     
-    if(ctx.progress){
-      console.log('assembleProgressObject | store data already exists:', ctx.progress)
-    }else{
-      console.log('assembleProgressObject | assemble progress object:', ctx.progress, courseList)
+  //   if(ctx.progress){
+  //     console.log('assembleProgressObject | store data already exists:', ctx.progress)
+  //   }else{
+  //     console.log('assembleProgressObject | assemble progress object:', ctx.progress, courseList)
 
-      // const progressObject = {}
-      // Object.entries(courseList).forEach(([uri, obj]) => {
-      //   progressObject[uri] = {
-      //     progress: 0,
-      //     code: '',
-      //     answers: {}
-      //   }
-      // })
-      updateProgress(courseList)
-    }
+  //     // const progressObject = {}
+  //     // Object.entries(courseList).forEach(([uri, obj]) => {
+  //     //   progressObject[uri] = {
+  //     //     progress: 0,
+  //     //     code: '',
+  //     //     answers: {}
+  //     //   }
+  //     // })
+  //     updateProgress(courseList)
+  //   }
 
 
-  }
+  // }
 
-  const resetProgress = () => {
-    if(!ctx.address) return;
-    axios.post('/api/reset-progress', {userAddress: ctx.address})
-  }
+  // const resetProgress = () => {
+  //   if(!ctx.address) return;
+  //   axios.post('/api/reset-progress', {userAddress: ctx.address})
+  // }
 
-  // const refresh = () => ctx.address && setRefreshTrigger(b => !b)
-  const refresh = async () => {
-    return new Promise(async (res)=>{
+  // // const refresh = () => ctx.address && setRefreshTrigger(b => !b)
+  // const refresh = async () => {
+  //   return new Promise(async (res)=>{
 
-      if(!ctx.address) {
-        res(false);
-        return 
-      }
+  //     if(!ctx.address) {
+  //       res(false);
+  //       return 
+  //     }
       
-      const { data } = await axios.post('/api/get-progress', {userAddress: ctx.address})
-      // setProgress(data.progressObject)
-      console.log('STORE | refresh progress ctx:', data.progressObject)
-      if(data && data.progressObject){
-        setCtx({...ctx, progress: data.progressObject})
-      }
+  //     const { data } = await axios.post('/api/get-progress', {userAddress: ctx.address})
+  //     // setProgress(data.progressObject)
+  //     console.log('STORE | refresh progress ctx:', data.progressObject)
+  //     if(data && data.progressObject){
+  //       setCtx({...ctx, progress: data.progressObject})
+  //     }
       
-      setLatestCategoryState(data.latestCategory)
-      setLatestCourseState(data.latestCourse)
-      if(data.progressObject){
-        res(true)
-      }
-    })
+  //     setLatestCategoryState(data.latestCategory)
+  //     setLatestCourseState(data.latestCourse)
+  //     if(data.progressObject){
+  //       res(true)
+  //     }
+  //   })
 
-  }
+  // }
 
-  const checkStorage = async () => {
-    if(!ctx.address){
-      console.log('STORE | cant check storage without address')
-      return;
-    }
+  // const checkStorage = async () => {
+  //   if(!ctx.address){
+  //     console.log('STORE | cant check storage without address')
+  //     return;
+  //   }
 
-    const { data } = await axios.post('/api/get-progress', {userAddress: ctx.address})
-    // setProgress(data.progressObject)
-    console.log('STORE | CHECK STORAGE:', data.progressObject)
-  }
+  //   const { data } = await axios.post('/api/get-progress', {userAddress: ctx.address})
+  //   // setProgress(data.progressObject)
+  //   console.log('STORE | CHECK STORAGE:', data.progressObject)
+  // }
 
 
 
@@ -371,6 +354,191 @@ const useConnectionManager = () => {
 
 
 
+  // const getCategoryStoreByUri = (_category:string) => {
+  //   if(!ctx.address || !ctx.progress) return {}
+  //   let prog = ctx.progress
+  //   let result = {}
+
+  //     if(_category in prog){
+  //       result = prog[_category]
+  //     }else{
+  //       prog[_category] = {}
+  //       result = {}
+  //     }
+  //     updateProgress(prog)
+  //     return result
+  // }
+
+  // const getCourseStoreByUri = (_category:string, _course:string) => {
+  //   if(!ctx.address || !ctx.progress) return {}
+  //   let prog = ctx.progress
+
+  //   let result = {}
+
+  //     if(_category in prog){
+  //       if(_course in prog[_category]){
+  //         result =prog[_category][_course]
+  //       }else{
+  //         prog[_category][_course] = {}
+  //         result = {}
+  //       }
+  //     }else{
+  //       prog[_category] = {}
+  //       result = {}
+  //     }
+  //     updateProgress(prog)
+  //     return result
+  // }
+
+  // const getRootStore = () => {
+  //   if(!ctx.address) return {}
+  //   return ctx.progress || {}
+  // }
+
+
+
+
+
+
+  // const useProgressStore = (_category:string, _course?:string) => {
+  //   const [state, setState] = useState({})
+  //   const [store, setStore] = useState({})
+
+  //   const getProgressStore = async () => {
+  //     if(ctx.address){
+  //       const { data } = await axios.post('/api/get-progress', {userAddress: ctx.address})
+  //       return data.progressObject || {}
+  //     }
+  //   }
+
+  //   const updateProgressStore = (_progress:any) => {
+  //     axios.post('/api/set-progress', {userAddress: ctx.address, data:{_progress}})
+  //   }
+
+  //   // const updateProgressCtx = (_progress:any) => {
+  //   //   setCtx({...ctx, progress: _progress})
+  //   // }
+
+    
+
+
+
+  //   const handleSetState = async (_cb) => {
+  //     if(ctx.address){
+  //       let prog = _cb(state)
+  //       updateProgressStore(prog)
+  //       setState(prog)
+  //     }
+  //   }
+    
+
+  //   //+ address changed - load store into ctx
+  //   const loadFromStore = async () => {
+  //     if(ctx.address && ctx.progress){
+  //       let prog = getProgressStore() // the whole store
+  //       let localProg = {}
+  
+  //       // if the uri does not exist - create it
+  //       if(_category in prog){
+  //         if(_course){
+  //           if(_course in prog[_category]){
+  //             localProg = prog[_category][_course]
+  //           }
+  //         }else{
+  //           localProg = prog[_category]
+  //         }
+  //       }else{
+
+  //       }
+  //       setState(localProg)
+  //     }
+  //   }
+
+  //   useEffect(()=>{
+  //     loadFromStore()
+  //   },[ctx.address])
+
+
+
+
+  //   // //+ progress ctx changed - update local state
+  //   // useEffect(()=>{
+  //   //   if(ctx.address && ctx.progress){
+  //   //     setState(ctx.progress)
+  //   //   }
+  //   // },[ctx.progress])
+
+  //   return [state, handleSetState]
+  
+  // }
+
+  /*
+    - load store uri into local state
+    - update uri only
+    - return local state
+  */
+
+
+    const useUriStore = (_category: string, _course?:string) => {
+      const [state, setState] = useState({})
+
+      const handleStateChange = (_cb:Function) => {
+        if(!ctx.address) return;
+
+        let newState = _cb(state)
+        let prog = {...ctx.progress}
+
+        if(_course){
+          prog[_category][_course] = newState
+        }else{
+          prog[_category] = newState
+        }
+        setCtx({...ctx, progress: prog})
+        updateProgress(prog)
+      }
+
+      const handler:any = handleStateChange
+
+
+      useEffect(()=>{
+        if(!ctx.address) return;
+
+        let prog = {...ctx.progress}
+
+        if(_category in prog){
+            if(_course){
+              if(_course in prog[_category]){
+                setState(prog[_category][_course])
+              }else{
+                prog[_category][_course] = {}
+                setCtx({...ctx, progress: prog})
+                setState({})
+              }
+            }else{
+              setState(prog[_category])
+            }
+        }else{
+          prog[_category] = {}
+          if(_course){
+            prog[_category][_course] = {}
+          }
+          setCtx({...ctx, progress: prog})
+          setState({})
+        }
+
+
+      }, [ctx.progress])
+
+      return [state, handler]
+    }
+
+
+
+
+
+
+
+
 
   const setLatestCategory = async (category: string) => {
       if(!ctx.address) return
@@ -401,23 +569,28 @@ const useConnectionManager = () => {
 
 
 
-  useEffect(()=>{
-    if(ctx.address){
-      console.log('STORE | address changed')
-      refresh()
-    }
-  }, [ctx.address])
+  // useEffect(()=>{
+  //   if(ctx.address){
+  //     console.log('STORE | address changed')
+  //     // refresh()
+  //   }
+  // }, [ctx.address])
 
   return {
       ctx,
       setCtx,
       progress: ctx.progress,
-      assembleProgressObject,
-      refresh,
-      checkStorage,
+      // assembleProgressObject,
+      // refresh,
+      // checkStorage,
       checkCompletion,
-      updateProgress,
-      resetProgress,
+      // updateProgress,
+      useUriStore,
+      // useProgressStore,
+      // getCategoryStoreByUri,
+      // getCourseStoreByUri,
+      // getRootStore,
+      // resetProgress,
       setLatestCategory,
       setLatestCourse,
       latestCategory: latestCategoryState,
