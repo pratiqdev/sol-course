@@ -222,8 +222,8 @@ const useConnectionManager = () => {
         setCtx({
           ...ctx,
           chainId: network.chainId,
-          address: null,
-          connected: false,
+          address: address,
+          connected: true,
           connecting: false,
           isVerified: false,
           isHolder: false,

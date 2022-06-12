@@ -31,3 +31,9 @@
 
 > discovered known issue with chrome extensions using both coinbase and metamask providers
 > https://github.com/NoahZinsmeister/web3-react/issues/300
+
+## 6/11 - 6hr
+2hr - Finished editor code tests
+1hr - added suggestion object to progress store
+1hr - tested progress updates and auto loading store data on mount
+2hr - refactored progress store to be category/course uri independent
