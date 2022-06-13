@@ -3,22 +3,21 @@ import { GlobalContextWrapper, useGlobalContext } from '@utils/context'
 import useConnectionManager from '@utils/hooks/useConnectionManager';
 import { AppProps } from 'next/app'
 import { MantineProvider } from '@mantine/core';
-import { Global } from '@mantine/core';
+import { Global, Overlay } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
 
-const ProgressAssembler = (props) => {
-  const { 
-    ctx, 
-    assembleProgressObject
-  } = useConnectionManager()
+// const ProgressAssembler = (props) => {
+//   const { 
+//     ctx, 
+//   } = useConnectionManager()
 
-  useEffect(()=>{
-    // assembleProgressObject() //~
-  }, [ctx.address])
+//   useEffect(()=>{
+//     // assembleProgressObject() //~
+//   }, [ctx.address])
   
-  return null
-}
+//   return null
+// }
 
 
 
@@ -28,7 +27,7 @@ const App = (props: AppProps) => {
 
   return (
     <GlobalContextWrapper>
-      <ProgressAssembler />
+      {/* <ProgressAssembler /> */}
       <MantineProvider
         withGlobalStyles
         withNormalizeCSS

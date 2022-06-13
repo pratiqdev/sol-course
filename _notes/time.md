@@ -24,6 +24,11 @@
 2hr - Setup validation and feedback for questionnaire
 1hr - Added mongodb connection
 2hr - Setup mongodb integration with custom useProgress hook
+
+
+
+
+vvvvvvvvvvvvvv UNPAID vvvvvvvvvvvvvvvvvvvvvv
  
 ## 6/6 - 3hr
 1hr - Fixed bugs with connectionManager and tested (with metamask only)
@@ -37,3 +42,12 @@
 1hr - added suggestion object to progress store
 1hr - tested progress updates and auto loading store data on mount
 2hr - refactored progress store to be category/course uri independent
+
+## 6/12 - 3hr
+2hr - refactor QAS to conform to new progress store structure
+1hr - testing progress store across all page types
+
+## 6/13 - 5hr
+1hr - removed bug from QAS that prevented them from showing on mount
+2hr - refactored code error output to use styled cards
+2hr - refactored suggestion box for tests to use category based cards / added categories to suggestion creation

@@ -6,6 +6,7 @@ import CodeBlock from '@instructions/CodeBlock'
 import Blockquote from '@instructions/Blockquote'
 import Image from '@instructions/Image'
 import constants from '@data/constants'
+import { SuggestionCoreTypes } from '@utils/interfaces'
 
 const CoursePage = () => {
 
@@ -109,6 +110,7 @@ contract HelloWorld {
                     title: 'Missing: string public greet = "Hello, World!"',
                     message: 'Add this code to the contract',
                     feedback:{
+                        coreType: SuggestionCoreTypes.CODE,
                         title: 'Cats',
                         suggestion: 'Learn about *this* before taking the test',
                         links:{
@@ -123,6 +125,7 @@ contract HelloWorld {
                     title: 'Single quotes not allowed',
                     message: 'Use double quotes instead of single quotes',
                     feedback:{
+                        coreType: SuggestionCoreTypes.CODE,
                         title: 'Dogs',
                         suggestion: 'Learn about *this* before taking the test',
                         links:{

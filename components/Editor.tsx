@@ -23,6 +23,38 @@ interface ICustomEditorProps{
   tests: ICodeTest[]
 }
 
+interface IErrorObject {
+  type: 'test' | 'compiler' | 'success' | 'data';
+  title: string;
+  message: string;
+}
+
+interface IErrorCardProps {
+  data: any;
+}
+
+const ErrorCard = (props: any) => {
+  const {type, title, message} = props.data
+  let bg = 'green'
+  if(type === 'test'){
+    bg ='#fd56'
+  }else if(type === 'compiler'){
+    bg = '#f876'
+  }else if(type === 'success'){
+    bg = '#8f86'
+  }else{
+    bg = '#2226'
+  }
+
+  return(
+    <div style={{background: bg , padding: '.5rem', paddingBottom: '0', border: '1px solid white', marginTop: '.5rem', borderRadius: '.25rem', color: 'white', fontSize: '.6rem'}}>
+      <b>{title}</b>
+      <pre>{message}</pre>
+    </div>
+  )
+
+}
+
 const CustomEditor = (props:ICustomEditorProps) => {
 
   // let [categoryUri, courseUri] = props.URI.split('/')
@@ -41,6 +73,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
   const { ctx, useUriStore } = useConnectionManager()
   const [store, setStore] = useUriStore(props.categoryUri, props.courseUri)
   const [catStore, setCatStore] = useUriStore(props.categoryUri)
+  const [errorItemArray, setErrorItemArray] = useState<IErrorObject[]>([])
 
   useEffect(()=>{
     // ctx.instructionsOpen ? ctx.navOpen ? '60vw' : '40vw' : 'calc(100vw - 120px)'
@@ -113,12 +146,12 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
 
 
+
   const handleCompile = async () => {
     setCompiling(true)
     setEditorErrors('Compiling code...')
 
-    let numErrors = 0;
-    let errorContent = ''
+    let errorArr: IErrorObject[] = []
     let feedback: any = catStore.feedback || {}
 
     
@@ -130,14 +163,12 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
       if(output.errors && output.errors.length){
         output.errors.forEach((x:any, i:number) => {
-          numErrors++
-          errorContent += `${'-'.repeat(100)}\n[${i+1}] COMPILE ERROR (${x.errorCode})\n${x.formattedMessage.replace('--> code.sol:', '')}`
+          errorArr.push({
+            type: 'compiler',
+            title: `COMPILER ERROR: (${x.errorCode})`,
+            message: x.formattedMessage.replace('--> code.sol:', '').trim()
+          })
         })
-      }
-
-
-      if(output.contracts){
-        setCompiledOutput(JSON.stringify(output.contracts['code.sol'], null, 2))
       }else{
         setCompiledOutput('Errors during compilation. Fix errors and compile again to see output.')
       }
@@ -151,22 +182,26 @@ const CustomEditor = (props:ICustomEditorProps) => {
           (test.exist && !exists)
           || (!test.exist && exists)
         ){
-          numErrors++
-          errorContent += `${'-'.repeat(100)}\n[${numErrors}] TEST ERROR (${test.type})\n${test.title}\n${test.message}\n\n`
+          errorArr.push({
+            type: 'test',
+            title: `TEST ERROR: (${test.type})`,
+            message: `${test.title}\n${test.message}`
+          })
           feedback[test.feedback.title] = test.feedback
 
         }
         
       })
-      let errorHeading = `Compiled with version: ${response.data.version} in ${response.data.duration}s\n${numErrors ? `${numErrors} ${numErrors > 1 ? 'errors' : 'error'}:\n\n` : 'No errors\n\n'}`
+      // let errorHeading = `Compiled with version: ${response.data.version} in ${response.data.duration}s\n${numErrors ? `${numErrors} ${numErrors > 1 ? 'errors' : 'error'}:\n\n` : 'No errors\n\n'}`
 
-      setEditorErrors(errorHeading + errorContent)
-      setTestPassed(numErrors === 0)
+      // setEditorErrors(errorHeading + errorContent)
+      
+      setTestPassed(errorArr.length === 0)
 
       console.log('CODE | compile/test success - save to progress')
 
 
-      setStore((s:any) => ({...s, complete: numErrors === 0}))
+      setStore((s:any) => ({...s, complete: errorArr.length === 0}))
       setCatStore((s:any)=>({...s, feedback}))
   
 
@@ -178,6 +213,21 @@ const CustomEditor = (props:ICustomEditorProps) => {
       console.log(response)
     }
     setCompiling(false)
+
+    if(errorArr.length === 0){
+      errorArr.push({
+        type: 'success',
+        title: `Compile success!`,
+        message: `Compiled with no errors and all tests passed!`
+      })
+    }else{
+      errorArr.unshift({
+        type: 'data',
+        title: `Errors found: ${errorArr.length}`,
+        message: `Compiled with errors or tests failed`
+      })
+    }
+    setErrorItemArray(errorArr)
   }
 
 
@@ -212,13 +262,15 @@ const CustomEditor = (props:ICustomEditorProps) => {
               <Button size='xs' variant='filled' color='lime' onClick={handleCompile} loading={compiling}>Compile</Button>
               {/* <Button size='xs' variant='filled' color='lime' onClick={()=>console.log(ctx.progress)}>Log Prog</Button> */}
               {/* <Button size='xs' variant='filled' color='lime' onClick={checkStorage}>Check Store</Button> */}
-              <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Compiled' : 'Show Editor'}</Button>
+              <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Output' : 'Show Editor'}</Button>
             </Group>
             <Group spacing="xs" style={{padding: '.5rem'}}>
               <Button size='xs' variant='filled' color='red'  onClick={()=> handleCodeUpdate(props.code)}>Reset</Button>
             </Group>
           </div>
-          <pre style={{padding: '.25rem', height: '27vh', fontSize: '.6rem', overflow: 'auto', paddingBottom: '1rem', whiteSpace: 'pre-wrap'}}>{editorErrors}</pre>
+          <div style={{padding: '.5rem', height: '27vh', overflow: 'auto', paddingBottom: '1rem'}}>
+            {errorItemArray.map(item => <ErrorCard key={item.message} data={item} />)}
+          </div>
       </div>
     </MediaQuery>
 
@@ -238,14 +290,16 @@ const CustomEditor = (props:ICustomEditorProps) => {
       }
           <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
             <Group spacing="xs" style={{padding: '.5rem'}}>
-              <Button size='xs' variant='filled' color='lime' onClick={handleCompile} loading={compiling}>Compile (mobile)</Button>
-              <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Compiled' : 'Show Editor'}</Button>
+              <Button size='xs' variant='filled' color='lime' onClick={handleCompile} loading={compiling}>Compile</Button>
+              <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Output' : 'Show Editor'}</Button>
             </Group>
             <Group spacing="xs" style={{padding: '.5rem'}}>
               <Button size='xs' variant='filled' color='red'  onClick={()=> setEditorContent(props.code)}>Reset</Button>
             </Group>
           </div>
-          <pre style={{padding: '.25rem', height: '17vh', fontSize: '.6rem', overflow: 'scroll', paddingBottom: '1rem', whiteSpace: 'pre-wrap'}}>{editorErrors}</pre>
+          <div style={{padding: '.5rem', height: '27vh', overflow: 'auto', paddingBottom: '1rem'}}>
+            {errorItemArray.map(item => <ErrorCard key={item.message} data={item} />)}
+          </div>
       </div>
     </MediaQuery>
     </>

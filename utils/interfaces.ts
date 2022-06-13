@@ -1,4 +1,8 @@
-
+export enum SuggestionCoreTypes {
+  'CODE',
+  'CONCEPT',
+  'TECH'
+}
 
 export interface IQuestionField {
   // uri: string;
@@ -12,6 +16,9 @@ export interface IQuestionField {
   options?: string[];
   /** User feedback for this question */
   feedback: {
+    /** The core type used for suggestions */
+    coreType: SuggestionCoreTypes;
+    
     title: string;
     /** Shows feedback under the question if answered incorrectly */
     response: string;
@@ -52,6 +59,8 @@ export interface ICodeTest {
   message?: string;
   /** User feedback for test failure */
   feedback: {
+    /** The core type used for suggestion categories */
+    coreType: SuggestionCoreTypes;
     /** Title used to prevent dupes in suggestion object */
     title: string;
     /** Suggestions displayed before course end test */

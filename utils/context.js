@@ -13,6 +13,7 @@ export function GlobalContextWrapper({ children }) {
     isVerified: false,
     navOpen: true,
     instructionsOpen: true,
+    showCompleteBanner: false,
     progress: {
       AllCategoriesComplete: false
     }

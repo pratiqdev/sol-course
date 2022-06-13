@@ -1,13 +1,16 @@
 import Shell from '@components/Shell'
 import Instructions from '@components/Instructions'
 import CustomAside from '@components/CustomAside'
+import useConnectionManager from '@utils/hooks/useConnectionManager'
 
 const CoursePage = () => {
-
+    const {ctx, setCtx} = useConnectionManager()
     return(
         <Shell categoryIndex={0}>
             <Instructions>
                 <h2>Intro - custom component (tsx)</h2>
+
+                <p>CTX.showCompleteBanner: {ctx.showCompleteBanner.toString()}</p>
 
                 <p>These are the instructions</p>
 

@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
-import Editor, { DiffEditor, useMonaco, loader } from "@monaco-editor/react";
-import { Text, Input, NativeSelect, Button } from '@mantine/core';
+import { Text, Input, NativeSelect, Button, Box, Grid, ActionIcon } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import useConnectionManager from '@utils/hooks/useConnectionManager';
-import { IFinalQuestions } from '@utils/interfaces'
+import { IFinalQuestions, SuggestionCoreTypes } from '@utils/interfaces'
 import courseList from '@data/courseList'
 
+import { QuestionMark } from 'tabler-icons-react'
 
-interface QuestionnaireProps {
+
+interface IQuestionnaireProps {
   qas: IFinalQuestions[],
   categoryUri: string;
   courseUri: string;
@@ -16,7 +17,19 @@ interface QuestionnaireProps {
 }
 
 
-const FinalTest = (props:QuestionnaireProps) => {
+
+
+
+
+
+
+
+
+
+
+
+
+const FinalTest = (props:IQuestionnaireProps) => {
 
   const {categoryUri, courseUri} = props
 
@@ -30,11 +43,71 @@ const FinalTest = (props:QuestionnaireProps) => {
   const [score, setScore] = useState(0)
   const [maxScore, setMaxScore] = useState(0)
   const [responses, setResponses] = useState<any>([])
-  const [showSuggestions, setShowSuggestions] = useState(true)
   const [categoryComplete, setCategoryComplete] = useState(false)
+  
+  const [suggestionsCodeType, setSuggestionsCodeType] = useState<any[]>([])
+  const [suggestionsConceptType, setSuggestionsConceptType] = useState<any[]>([])
+  const [suggestionsTechType, setSuggestionsTechType] = useState<any[]>([])
+  const [suggestionsGeneralType, setSuggestionsGeneralType] = useState<any[]>([])
+
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [hasSuggestions, setHasSuggestions] = useState(false)
 
 
 
+
+  const SuggestionCard = (props:any) => {
+    const {title, message, links} = props.item
+  
+    return (
+      <Grid.Col span={4}>
+        <Box sx={{border: '1px solid white', borderRadius: '.25rem', padding: '.5rem', height: '100%', '*':{margin: '0px'}}}>
+          <h4>{title}</h4>
+          <p>{message}</p>
+        </Box>
+      </Grid.Col>
+    )
+  }
+  
+  
+  
+  const SuggestionBox = () => {
+    
+    return(
+      <>
+      {suggestionsConceptType.length > 0 && <>
+      <h3>Concept Related Suggestions</h3>
+      <Grid>
+        {suggestionsConceptType.map((item:any) => <SuggestionCard key={item.message} item={item} />)}
+      </Grid>
+      </>}
+  
+      {suggestionsCodeType.length > 0 && <>
+      <h3>Code Related Suggestions</h3>
+      <Grid>
+        {suggestionsCodeType.map((item:any) => <SuggestionCard key={item.message} item={item} />)}
+      </Grid>
+      </>}
+  
+      {suggestionsTechType.length > 0 && <>
+      <h3>Tech Related Suggestions</h3>
+      <Grid>
+        {suggestionsTechType.map((item:any) => <SuggestionCard key={item.message} item={item} />)}
+      </Grid>
+      </>}
+  
+      {suggestionsGeneralType.length > 0 && <>
+      <h3>General Suggestions</h3>
+      <Grid>
+        {suggestionsGeneralType.map((item:any) => <SuggestionCard key={item.message} item={item} />)}
+      </Grid>
+      </>}
+  
+      <pre>{JSON.stringify(catStore.feedback, null, 2)}</pre>
+      </>
+    )
+  }
+  
 
 
 
@@ -362,53 +435,106 @@ const FinalTest = (props:QuestionnaireProps) => {
     tempResponses[index].givenAnswer = answer
     console.log('FinalTest | set responses:',tempResponses)
     setResponses(tempResponses)
-    // prog only updated on submit
-    // let newProg = {...ctx.progress}
 
-    // if(ctx.address && ctx.progress){
-    //   if(categoryUri in newProg &&){
-    //       newProg[uri]['qas'] = tempResponses
-    //     }else{
-    //       newProg[uri] = {}
-    //     }
-    // }else{
-    //   newProg[uri] = {}
-    // }
-
-    // updateProgress((p) => ({...p, ...newProg}))
   }
 
 
 
 
 
+
+
+  // const [suggestionsCodeType, setSuggestionsCodeType] = useState([])
+  // const [suggestionsConceptType, setSuggestionsConceptType] = useState([])
+  // const [suggestionsTechType, setSuggestionsTechType] = useState([])
+  // const [suggestionsGeneralType, setSuggestionsGeneralType] = useState([])
+  // title / message / links
+
+  const parseSuggestions = () => {
+    const codeType:any[] = []
+    const conceptType:any[] = []
+    const techType:any[] = []
+    const generalType:any[] = []
+
+    Object.entries(catStore.feedback).forEach((item:any) => {
+      let data = item[1]
+
+      switch(data.coreType){
+
+        case SuggestionCoreTypes.CODE: codeType.push({
+          title: data.title,
+          message: data.suggestion,
+          links: data.links
+        }); break;
+
+        case SuggestionCoreTypes.CONCEPT: conceptType.push({
+          title: data.title,
+          message: data.suggestion,
+          links: data.links
+        }); break;
+
+        case SuggestionCoreTypes.CONCEPT: techType.push({
+          title: data.title,
+          message: data.suggestion,
+          links: data.links
+        }); break;
+
+        default: generalType.push({
+          title: data.title,
+          message: data.suggestion,
+          links: data.links
+        })
+
+      }
+
+    })
+
+    if(
+      codeType.length > 0
+      || conceptType.length > 0
+      || techType.length > 0
+      || generalType.length > 0
+    ){
+      setShowSuggestions(true)
+      setHasSuggestions(true)
+    }
+
+    setSuggestionsCodeType(codeType)
+    setSuggestionsConceptType(conceptType)
+    setSuggestionsTechType(techType)
+    setSuggestionsGeneralType(generalType)
+
+  }
+
+
+  useEffect(()=>{
+    if(catStore.feedback){
+      parseSuggestions()
+    }
+  },[catStore])
+
+
+
+
+
+
   return (
-    <div style={{marginTop: '70px', width: '100%' , height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', padding: '1rem', paddingTop: '.5rem', overflow: 'auto'  }}>
-      <small>{props.categoryUri} / {props.courseUri}</small>
-      <h2 style={{margin: '0', marginTop: '1rem'}}>{props.title}</h2>
+    <div style={{marginTop: '70px', width: '100%' , height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', padding: '1rem', paddingTop: '.5rem', overflow: 'auto', overflowX:'hidden'  }}>
+      <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem', paddingRight: '.5rem'}}>
+        <Text sx={{color: '#68f', fontSize: '.8rem'}}>{props.categoryUri} / {props.courseUri}</Text>
+        {hasSuggestions && <ActionIcon variant={showSuggestions ? 'hover' : 'filled'} color='blue' size='md' onClick={()=>setShowSuggestions(b => !b)}><QuestionMark size={20}/></ActionIcon>}
+      </div>
 
-      {!categoryComplete 
-      ? <>
-      <h3>You must complete all courses in this category to take the test.</h3>
-      </>
-      : <>
+        <h2 style={{margin: '0', marginTop: '1rem'}}>{props.title}</h2>
 
-          <p style={{margin: '0'}}>{props.subtitle}</p>
-          <div>
-            <Button size='sm' onClick={()=>setShowSuggestions(b => !b)}>{showSuggestions ? 'Hide Suggestions' : 'Show Suggestions'}</Button>
-          </div>
-          <hr />
+      {!ctx.connected && <p>Not Connected - You must be connected to take any tests for any category</p>}
+      {(ctx.connected && !categoryComplete) &&<p>Not complete - You must complete all courses in this category before taking this test!</p>}
 
-
+      {(ctx.connected && categoryComplete) && <>
 
         {showSuggestions 
-        ? <>
-            <p>Suggestions:</p>
-            <pre style={{fontSize: '.6rem'}}>
-              {JSON.stringify(catStore.feedback, null, 2)}
-            </pre>
-        </>
-        : <>
+        ?<SuggestionBox />
+        :<>
           {responses.map((x:any, i:number) => {
             console.log('FinalTest | remapping responses')
             switch(x.type){
@@ -416,12 +542,21 @@ const FinalTest = (props:QuestionnaireProps) => {
               default: return <QuestionString data={x} index={i} key={x.question} handleChange={handleChange} />
             }
           })}
+
           <Button size='md' style={{marginTop: '2rem', minHeight: '2rem'}} onClick={handleSubmit}>Submit</Button>
           {wasSubmitted && <p>SCORE: {score} / {maxScore}</p>}
-
-          {/* <pre>{JSON.stringify(store, null, 2)}</pre> */}
         </>}
+    
+        
       </>}
+
+ 
+
+
+
+
+      
+      
 
     </div>
 

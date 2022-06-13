@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import CONSTANTS from '@utils/constants'
+import CONSTANTS from '@data/constants'
 import axios from 'axios'
 import { Button } from '@mantine/core'
 import Modal from '@components/Modal'
@@ -69,6 +69,17 @@ const AccessContainer = (props:AccessContainerProps) => {
         verifyData()
     }, [ctx.address])
 
+
+    const handleClose = () => {
+        console.log('HANDLE CLOSE')
+        setShowConnectModal(false)
+    }
+
+    const handleConnect = () => {
+        setShowConnectModal(false)
+        connect()
+    }
+
     if(props.restricted && expired){
         return(
       
@@ -107,13 +118,13 @@ const AccessContainer = (props:AccessContainerProps) => {
     }else{
         return(
             <>
-                <Modal centered open={showConnectModal && !props.restricted} title='Connect a Wallet'>
+                <Modal centered open={showConnectModal && !props.restricted} title='Connect a Wallet' style={{zIndex:'100'}} onClose={handleClose}>
                     <p>
                         Course progress will not be saved and advanced courses cannot be accessed without connecting a wallet!
                     </p>
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                    <Button onClick={connect} loading={ctx.connecting}>Connect</Button>
-                    <Button onClick={()=>setShowConnectModal(false)}>Continue Anonymously</Button>
+                    <Button onClick={handleConnect} loading={ctx.connecting}>Connect</Button>
+                    <Button onClick={handleClose}>Continue Anonymously</Button>
                     </div>
                 </Modal>
                 {props.children}

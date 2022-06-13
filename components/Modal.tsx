@@ -16,12 +16,17 @@ const CustomModal = (props:any) => {
     }
   },[ctx])
 
+  const handleModalClose = () => {
+    setOpened(false)
+    props.onClose()
+  }
+
   return (
       <Modal
         size={props.size || 'sm'}
         centered={props.centered ? true : false}
         opened={opened}
-        onClose={() => setOpened(false)}
+        onClose={handleModalClose}
         withCloseButton={props.title ? true : false}
         title={props.title}
         style={{...props.style}}

@@ -11,6 +11,7 @@ import axios from 'axios'
 import verifyAddress from '@utils/verifyAddress';
 import { useGlobalContext } from '../context';
 import courseList from '@data/courseList';
+import CONSTANTS from '@data/constants'
 
 
 
@@ -158,7 +159,7 @@ const useConnectionManager = () => {
     console.log('index | resetApp')
     localStorage.removeItem("WEB3_CONNECT_CACHED_PROVIDER");
     localStorage.removeItem("walletconnect");
-    sessionStorage.setItem('CHIPTOS_CONNECTED', 'false')
+    sessionStorage.setItem(CONSTANTS.JWT_STORAGE_KEY, 'false')
 
     if(ctx.w3m && ctx.w3m.Web3Modal){
       await ctx.web3Modal.provider.close()
@@ -201,27 +202,27 @@ const useConnectionManager = () => {
 
       const { data } = await axios.post('/api/get-progress', {userAddress: address})
 
-      setCtx({
-        ...ctx,
-        chainId: network.chainId,
-        address,
-        connected: true,
-        connecting: false,
-        isVerified: holderData.isVerified,
-        isHolder: holderData.isHolder,
-        progress: data?.progressObject || null,
-        w3m: {
-          provider,
-          library,
-          network,
-          web3Modal,
-        }
-      });
-
-
-      // refresh()
-      
-      await subscribeToProviderEvents(provider);
+      if(holderData.isVerified){
+        setCtx({
+          ...ctx,
+          chainId: network.chainId,
+          address,
+          connected: true,
+          connecting: false,
+          isVerified: holderData.isVerified,
+          isHolder: holderData.isHolder,
+          progress: data?.progressObject || null,
+          w3m: {
+            provider,
+            library,
+            network,
+            web3Modal,
+          }
+        });
+        await subscribeToProviderEvents(provider);
+      }else{
+        resetApp()
+      }
       
     }catch(err){
       console.log('WEB3 MODAL ERROR:', err)
@@ -282,19 +283,26 @@ const useConnectionManager = () => {
   const useUriStore = (_category: string, _course?:string) => {
     const [state, setState] = useState({})
 
+
     const handleStateChange = async (_cb:Function) => {
       if(!ctx.address) return;
-      
+      let oldState:any = {...state}
       let newState = _cb(state)
       console.log('URISTORE | handleStateChange:', {_category, _course, newState})
       let prog = {...ctx.progress}
 
+      
       if(_course){
         prog[_category][_course] = newState
       }else{
         prog[_category] = newState
       }
-      await setCtx({...ctx, progress: prog})
+
+      if('complete' in newState && newState.complete === true && (!oldState.complete)){
+        await setCtx({...ctx, showCompleteBanner: true, progress: prog})
+      }else{
+        await setCtx({...ctx, progress: prog})
+      }
       // console.log('URISTORE | updating and setting ctx 0')
 
       updateProgress(prog, `1 ${_course}`)

@@ -19,7 +19,7 @@ const CoursePage = () => {
     categoryUri='intro'
     courseUri='intro-test'
     title='Intro Test'
-    subtitle='show suggestions and links before the test (if they exist)'
+    subtitle='Category test for "Intro"'
     qas={[
         {
             question: 'A question!!!',

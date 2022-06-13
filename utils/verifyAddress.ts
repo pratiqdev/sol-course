@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import abi from './abi.json'
 import axios from 'axios'
 import bops from 'bops'
-import CONSTANTS from '@utils/constants'
+import CONSTANTS from '@data/constants'
 
 interface IVerfifiedDataStruct {
   isHolder: boolean;
@@ -15,7 +15,6 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
   const web3 =  new Web3(Web3.givenProvider)
   //@ts-ignore
   const Contract = await new web3.eth.Contract(abi, '0x5955373cc1196fd91a4165c4c5c227b30a3948f9')
-  const message = 'Message used for signature'
 
 
   // connect with the api route to generate a jwt
@@ -25,8 +24,7 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
   }
 
 
-  // const msg = `0x${bops.from(message, 'utf8').toString('hex')}`;
-  const msg = `Welcome to the Chiptos Solidity Course! Verify your address to access courses`;
+  const msg = `Welcome to the Chiptos Solidity Course! \n\nVerify your address to access courses and save your progress.`;
 
   // attempt to sign a message thru metamask
   // does this work thru any provider?
@@ -34,14 +32,14 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
     console.log('verifyAddress | signMessage | provider:', window.ethereum)
     try {
         const from = _address;
-        console.log('from : ' + from);
-        console.log('msg : ' + msg);
+        // console.log('from : ' + from);
+        // console.log('msg : ' + msg);
         const ethereum = window.ethereum
         const sign = await ethereum.request({
             method: 'personal_sign',
             params: [msg, from, 'Random text'],
         });
-        console.log('signed: ' + sign);
+        console.log('verifyAddress | signed: ' + sign);
         globalSignature = sign;
     } catch (err) {
         console.error(err);
@@ -54,17 +52,19 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
     try {
         const from = _address;
         const recoveredAddr = web3.eth.accounts.recover(msg, globalSignature);
-        console.log('recoveredAddr : ' + recoveredAddr);
+        console.log('verifyAddress | recoveredAddr : ' + recoveredAddr);
 
         if (recoveredAddr.toLowerCase() === from.toLowerCase()) {
-            console.log(`Success: ${recoveredAddr}`);
+            console.log(`verifyAddress | Success: ${recoveredAddr}`);
             return _address
         } else {
-            console.log(`Failed:${recoveredAddr} vs ${from}`,);
-            return null
+            console.log(`verifyAddress | Failed to verify message:${recoveredAddr} vs ${from}`,);
+            return false
         }
     } catch (err) {
-        console.error(err);
+        console.log(`verifyAddress | error:`,err);
+        return false
+
     }
   }
   
@@ -73,7 +73,7 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
     let verifiedAddress = await verifyMessage()
 
     if(!verifiedAddress){
-      console.log('Address could not be verified')
+      console.log('verifyAddress | Address could not be verified')
       return {
         isHolder: false,
         isVerified: false,
@@ -91,7 +91,7 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
           expiration: Date.now() + 7.2e+6
         }
         localStorage.setItem(CONSTANTS.JWT_STORAGE_KEY, JSON.stringify(storageItem))
-        console.log('set localStorage item:', storageItem)
+        // console.log('set localStorage item:', storageItem)
         return {
           isHolder: true,
           isVerified: true,

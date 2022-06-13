@@ -7,6 +7,7 @@ import CodeBlock from '@instructions/CodeBlock'
 import Blockquote from '@instructions/Blockquote'
 import Image from '@instructions/Image'
 import constants from '@data/constants'
+import { SuggestionCoreTypes } from '@utils/interfaces'
 
 const CoursePage = () => {
 
@@ -91,6 +92,7 @@ const myFunction = (arg) => {
                         question: 'A question!!!',
                         answer: 'blaps',
                         feedback: {
+                            coreType: SuggestionCoreTypes.CODE,
                             title: 'CheckOut',
                             response:'The answer is "blaps". Check that thing for more answers',
                             suggestion: 'Check out that thing for more answers about "A question!!!"',
@@ -105,6 +107,7 @@ const myFunction = (arg) => {
                         question: 'Another q & a',
                         answer: 'flap',
                         feedback: {
+                            coreType: SuggestionCoreTypes.CODE,
                             title: 'CheckOut2',
                             response:'The answer is "flap". Check that thing for more answers',
                             suggestion: 'Check out that thing for more answers about "A question!!!"',
@@ -118,6 +121,7 @@ const myFunction = (arg) => {
                         question: 'A number question... same as text really',
                         answer: '42',
                         feedback: {
+                            coreType: SuggestionCoreTypes.CONCEPT,
                             title: 'CheckOut3',
                             response:'The answer is "42". Check that thing for more answers',
                             suggestion: 'Check out that thing for more answers about "A question!!!"',
@@ -133,6 +137,7 @@ const myFunction = (arg) => {
                         options: ['option one!', 'option two...', 'option thr33'],
                         answer: 'option one!',
                         feedback: {
+                            coreType: SuggestionCoreTypes.CODE,
                             title: 'CheckOut4',
                             response:'The answer is "option one!". Check that thing for more answers',
                             suggestion: 'Check out that thing for more answers about "A question!!!"',
@@ -147,6 +152,7 @@ const myFunction = (arg) => {
                         question: 'A basic boolean!?',
                         answer: 'false',
                         feedback: {
+                            coreType: SuggestionCoreTypes.TECH,
                             title: 'CheckSomeBooleans',
                             response:'The answer is "false". Check that thing for more answers',
                             suggestion: 'Check out that thing for more answers about "A question!!!"',

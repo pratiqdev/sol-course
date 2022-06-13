@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link'
 import {
   AppShell,
@@ -12,7 +12,8 @@ import {
   useMantineTheme,
   Accordion,
   Button,
-  Box
+  Box,
+  ActionIcon
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import courseList from '@data/courseList';
@@ -22,12 +23,47 @@ import { ellipseAddress } from '@utils/utilities';
 import AccessContainer from '@components/AccessContainer'
 import useConnectionManager from '@utils/hooks/useConnectionManager'
 import StatusBadge from '@components/StatusBadge'
+import { ChevronLeft, ChevronRight } from 'tabler-icons-react';
 
 interface ShellProps{
   restricted?: any;
   children?: any;
   categoryIndex: number;
 }
+
+
+const CompletionBanner = () => {
+  const {ctx, setCtx} = useConnectionManager()
+  const [showBanner, setShowBanner] = useState(false)
+
+  useEffect(()=>{
+    if(ctx.showCompleteBanner){
+      setShowBanner(true)
+      console.log('COMPLETE CTX CHANGE:', ctx.showCompleteBanner)
+      setCtx({...ctx, showCompleteBanner: false})
+    }else{
+      console.log('COMPLETE CTX CHANGE:', ctx.showCompleteBanner)
+    }
+  },[ctx])
+
+  const handleClose = () => {
+    setShowBanner(false)
+    setCtx({...ctx, showCompleteBanner: false})
+  }
+
+
+  if(showBanner){
+    return(
+      <div style={{position: 'fixed', height: '100vh', width: '100vw', top: '0', left: '0', zIndex: '1000', background: '#0f03', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+          <p>Complete banner!</p>
+          <Button onClick={handleClose}>Close Banner</Button>
+      </div>
+    )
+  }else{
+    return null
+  }
+}
+
 
 const Shell = (props: ShellProps) => {
   const theme = useMantineTheme();
@@ -43,7 +79,7 @@ const Shell = (props: ShellProps) => {
   // console.log('currentCategory:', currentCategory)
   // console.log('currentPage:', currentPage)
   // console.log('currentIndex:', props.categoryIndex)
-  const [accordionState, handlers] = useAccordionState({ total: Object.entries(courseList).length, initialItem: props.categoryIndex });
+  const [accordionState, handlers] = useAccordionState({ total: Object.entries(courseList).length, initialItem: props.categoryIndex || 0 });
   const isMobile = useMediaQuery('(max-width: 992px)');
 
   let fixedNav = true
@@ -59,6 +95,22 @@ const Shell = (props: ShellProps) => {
     // console.log('DDD')
     fixedNav = true
   }
+
+  const LeftChev = () => (
+      <ChevronLeft
+        size={48}
+        strokeWidth={2}
+        color={'#68f'}
+      />
+  )
+
+  const RightChev = () => (
+    <ChevronRight
+      size={48}
+      strokeWidth={2}
+      color={'#68f'}
+    />
+)
 
 
   return (
@@ -82,7 +134,7 @@ const Shell = (props: ShellProps) => {
               {/* <Button style={{padding: '5px', width: '2rem'}} onClick={()=> setShrinkNav(o => !o)}>{shrinkNav ? `>` : `<`}</Button> */}
               <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
                       {ctx.navOpen && <Text>Courses</Text>}
-                      <Button style={{minWidth: '2rem', padding: '0'}} onClick={() => setCtx({...ctx, navOpen: !ctx.navOpen})}>{!ctx.navOpen ? `>` : `<`}</Button>
+                      <ActionIcon variant='hover' size='md' color='blue' onClick={() => setCtx({...ctx, navOpen: !ctx.navOpen})}>{!ctx.navOpen ? <RightChev /> : <LeftChev />}</ActionIcon>
                   </div>
               {ctx.navOpen &&
               <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
@@ -169,6 +221,7 @@ const Shell = (props: ShellProps) => {
         overflow: isMobile ? 'auto' : 'hidden'
         }}>
           <AccessContainer restricted={props.restricted}>
+            <CompletionBanner />
             {props.children}
           </AccessContainer>
     </div>
