@@ -83,6 +83,28 @@ const myFunction = (arg) => {
 
 
 
+{/* 
+
+Type error: Type '{ 
+    suggestion: string; 
+    links: { 
+        'https://google.com/images/cats': string; 
+    }; 
+}' 
+    
+    is missing the following properties from type '
+    { 
+        coreType: SuggestionCoreTypes; 
+        title: string; 
+        suggestion?: string | undefined; 
+        links?: { 
+            [key: string]: string; 
+        } | undefined; 
+    }': 
+    coreType, 
+    title
+*/}
+
 
 
 </Instructions>
