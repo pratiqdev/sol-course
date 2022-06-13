@@ -46,12 +46,6 @@ const Debugger = (props) => {
     reset, 
     
     progress, 
-    latestCourse, 
-    latestCategory, 
-    updateProgress, 
-    refresh, 
-    setLatestCategory, 
-    setLatestCourse 
 } = useConnectionManager()
 
   const [open, setOpen] = useState(true)
