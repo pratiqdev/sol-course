@@ -109,7 +109,8 @@ Type error: Type '{
 
 </Instructions>
 
-            <Editor 
+        <Editor 
+            language='sol'
             categoryUri='intro'
             courseUri='getting-started'
             code={

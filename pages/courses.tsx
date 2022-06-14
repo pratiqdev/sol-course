@@ -19,10 +19,8 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 import courseList from '@data/courseList';
 import useConnectionManager from '@utils/hooks/useConnectionManager';
-import { useGlobalContext } from '@utils/context';
 import CourseCard from '@components/CourseCard'
 import { ellipseAddress } from '@utils/utilities'
-import useProgress from '@utils/hooks/useProgress';
 
 
 

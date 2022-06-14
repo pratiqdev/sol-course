@@ -239,6 +239,67 @@ const FinalTest = (props:IQuestionnaireProps) => {
 
 
 
+    
+  const QuestionBoolean = (props:any) => {
+    const {index, data} = props
+    const [value, setValue] = useState(data.givenAnswer)
+    const [correct, setCorrect] = useState(false)
+    const [wasSelected, setWasSelected] = useState(false)
+
+
+    const handleLocalChange = (val:any) => {
+      // console.log('QAS | QuestionString | handleLocalChange...')
+      setWasSelected(true)
+      setValue(val)
+      props.handleChange(index, val)
+      setCorrect(responses[index].answer == val.toString())
+      console.log(
+        'QAS | QuestionString | correct:', 
+        val, 
+        responses[index].answer == val.toString() ? 'correct' : 'wrong'
+      )
+    }
+
+    useEffect(()=>{
+      if(store && store.wasSubmitted){
+        setWasSubmitted(true)
+      }
+    },[])
+
+    useEffect(()=>{ 
+      if(wasSubmitted){
+        setCorrect(responses[index].answer == value.toString())
+      }
+    }, [wasSubmitted])
+
+    let outlineColor = '4px solid transparent'
+    if(wasSubmitted && !correct){
+      outlineColor = '4px solid red'
+    }
+    if(wasSubmitted && correct){
+      outlineColor = '4px solid green'
+    }
+
+    
+    return(
+      <div style={{borderLeft: outlineColor, padding: '0', paddingLeft: wasSubmitted ? '5px' : '0', marginBottom: '1rem'}}>
+        <Text>{index + 1} - {data.question}</Text>
+        <div style={{display: 'flex', width: '100%', justifyContent: 'stretch'}}>
+          <Button fullWidth variant={wasSelected ? value ? 'white' : 'subtle' : 'default'}  sx={{marginRight: '10px'}} onClick={()=>handleLocalChange(true)}>True</Button>
+          <Button fullWidth variant={wasSelected ? !value ? 'white' : 'subtle' : 'default'} onClick={()=>handleLocalChange(false)}>False</Button>
+        </div>
+        {wasSubmitted && !correct &&
+          <small style={{color: 'red'}}>{data.feedback.response}</small>
+        }
+      </div>
+    )
+  }
+  
+
+
+
+
+
 
 
 
@@ -539,6 +600,7 @@ const FinalTest = (props:IQuestionnaireProps) => {
             console.log('FinalTest | remapping responses')
             switch(x.type){
               case 'options': return <QuestionOptions data={x} index={i} key={x.question} handleChange={handleChange} />; break;
+              case 'boolean': return <QuestionBoolean data={x} index={i} key={x.question} handleChange={handleChange} />; break;
               default: return <QuestionString data={x} index={i} key={x.question} handleChange={handleChange} />
             }
           })}

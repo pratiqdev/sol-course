@@ -4,82 +4,62 @@ import {
   AppShell,
   Navbar,
   Header,
-  Footer,
-  Aside,
   Text,
   MediaQuery,
   Burger,
   useMantineTheme,
-  Accordion,
   Button,
-  Container,
-  Box,
-  ActionIcon
 } from '@mantine/core';
-import courseList from '@data/courseList';
-import { heights } from '@mantine/core/lib/components/Button/Button.styles';
 import useConnectionManager from '@utils/hooks/useConnectionManager';
-import { useGlobalContext } from '@utils/context';
 import { ellipseAddress } from '@utils/utilities';
 
-import {
-  Settings,
-  Home2
-} from 'tabler-icons-react'
-import Blocky from '@components/Blocky';
 
 
-/*
-Create a fullscreen modal like a game start screen 
-Only show on first start 
-Check a localStorage var
-if started = false => showStart => setStarted false
 
-*/
 
-const Debugger = (props) => {
-  const { 
-    ctx, 
-    setCtx, 
+// const Debugger = (props) => {
+//   const { 
+//     ctx, 
+//     setCtx, 
     
-    connect, 
-    reset, 
+//     connect, 
+//     reset, 
     
-    progress, 
-} = useConnectionManager()
+//     progress, 
+// } = useConnectionManager()
 
-  const [open, setOpen] = useState(true)
+//   const [open, setOpen] = useState(true)
 
-  const [progressState, setProgressState] = useState('empty')
-  const [contextState, setContextState] = useState('empty')
+//   const [progressState, setProgressState] = useState('empty')
+//   const [contextState, setContextState] = useState('empty')
 
-  useEffect(()=>{
-    let context = {...ctx}
-    delete context['w3m']
-    setContextState(JSON.stringify(context, null, 2))
-    setProgressState(JSON.stringify(progress, null, 2))
+//   useEffect(()=>{
+//     let context = {...ctx}
+//     delete context['w3m']
+//     setContextState(JSON.stringify(context, null, 2))
+//     setProgressState(JSON.stringify(progress, null, 2))
 
-  },[ctx, progress])
+//   },[ctx, progress])
   
 
-  return(
-    <div className={open ? 'debugger-open' : 'debugger-closed'} onClick={()=>setOpen(b=>!b)}>
-        <h4>Context</h4>
-        <pre>{contextState}</pre>
-        <hr/>
-        <h4>Progress</h4>
-        <pre>{progressState}</pre>
-    </div>
-  )
-}
+//   return(
+//     <div className={open ? 'debugger-open' : 'debugger-closed'} onClick={()=>setOpen(b=>!b)}>
+//         <h4>Context</h4>
+//         <pre>{contextState}</pre>
+//         <hr/>
+//         <h4>Progress</h4>
+//         <pre>{progressState}</pre>
+//     </div>
+//   )
+// }
 
 
 
-export default function AppShellDemo() {
+const HomePage = () => {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
-  const [shrinkNav, setShrinkNav] = useState(false)
   const { connect, ctx, setCtx} = useConnectionManager()
+
   return (
     <AppShell
       styles={{
@@ -104,58 +84,38 @@ export default function AppShellDemo() {
           </Navbar>
         </MediaQuery>
       }
-    //   aside={
-    //     <MediaQuery smallerThan="sm" styles={{ display: 'none' }}>
-    //       <Aside p="md" hiddenBreakpoint="sm" width={{ sm: 200, lg: 300 }}>
-    //         <Text>Application sidebar</Text>
-    //       </Aside>
-    //     </MediaQuery>
-    //   }
-    //   footer={
-    //     <Footer height={60} p="md">
-    //       Application footer
-    //     </Footer>
-    //   }
-      header={
-        <Header fixed height={70}  p="md">
-          <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
-            <MediaQuery largerThan="md" styles={{ display: 'none' }}>
-              <Burger
-                opened={opened}
-                onClick={() => setOpened((o) => !o)}
-                size="sm"
-                color={theme.colors.gray[6]}
-                mr="xl"
-              />
-            </MediaQuery>
 
-            <div style={{display: 'flex', alignItems: 'center', width: '100%', flexWrap: 'nowrap'}}>
+    header={
+      <Header fixed height={70}  p="md">
+        <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+          <MediaQuery largerThan="md" styles={{ display: 'none' }}>
+            <Burger
+              opened={opened}
+              onClick={() => setOpened((o) => !o)}
+              size="sm"
+              color={theme.colors.gray[6]}
+              mr="xl"
+            />
+          </MediaQuery>
 
-              <div style={{width: '100%', display: 'flex'}}>
-                {/* <Link href='/' passHref><ActionIcon><Home2 size={18}/></ActionIcon></Link> */}
-              <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>Home</Button></Link>
-
-                <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
-                  <div style={{display: 'flex', }}>
-                    <Link href='/courses' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
-                    <Link href='/docs' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
-                  </div>
-                </MediaQuery>
-              </div>
-
-              <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
-                <div style={{display: 'flex', alignItems: 'center'}}>
-                  {!ctx.connected 
-                    ? <Button variant='filled' onClick={connect} sx={{marginRight: '10px'}}>Connect</Button>
-                    : <Button variant='filled'  sx={{marginRight: '10px'}}>{ellipseAddress(ctx.address, 4)}</Button>
-                  }
-                  <Blocky />
-                </div>
-              </MediaQuery>
+          <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+            <div style={{width: '100%'}}>
+              <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>ChiptosX Sol</Button></Link>
             </div>
+            <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
+            <div style={{display: 'flex', alignItems: 'center'}}>
+              <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
+              <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
+              {(!ctx.connected)
+                ? <Button variant='filled' onClick={connect} loading={ctx.connecting}>Connect</Button>
+                : <Button variant='filled'>{ellipseAddress(ctx.address || '', 4)}</Button>
+              }
+            </div>
+            </MediaQuery>
           </div>
-        </Header>
-      }
+        </div>
+      </Header>
+    }
     >
         <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', }}>
             <Text>Basic intro, what is this, quick how to, get started callout</Text>
@@ -170,3 +130,5 @@ export default function AppShellDemo() {
     </AppShell>
   );
 }
+
+export default HomePage

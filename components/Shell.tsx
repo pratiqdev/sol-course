@@ -162,13 +162,18 @@ const Shell = (props: ShellProps) => {
             <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginBottom: 10}}>Docs</Button></Link>
             <Button variant='light' sx={{marginBottom: 10}} onClick={connect}>Connect</Button>
          
-              <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
-              {Object.entries(courseList).map(([categoryUri, categoryObject],i) => 
-                  <Accordion.Item key={categoryObject.title} label={categoryObject.title} style={{background: i === props.categoryIndex ? '#335' : '#222', fontSize: '.8rem'}}>
-                      {Object.entries(categoryObject.courses).map(([courseUri, courseObject]) => 
-                        <Box key={courseObject.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', minWidth: '100%','&:hover': { background: '#222'}}}>
-                          <Link href={`/courses/${courseObject.file}`}>{courseObject.title}</Link>
-                        </Box>
+            <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
+                {Object.entries(courseList).map(([categoryUri, categoryObject],i) => 
+                  <Accordion.Item key={categoryObject.title} label={categoryObject.title} style={{background: i === props.categoryIndex ? '#223' : '#222', fontSize: '.8rem'}}>
+                      {Object.entries(categoryObject.courses).map(([courseUri, courseObject]) => {
+
+                        return(
+                          <Box key={courseObject.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', marginLeft: '-10px', marginRight: '-10px',cursor: 'pointer', minWidth: '100%', borderBottom: '1px solid transparent', '&:hover': { borderBottom: '1px solid #555'}}}>
+                            <StatusBadge path={courseObject.file}/> <Link href={`/courses/${courseObject.file}`}>{courseObject.title}</Link>
+                          </Box>
+                        )}
+
+
                       )}
                   </Accordion.Item>
                 )}

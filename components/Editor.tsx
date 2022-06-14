@@ -9,7 +9,8 @@ import {
 } from '@mantine/core'
 import axios from 'axios';
 import { ICodeTest } from '@utils/interfaces';
-import { language } from 'gray-matter';
+import { useMediaQuery } from '@mantine/hooks'
+import MobileEditor from '@components/MobileEditor'
 
 
 /**
@@ -20,7 +21,8 @@ interface ICustomEditorProps{
   categoryUri: string;
   courseUri: string;
   code: string;
-  tests: ICodeTest[]
+  tests: ICodeTest[];
+  language: string;
 }
 
 interface IErrorObject {
@@ -74,6 +76,8 @@ const CustomEditor = (props:ICustomEditorProps) => {
   const [store, setStore] = useUriStore(props.categoryUri, props.courseUri)
   const [catStore, setCatStore] = useUriStore(props.categoryUri)
   const [errorItemArray, setErrorItemArray] = useState<IErrorObject[]>([])
+
+  const isMobile = useMediaQuery('(max-width: 992px)');
 
   useEffect(()=>{
     // ctx.instructionsOpen ? ctx.navOpen ? '60vw' : '40vw' : 'calc(100vw - 120px)'
@@ -249,12 +253,12 @@ const CustomEditor = (props:ICustomEditorProps) => {
       <div style={{marginTop: '70px', width: width, minWidth: width, maxWidth: width, height: 'calc(100vh - 70px)', maxHeight:  'calc(100vh - 70px)' }}>
         {showEditor
         ? <Editor
-        height="calc(70vh - 70px )"
-        defaultLanguage="sol"
-        value={editorContent}
-        onChange={(c) => handleCodeUpdate(c || '')}
-        theme={'vs-dark'}
-        /> 
+            height="calc(70vh - 70px )"
+            defaultLanguage="sol"
+            value={editorContent}
+            onChange={(c) => handleCodeUpdate(c || '')}
+            theme={'vs-dark'}
+          /> 
         : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto' }}>{compiledOutput}</pre>
       }
           <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
@@ -279,13 +283,11 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
       <div style={{width: '100%', height: 'calc(90vh - 70px)'}}>
         {showEditor
-        ? <Editor
-        height="calc(70vh - 70px )"
-        defaultLanguage="sol"
-        value={editorContent}
-        onChange={(c) => handleCodeUpdate(c || '')}
-        theme={'vs-dark'}
-        /> 
+        ? <MobileEditor 
+            value={editorContent}
+            onChange={handleCodeUpdate}
+            language={props.language}
+          />
         : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto' }}>{compiledOutput}</pre>
       }
           <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
