@@ -47,7 +47,8 @@ vvvvvvvvvvvvvv UNPAID vvvvvvvvvvvvvvvvvvvvvv
 2hr - refactor QAS to conform to new progress store structure
 1hr - testing progress store across all page types
 
-## 6/13 - 5hr
+## 6/13 - 6hr
 1hr - removed bug from QAS that prevented them from showing on mount
 2hr - refactored code error output to use styled cards
 2hr - refactored suggestion box for tests to use category based cards / added categories to suggestion creation
+1hr - Swapped out monaco editor for simple editor for mobile users
