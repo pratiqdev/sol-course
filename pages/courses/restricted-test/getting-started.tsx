@@ -87,6 +87,7 @@ const myFunction = (arg) => {
 </Instructions>
 
 <Editor 
+            language='sol'
             categoryUri='restricted-test'
             courseUri='getting-started'
             code={
