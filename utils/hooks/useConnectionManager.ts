@@ -274,7 +274,7 @@ const useConnectionManager = () => {
   const updateProgress = async (newProg: any, tag:string) => {
       if(!ctx.address) return
       try{
-          console.log('STORE | SAVING PROGRESS TO STORE:', {hasFeedback: newProg.intro.feedback ? 'true' : 'false', tag, newProg})
+          // console.log('STORE | SAVING PROGRESS TO STORE:', {hasFeedback: newProg.intro.feedback ? 'true' : 'false', tag, newProg})
           await axios.post('/api/set-progress', {userAddress: ctx.address, data:{progressObject: newProg}})
           // refresh()
       }catch(err){
@@ -306,7 +306,7 @@ const useConnectionManager = () => {
         prog[_category] = newState
       }
 
-      if('complete' in newState && newState.complete === true && (!oldState.complete)){
+      if('complete' in newState && newState.complete === true && (!oldState.complete) && !('noBanner' in newState)){
         await setCtx({...ctx, showCompleteBanner: true, progress: prog})
       }else{
         await setCtx({...ctx, progress: prog})

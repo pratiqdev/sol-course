@@ -65,9 +65,11 @@ span a:hover{
 
 span code{
   background: #333;
-  padding: .1rem;
+  padding: .1rem .2rem;
+  color:rgb(152, 162, 255);
   margin: 0;
   border-radius: .25rem;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .prism-code{

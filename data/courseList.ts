@@ -45,6 +45,34 @@ const courseList: ICourseListObject = {
             },
         }
     },
+    'solidity-basics':{
+        title: 'Solidity Basics',
+        description: 'An introduction to the features and structure of the Solidity language',
+        difficulty: 10, // out of 100
+        restricted: false,
+        // actual courses
+        courses: {
+            '1':{
+                title: 'Contract Definition',
+                file: 'solidity-basics/contract-definition',
+                data: null
+            },
+        }
+    },
+    'transactions':{
+        title: 'Transactions',
+        description: 'Contract interactions and events',
+        difficulty: 10, // out of 100
+        restricted: false,
+        // actual courses
+        courses: {
+            '1':{
+                title: 'Intro to Transactions',
+                file: 'transactions/intro-to-transactions',
+                data: null
+            },
+        }
+    },
 
 }
 export default courseList

@@ -11,7 +11,7 @@ import { SuggestionCoreTypes } from '@utils/interfaces'
 const CoursePage = () => {
 
     return(
-        <Shell categoryIndex={0}>
+        <Shell categoryIndex={2}>
 
             
 <Instructions>

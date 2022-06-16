@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Editor from '@components/Editor'
 import Shell from '@components/Shell'
-import Instructions from '@components/Instructions'
+import InstructionsFull from '@components/InstructionsFull'
 import CodeBlock from '@instructions/CodeBlock'
 import Blockquote from '@instructions/Blockquote'
 import Image from '@instructions/Image'
@@ -11,10 +11,14 @@ import { SuggestionCoreTypes } from '@utils/interfaces'
 const CoursePage = () => {
 
     return(
-        <Shell categoryIndex={0}>
+        <Shell categoryIndex={3}>
 
             
-<Instructions>
+<InstructionsFull
+    categoryUri='transactions'
+    courseUri='intro-to-transactions'
+>
+
 <h2>Intro to Transactions <code>Tx</code></h2>
 
 <p>Every interaction is considered a transaction, between users or a user to a smart contract.</p>
@@ -77,7 +81,7 @@ const CoursePage = () => {
 
 
 
-</Instructions>
+</InstructionsFull>
 
     
         </Shell>

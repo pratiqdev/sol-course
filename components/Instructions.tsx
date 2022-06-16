@@ -1,3 +1,4 @@
+import {useEffect} from 'react'
 import { Button, Text, MediaQuery, ActionIcon } from '@mantine/core'
 import { useRouter } from 'next/router'
 import Blockquote from '@instructions/Blockquote'
@@ -5,7 +6,11 @@ import CodeBlock from '@instructions/CodeBlock'
 import useConnectionManager from '@utils/hooks/useConnectionManager'
 import { ChevronLeft, ChevronRight } from 'tabler-icons-react'
 
-const Instructions = (props: any) => {
+interface IInstructionProps {
+    children?: any;
+}
+
+const Instructions = (props: IInstructionProps) => {
     const { ctx, setCtx } = useConnectionManager()
     const router = useRouter()
     const routerSplit = router.asPath.split('/')
@@ -35,11 +40,12 @@ const Instructions = (props: any) => {
     )
 
 
+
     return(
         <>
         <MediaQuery largerThan="md" styles={{ display: 'none !important', }}>
         
-        <div style={{ padding: '10px', paddingTop: '0', marginTop: '70px', width: '100%', background: '#222',}}>
+        <div style={{ padding: '10px', paddingTop: '0', marginTop: '70px', width: '100%', background: '#222', minHeight: 'calc(100vh - 70px)'}}>
             <>
             <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem'}}>
                 <Text sx={{color: '#68f', fontSize: '.8rem'}}>{currentCategory} / {currentPage}</Text>
