@@ -24,6 +24,7 @@ import AccessContainer from '@components/AccessContainer'
 import useConnectionManager from '@utils/hooks/useConnectionManager'
 import StatusBadge from '@components/StatusBadge'
 import { ChevronLeft, ChevronRight } from 'tabler-icons-react';
+import Blocky from './Blocky';
 
 interface ShellProps{
   restricted?: any;
@@ -96,6 +97,12 @@ const Shell = (props: ShellProps) => {
     fixedNav = true
   }
 
+
+  const handleConnect = () => {
+    setOpened(false)
+    connect()
+  }
+
   const LeftChev = () => (
       <ChevronLeft
         size={48}
@@ -160,7 +167,7 @@ const Shell = (props: ShellProps) => {
           <Navbar p="md" hiddenBreakpoint="md" hidden={!opened} width={{md: ctx.navOpen ? '20vw' : 60 }}>
             <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginBottom: 10}}>Courses</Button></Link>
             <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginBottom: 10}}>Docs</Button></Link>
-            <Button variant='light' sx={{marginBottom: 10}} onClick={connect}>Connect</Button>
+            <Button variant='light' sx={{marginBottom: 10}} onClick={handleConnect}>Connect</Button>
          
             <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
                 {Object.entries(courseList).map(([categoryUri, categoryObject],i) => 
@@ -207,10 +214,11 @@ const Shell = (props: ShellProps) => {
               <div style={{display: 'flex', alignItems: 'center'}}>
                 <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Courses</Button></Link>
                 <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginRight: 10}}>Docs</Button></Link>
-                {(!ctx.connected)
-                  ? <Button variant='filled' onClick={connect} loading={ctx.connecting}>Connect</Button>
+                <Blocky />
+                {/* {(!ctx.connected)
+                  ? <Button variant='filled' onClick={handleConnect} loading={ctx.connecting}>Connect</Button>
                   : <Button variant='filled'>{ellipseAddress(ctx.address || '', 4)}</Button>
-                }
+                } */}
               </div>
               </MediaQuery>
             </div>

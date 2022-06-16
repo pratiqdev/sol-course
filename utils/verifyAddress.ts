@@ -11,6 +11,15 @@ interface IVerfifiedDataStruct {
 }
 const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => {
 
+  if(!_address){
+    console.log('NO ADDRESS TO VERIFY:', _address)
+    return {
+      isHolder: false,
+      isVerified: false,
+      message: 'No address to verify...'
+    }
+  }
+
   let globalSignature
   const web3 =  new Web3(Web3.givenProvider)
   //@ts-ignore
@@ -47,7 +56,7 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
   }
 
   // use web3.eth to verify the signature and check the address returned
-  // from the verification process agains the address passed as arg
+  // from the verification process against the address passed as arg
   const verifyMessage = async () => {
     try {
         const from = _address;

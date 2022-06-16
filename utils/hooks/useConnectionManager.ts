@@ -12,6 +12,7 @@ import verifyAddress from '@utils/verifyAddress';
 import { useGlobalContext } from '../context';
 import courseList from '@data/courseList';
 import CONSTANTS from '@data/constants'
+import { useMediaQuery } from '@mantine/hooks'
 
 
 
@@ -19,6 +20,7 @@ import CONSTANTS from '@data/constants'
 const useConnectionManager = () => {
 
   const {ctx, setCtx} = useGlobalContext()
+  const isMobile = useMediaQuery('(max-width: 992px)');
 
   // const [progress, setProgress] = useState<any>({})
   const [latestCategoryState, setLatestCategoryState] = useState<any>()
@@ -180,7 +182,11 @@ const useConnectionManager = () => {
   };
 
   const connectWeb3 = async () => {
-    setCtx({...ctx, navOpen: false, connecting: true})
+    setCtx({
+      ...ctx, 
+      navOpen: isMobile ? ctx.navOpen : false, 
+      connecting: true
+    })
     console.log('index | connectWeb3')
 
     try{
@@ -199,6 +205,7 @@ const useConnectionManager = () => {
       const address = provider.selectedAddress ? provider.selectedAddress : provider.accounts[0];
       
       let holderData = await verifyAddress(address)
+      console.log('verifyAddress | return data:', holderData)
 
       const { data } = await axios.post('/api/get-progress', {userAddress: address})
 
@@ -225,6 +232,7 @@ const useConnectionManager = () => {
       }
       
     }catch(err){
+      resetApp()
       console.log('WEB3 MODAL ERROR:', err)
     }
   }

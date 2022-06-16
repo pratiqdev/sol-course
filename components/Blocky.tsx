@@ -2,33 +2,40 @@ import useConnectionManager from '@utils/hooks/useConnectionManager';
 import Blockies from 'react-blockies';
 import { Button } from '@mantine/core'
 import { useEffect, useState } from 'react';
+import { ellipseAddress } from '@utils/utilities';
  
 const Blocky = () => {
-    const {ctx} = useConnectionManager()
+    const {ctx, connect, reset} = useConnectionManager()
     const [hasAddress, setHasAddress] = useState(false)
     
     useEffect(  ()=>{
-        if(!ctx.connected || !ctx.address){
-            setHasAddress(true)
-        }
+        setHasAddress(ctx.connected && ctx.address)
     },[ctx.address, ctx.connected])
 
     if(!hasAddress){
         return(
-            <Button>Connect#</Button>
+            <Button onClick={connect} loading={ctx.connecting}>Connect#</Button>
         )
     }    
 
     return (
-        <Blockies
-            seed={ctx.address} 
-            size={10} 
-            scale={3} 
-            color="#dfe" 
-            bgColor="#ffe" 
-            spotColor="#abc" 
-            className="identicon" 
-        />
+        <Button 
+            onClick={reset} 
+            loading={ctx.connecting} 
+            style={{paddingLeft: '10px'}}
+            leftIcon={
+                <Blockies
+                    seed={ctx.address} 
+                    size={10} 
+                    scale={2} 
+                    color="#dfe" 
+                    bgColor="#ffe" 
+                    spotColor="#abc" 
+                    className="identicon" 
+                />
+            }>
+                {ellipseAddress(ctx.address || '', 4)}
+        </Button>
     )
 }
 
