@@ -66,6 +66,7 @@ span a:hover{
   color:#2525fd;
 }
 
+
 span code{
   background: #333;
   padding: .1rem .2rem;
@@ -165,4 +166,39 @@ hr{
 
 .identicon{
   border-radius: 50%;
+}
+
+
+span p {
+  margin-top: 1rem
+}
+
+table{
+  border-collapse: collapse;
+  font-size: .8rem;
+}
+
+thead{
+  font-weight: bold;
+  border-bottom: 1px solid white;
+}
+td{
+  padding: .5rem
+}
+tr:nth-of-type(odd){
+  background: rgb(100,100,100,.2);
+}
+
+td {
+  border-right: 1px solid grey;
+}
+td:last-child{
+  border-right: 0px solid grey;
+}
+
+thead td {
+  border-right: 1px solid white;
+}
+thead td:last-child{
+  border-right: 0px solid white;
 }

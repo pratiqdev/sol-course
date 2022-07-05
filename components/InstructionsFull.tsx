@@ -34,20 +34,28 @@ const Instructions = (props: IInstructionFullProps) => {
 
     return(
         <div style={{
+            background: '#222', 
+            width: '100%',
+            minHeight: 'calc(100vh)',
+            overflow: 'auto'
+        }}>
+        <div style={{
             padding: '20px', 
             paddingTop: '0', 
             paddingRight: '15px',
             marginTop: '70px', 
             width: ctx.instructionsOpen ? 'calc(100vw - 60px)' : '60px', 
             background: '#222', 
-            maxHeight: 'calc(100vh - 70px)',
-            minHeight: 'calc(100vh - 70px)',
             overflow: 'auto',
+            maxWidth: '800px',
+            marginLeft: 'auto',
+            marginRight: 'auto'
         }}>
             <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem'}}>
                 <Text sx={{color: '#68f', fontSize: '.8rem'}}>{currentCategory} / {currentPage}</Text>
             </div>
             <span>{props.children}</span>
+        </div>
         </div>
     )
 }

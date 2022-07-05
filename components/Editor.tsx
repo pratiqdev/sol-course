@@ -121,7 +121,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
    * returns true if regex found
    * returns false if regex not found (or found in comment)
    */
-  const doesRegexExist = (str: string, reg: string) => {
+  const doesRegexExist = (str: string, reg: RegExp | string) => {
     let RESULT = false
     if(str.search(reg)){
       // console.log('CODE | found regex. Checking for comment...')
@@ -181,8 +181,10 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
       
       props.tests.forEach((test:any, i: number)=>{
-        const reg = new RegExp(test.regex, 'gi');
-        let exists = doesRegexExist(editorContent, test.regex)
+        const reg = new RegExp(test.regex.replace(/ /g, '[\n\r\\s]*'), 'gm');
+        // const reg = new RegExp(test.regex, 'gi');
+        console.log('testing regex:', test.regex, 'as:', reg)
+        let exists = doesRegexExist(editorContent, reg)
 
         if(
           (test.exist && !exists)
