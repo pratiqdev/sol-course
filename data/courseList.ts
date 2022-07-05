@@ -103,8 +103,8 @@ const courseList: ICourseListObject = {
                 file: 'smart-contract-intro/contract-functions',
             },
             '6':{
-                title: '',
-                file: 'smart-contract-intro/',
+                title: 'Contract Payments',
+                file: 'smart-contract-intro/contract-payments',
             },
   
         }
