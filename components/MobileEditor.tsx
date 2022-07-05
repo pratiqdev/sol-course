@@ -38,7 +38,7 @@ const MobileEditor = (props:IMobileEditorProps) => {
             onValueChange={onValueChange}
             highlight={highlight}
             padding={10}
-            style={{minHeight: 'calc(70vh - 70px)', fontFamily: 'monospace, monospace', fontSize: '.8rem'}}
+            style={{minHeight: 'calc(70vh - 70px)', fontFamily: 'monospace, monospace', fontSize: '.8rem', background: '#000'}}
             // style={styles.root}
         />
     )

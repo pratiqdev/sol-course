@@ -28,7 +28,6 @@
 
 
 
-vvvvvvvvvvvvvv UNPAID vvvvvvvvvvvvvvvvvvvvvv
  
 ## 6/6 - 3hr
 1hr - Fixed bugs with connectionManager and tested (with metamask only)
@@ -52,3 +51,11 @@ vvvvvvvvvvvvvv UNPAID vvvvvvvvvvvvvvvvvvvvvv
 2hr - refactored code error output to use styled cards
 2hr - refactored suggestion box for tests to use category based cards / added categories to suggestion creation
 1hr - Swapped out monaco editor for simple editor for mobile users
+
+
+
+
+vvvvvvvvvvvvvv UNPAID vvvvvvvvvvvvvvvvvvvvvv
+
+## 7/5 - 1hr
+1hr - added courses from course-content repo

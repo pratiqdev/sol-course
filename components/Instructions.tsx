@@ -38,6 +38,33 @@ const Instructions = (props: IInstructionProps) => {
             color={'#68f'}
         />
     )
+    
+    const styles = {
+        desktopInstructions: {
+            padding: '10px', 
+            paddingTop: '0', 
+            paddingRight: '15px',
+            marginTop: '70px', 
+            width: ctx.instructionsOpen ? 'calc(45vw - 60px)' : '60px', 
+            background: '#222', 
+            maxHeight: 'calc(100vh - 70px)',
+            minHeight: 'calc(100vh - 70px)',
+            overflow: 'auto',
+        },
+
+        mobileInstructions: { 
+            padding: '10px', 
+            paddingTop: '0', 
+            paddingBottom: '1rem',
+            borderBottom: '2px solid white',
+            marginTop: '70px', 
+            width: '100%', 
+            background: '#222', 
+            height: '100%', 
+            minHeight: 'calc(100vh - 70px)', 
+            overflow:'hidden',
+        }
+    }
 
 
 
@@ -45,7 +72,7 @@ const Instructions = (props: IInstructionProps) => {
         <>
         <MediaQuery largerThan="md" styles={{ display: 'none !important', }}>
         
-        <div style={{ padding: '10px', paddingTop: '0', marginTop: '70px', width: '100%', background: '#222', minHeight: 'calc(100vh - 70px)'}}>
+        <div style={styles.mobileInstructions}>
             <>
             <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem'}}>
                 <Text sx={{color: '#68f', fontSize: '.8rem'}}>{currentCategory} / {currentPage}</Text>
@@ -57,17 +84,7 @@ const Instructions = (props: IInstructionProps) => {
 
 
         <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
-        <div style={{
-            padding: '10px', 
-            paddingTop: '0', 
-            paddingRight: '15px',
-            marginTop: '70px', 
-            width: ctx.instructionsOpen ? 'calc(45vw - 60px)' : '60px', 
-            background: '#222', 
-            maxHeight: 'calc(100vh - 70px)',
-            minHeight: 'calc(100vh - 70px)',
-            overflow: 'auto',
-            }}>
+        <div style={styles.desktopInstructions}>
             {ctx.instructionsOpen 
             ?
                 <>

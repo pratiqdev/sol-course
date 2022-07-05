@@ -25,7 +25,7 @@ export interface ICourseObject {
   /** Relative path to the file containing this course */
   file: string; 
   /** data for this course - object of answers or string of code */
-  data: any;
+  // data: any;
 }
 
 export interface ICourseCategoryObject {

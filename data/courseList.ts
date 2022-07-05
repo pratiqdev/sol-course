@@ -12,22 +12,18 @@ const courseList: ICourseListObject = {
             'getting-started':{
                 title: 'Getting Started',
                 file: 'intro/getting-started',
-                data: null
             },
             '1-2-q&a-example':{
                 title: 'Q & A (tsx)',
                 file: 'intro/standard-qa',
-                data: null
             },
             '1-3-custom-example':{
                 title: 'custom components (tsx)',
                 file: 'intro/standard-custom',
-                data: null
             },
             '1-4-intro-test':{
                 title: 'Intro Test',
                 file: 'intro/intro-test',
-                data: null
             }
         }
     },
@@ -41,7 +37,6 @@ const courseList: ICourseListObject = {
             '2-1-restricted-course-example':{
                 title: 'Restricted!',
                 file: 'restricted-test/getting-started',
-                data: null
             },
         }
     },
@@ -55,7 +50,14 @@ const courseList: ICourseListObject = {
             '1':{
                 title: 'Contract Definition',
                 file: 'solidity-basics/contract-definition',
-                data: null
+            },
+            '2':{
+                title: 'Getting Started',
+                file: 'solidity-basics/getting-started',
+            },
+            '3':{
+                title: 'First Steps',
+                file: 'solidity-basics/first-steps',
             },
         }
     },
@@ -69,8 +71,42 @@ const courseList: ICourseListObject = {
             '1':{
                 title: 'Intro to Transactions',
                 file: 'transactions/intro-to-transactions',
-                data: null
             },
+  
+        }
+    },
+    'smart-contract-intro':{
+        title: 'Smart Contract Intro',
+        description: 'Get familiar with Smart Contract concepts',
+        difficulty: 20, // out of 100
+        restricted: false,
+        // actual courses
+        courses: {
+            '1':{
+                title: 'Getting Started',
+                file: 'smart-contract-intro/getting-started',
+            },
+            '2':{
+                title: 'Contract Variables',
+                file: 'smart-contract-intro/contract-variables',
+            },
+            '3':{
+                title: 'Contract Data',
+                file: 'smart-contract-intro/contract-data',
+            },
+            '4':{
+                title: 'Contract Arrays',
+                file: 'smart-contract-intro/contract-arrays',
+            },
+            '5':{
+                title: 'Contract Functions',
+                file: 'smart-contract-intro/contract-functions',
+            },
+            '6':{
+                title: '',
+                file: 'smart-contract-intro/',
+            },
+  
         }
     },
 

@@ -44,12 +44,12 @@ List most common license types and why to choose each type of license
 
 <Blockquote>
     <i>
-    "Trust in smart contract 
+    &ldquo; Trust in smart contract 
     can be better established if their source code is available. Since making 
     source code available always touches on legal problems with regards to 
     copyright, the Solidity compiler encouranges the use of machine-readable 
     SPDX license identifiers. Every source file should start with a comment 
-    indicating its license. "
+    indicating its license. &rdquo;
     </i>
     <br />
     <br />

@@ -51,7 +51,7 @@ const ErrorCard = (props: any) => {
   return(
     <div style={{background: bg , padding: '.5rem', paddingBottom: '0', border: '1px solid white', marginTop: '.5rem', borderRadius: '.25rem', color: 'white', fontSize: '.6rem'}}>
       <b>{title}</b>
-      <pre>{message}</pre>
+      <pre style={{whiteSpace: 'pre-wrap'}}>{message}</pre>
     </div>
   )
 
@@ -97,6 +97,8 @@ const CustomEditor = (props:ICustomEditorProps) => {
       setWidth('40vw')
     }
   }, [ctx])
+
+
 
 
 
@@ -281,16 +283,16 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
     <MediaQuery largerThan="md" styles={{ display: 'none !important', }}>
 
-      <div style={{width: '100%', height: 'calc(90vh - 70px)'}}>
+      <div style={{width: '100%', height: 'auto', background: '#222'}}>
         {showEditor
         ? <MobileEditor 
             value={editorContent}
             onChange={handleCodeUpdate}
             language={props.language}
           />
-        : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto' }}>{compiledOutput}</pre>
+        : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto', padding: '.5rem', background: '#000'}}>{compiledOutput}</pre>
       }
-          <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{height: 'auto', display: 'flex', justifyContent: 'space-between'}}>
             <Group spacing="xs" style={{padding: '.5rem'}}>
               <Button size='xs' variant='filled' color='lime' onClick={handleCompile} loading={compiling}>Compile</Button>
               <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Output' : 'Show Editor'}</Button>
@@ -299,7 +301,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
               <Button size='xs' variant='filled' color='red'  onClick={()=> setEditorContent(props.code)}>Reset</Button>
             </Group>
           </div>
-          <div style={{padding: '.5rem', height: '27vh', overflow: 'auto', paddingBottom: '1rem'}}>
+          <div style={{padding: errorItemArray.length > 0 ? '.5rem' : '0', height: 'auto', overflow: 'auto'}}>
             {errorItemArray.map(item => <ErrorCard key={item.message} data={item} />)}
           </div>
       </div>

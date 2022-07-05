@@ -83,6 +83,10 @@ const Shell = (props: ShellProps) => {
   const [accordionState, handlers] = useAccordionState({ total: Object.entries(courseList).length, initialItem: props.categoryIndex || 0 });
   const isMobile = useMediaQuery('(max-width: 992px)');
 
+  useEffect(()=>{
+    console.log('IS MOBILE:', isMobile)
+  },[isMobile])
+
   let fixedNav = true
   if(opened && isMobile){
     // console.log('AAA')
@@ -231,7 +235,8 @@ const Shell = (props: ShellProps) => {
         justifyContent: 'stretch', 
         marginLeft: isMobile ? '0' : ctx.navOpen ? '20vw' : 60 ,
         flexDirection: isMobile ? 'column' : 'row',
-        overflow: isMobile ? 'auto' : 'hidden'
+        // overflow: isMobile ? 'auto' : 'hidden',
+        height: '100%'
         }}>
           <AccessContainer restricted={props.restricted}>
             <CompletionBanner />
