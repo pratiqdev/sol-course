@@ -11,6 +11,7 @@ import axios from 'axios';
 import { ICodeTest } from '@utils/interfaces';
 import { useMediaQuery } from '@mantine/hooks'
 import MobileEditor from '@components/MobileEditor'
+import { useRouter } from 'next/router'
 
 
 /**
@@ -18,8 +19,6 @@ import MobileEditor from '@components/MobileEditor'
  */
 
 interface ICustomEditorProps{
-  categoryUri: string;
-  courseUri: string;
   code: string;
   tests: ICodeTest[];
   language: string;
@@ -48,6 +47,14 @@ const ErrorCard = (props: any) => {
     bg = '#2226'
   }
 
+  if(props.index === 0){
+    return (
+      <div style={{background: 'none' , padding: '0 .5rem',  marginTop: '.5rem', color: 'white', fontSize: '.6rem', display: 'flex'}}>
+        <pre style={{whiteSpace: 'pre-wrap', padding: '0rem', margin: '0'}}><b style={{margin:'0', padding: '0', paddingRight: '1rem'}}>{title}</b>{message}</pre>
+      </div>
+    )
+  }
+
   return(
     <div style={{background: bg , padding: '.5rem', paddingBottom: '0', border: '1px solid white', marginTop: '.5rem', borderRadius: '.25rem', color: 'white', fontSize: '.6rem'}}>
       <b>{title}</b>
@@ -61,7 +68,13 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
   // let [categoryUri, courseUri] = props.URI.split('/')
 
-  const { categoryUri, courseUri, code, tests} = props
+  const {code, tests } = props
+  const router = useRouter()
+  const splitRoute = router.pathname.replace('/courses/', '').split('/')
+
+  // console.log('ROUTER PATH:', splitRoute)
+  const categoryUri = splitRoute[0]
+  const courseUri = splitRoute[1]
 
 
 
@@ -73,8 +86,8 @@ const CustomEditor = (props:ICustomEditorProps) => {
   const [width, setWidth] = useState('calc(100vw - 120px)')
   const [testPassed, setTestPassed] = useState(false)
   const { ctx, useUriStore } = useConnectionManager()
-  const [store, setStore] = useUriStore(props.categoryUri, props.courseUri)
-  const [catStore, setCatStore] = useUriStore(props.categoryUri)
+  const [store, setStore] = useUriStore(categoryUri, courseUri)
+  const [catStore, setCatStore] = useUriStore(categoryUri)
   const [errorItemArray, setErrorItemArray] = useState<IErrorObject[]>([])
 
   const isMobile = useMediaQuery('(max-width: 992px)');
@@ -123,6 +136,9 @@ const CustomEditor = (props:ICustomEditorProps) => {
    */
   const doesRegexExist = (str: string, reg: RegExp | string) => {
     let RESULT = false
+    if(reg instanceof RegExp){
+      return reg.test(str)
+    }
     if(str.search(reg)){
       // console.log('CODE | found regex. Checking for comment...')
       // regex found -> make sure its not a comment
@@ -181,10 +197,22 @@ const CustomEditor = (props:ICustomEditorProps) => {
 
       
       props.tests.forEach((test:any, i: number)=>{
-        const reg = new RegExp(test.regex.replace(/ /g, '[\n\r\\s]*'), 'gm');
+        // const reg = new RegExp(test.regex.replace(/ /g, '[\s\r\n]*'), 'gm');
+        let reg
+        // if(test.regex instanceof RegExp){
+        //   reg = test.regex
+        //   console.log('testing regex:', test.regex, 'as regex:', reg)
+        // }else{
+        //   reg = new RegExp(test.regex, 'gm');
+        //   console.log('testing regex:', test.regex, 'as string:', reg)
+        // }
+        // const reg = new RegExp(test.regex, 'gm');
         // const reg = new RegExp(test.regex, 'gi');
-        console.log('testing regex:', test.regex, 'as:', reg)
-        let exists = doesRegexExist(editorContent, reg)
+        let exists = doesRegexExist(editorContent, test.regex)
+
+        if(exists){
+          console.log(`testing regex: found ${reg}`)
+        }
 
         if(
           (test.exist && !exists)
@@ -231,7 +259,7 @@ const CustomEditor = (props:ICustomEditorProps) => {
     }else{
       errorArr.unshift({
         type: 'data',
-        title: `Errors found: ${errorArr.length}`,
+        title: `${errorArr.length} Error${errorArr.length > 1 ? 's' : ''}`,
         message: `Compiled with errors or tests failed`
       })
     }
@@ -263,21 +291,19 @@ const CustomEditor = (props:ICustomEditorProps) => {
             onChange={(c) => handleCodeUpdate(c || '')}
             theme={'vs-dark'}
           /> 
-        : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto' }}>{compiledOutput}</pre>
+        : <pre style={{fontSize: '.8rem', maxHeight: "calc(70vh - 70px)", height:"calc(80vh - 70px)", margin: '0', overflow: 'auto', padding: '1rem' }}>{compiledOutput}</pre>
       }
           <div style={{height: '3vh', display: 'flex', justifyContent: 'space-between' }}>
             <Group spacing="xs" style={{padding: '.5rem'}}>
               <Button size='xs' variant='filled' color='lime' onClick={handleCompile} loading={compiling}>Compile</Button>
-              {/* <Button size='xs' variant='filled' color='lime' onClick={()=>console.log(ctx.progress)}>Log Prog</Button> */}
-              {/* <Button size='xs' variant='filled' color='lime' onClick={checkStorage}>Check Store</Button> */}
               <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Output' : 'Show Editor'}</Button>
             </Group>
             <Group spacing="xs" style={{padding: '.5rem'}}>
-              <Button size='xs' variant='filled' color='red'  onClick={()=> handleCodeUpdate(props.code)}>Reset</Button>
+              <Button size='xs' variant='outline' color='red'  onClick={()=> handleCodeUpdate(props.code)}>Reset</Button>
             </Group>
           </div>
           <div style={{padding: '.5rem', height: '27vh', overflow: 'auto', paddingBottom: '1rem'}}>
-            {errorItemArray.map(item => <ErrorCard key={item.message} data={item} />)}
+            {errorItemArray.map((item, index) => <ErrorCard key={item.message} data={item} index={index} />)}
           </div>
       </div>
     </MediaQuery>
@@ -300,11 +326,11 @@ const CustomEditor = (props:ICustomEditorProps) => {
               <Button size='xs' variant='filled' color='gray'  onClick={()=>setShowEditor(s =>!s)}>{showEditor ? 'Show Output' : 'Show Editor'}</Button>
             </Group>
             <Group spacing="xs" style={{padding: '.5rem'}}>
-              <Button size='xs' variant='filled' color='red'  onClick={()=> setEditorContent(props.code)}>Reset</Button>
+              <Button size='xs' variant='outline' color='red'  onClick={()=> setEditorContent(props.code)}>Reset</Button>
             </Group>
           </div>
           <div style={{padding: errorItemArray.length > 0 ? '.5rem' : '0', height: 'auto', overflow: 'auto'}}>
-            {errorItemArray.map(item => <ErrorCard key={item.message} data={item} />)}
+            {errorItemArray.map((item, index) => <ErrorCard key={item.message} data={item} index={index} />)}
           </div>
       </div>
     </MediaQuery>

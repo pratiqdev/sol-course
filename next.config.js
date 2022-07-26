@@ -15,6 +15,7 @@ module.exports = withMDX({
   // Append the default value with md extensions
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   webpack5: true,
+  experimental: { images: { layoutRaw: true } },
   webpack: (config) => {
     config.resolve.fallback = { fs: false };
 

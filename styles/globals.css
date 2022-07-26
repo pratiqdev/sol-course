@@ -29,11 +29,12 @@ main{
 }
 
 span blockquote{
-  background: #334;
+  background: rgb(49, 49, 87);
   padding: 0.1rem .5rem;
   padding-top: .3rem;
-  margin: 0rem;
+  margin: 1rem;
   margin-right: .25rem;
+  margin-left: 0rem;
   border-radius: .25rem;
   border-left: 4px solid rgb(93, 93, 116);
 }
@@ -51,6 +52,11 @@ span blockquote[data-variant='alert']{
 span blockquote[data-variant='error']{
   background: #772c2c;
   border-color: rgb(230, 8, 8);
+}
+
+span blockquote[data-variant='instructions']{
+  background: #195800;
+  border-color: rgb(0, 169, 14);
 }
 
 span h1, span h2, span h3, span h4{

@@ -44,7 +44,10 @@ import { SuggestionCoreTypes } from '@utils/interfaces'
 const CoursePage = () => {
 
     return(
-        <Shell categoryIndex={4}>
+        <Shell 
+            categoryIndex={4}
+            nextCourse='/courses/smart-contract-intro/contract-data'
+        >
 
             
 <Instructions>
@@ -94,7 +97,7 @@ Now go ahead and add the price to our code terminal. -and compile-
 </p> */}
 
 
-<Blockquote variant='info' title='Instructions:'>
+<Blockquote variant='instructions' title='Instructions:'>
 Add the price to the contract in the code editor, and compile.
 </Blockquote>
 
@@ -106,8 +109,6 @@ Add the price to the contract in the code editor, and compile.
 
 <Editor 
             language='sol'
-            categoryUri='smart-contract-intro'
-            courseUri='contract-variables'
             code={
 `// SPDX-License-Identifier: MIT
 

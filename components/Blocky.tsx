@@ -12,9 +12,9 @@ const Blocky = () => {
         setHasAddress(ctx.connected && ctx.address)
     },[ctx.address, ctx.connected])
 
-    if(!hasAddress){
+    if(!ctx.connected || !ctx.address){
         return(
-            <Button onClick={connect} loading={ctx.connecting}>Connect#</Button>
+            <Button onClick={connect} loading={ctx.connecting}>Connect...</Button>
         )
     }    
 
@@ -22,19 +22,17 @@ const Blocky = () => {
         <Button 
             onClick={reset} 
             loading={ctx.connecting} 
-            style={{paddingLeft: '10px'}}
+            style={{paddingLeft: '.3rem', background: 'rgb(100,100,100,.4)', borderTopLeftRadius: '1.2rem', borderBottomLeftRadius: '1.2rem', borderTopRightRadius: '1.2rem', borderBottomRightRadius: '1.2rem'}}
+            variant='subtle'
             leftIcon={
                 <Blockies
                     seed={ctx.address} 
-                    size={10} 
-                    scale={2} 
-                    color="#dfe" 
-                    bgColor="#ffe" 
-                    spotColor="#abc" 
+                    size={8} 
+                    scale={3} 
                     className="identicon" 
                 />
             }>
-                {ellipseAddress(ctx.address || '', 4)}
+                <span style={{paddingTop: '.25rem'}}>{ellipseAddress(ctx.address || '', 4)}</span>
         </Button>
     )
 }

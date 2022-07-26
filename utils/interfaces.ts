@@ -48,7 +48,7 @@ export interface IFinalQuestions {
  */
 export interface ICodeTest {
   // uri: string;
-  regex: string;
+  regex: string | RegExp;
   /** Should this code exist or not exist */
   exist: boolean;
   /** The type of error found */

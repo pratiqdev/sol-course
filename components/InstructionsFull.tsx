@@ -15,10 +15,18 @@ interface IInstructionFullProps {
 const Instructions = (props: IInstructionFullProps) => {
     const { ctx, setCtx, useUriStore } = useConnectionManager()
     const [store, setStore] = useUriStore(props.categoryUri, props.courseUri)
+
     const router = useRouter()
-    const routerSplit = router.asPath.split('/')
-    const currentCategory = routerSplit[2]
-    const currentPage = routerSplit[3]
+    const splitRoute = router.pathname.replace('/courses/', '').split('/')
+  
+    // console.log('ROUTER PATH:', splitRoute)
+    const categoryUri = splitRoute[0]
+    const courseUri = splitRoute[1]
+
+    
+    // const routerSplit = router.asPath.split('/')
+    // const currentCategory = routerSplit[2]
+    // const currentPage = routerSplit[3]
 
     const isComplete = useRef(false)
 
@@ -26,7 +34,7 @@ const Instructions = (props: IInstructionFullProps) => {
     useEffect(()=>{
         if(ctx.connected && ctx.address && store && isComplete.current === false){
             isComplete.current = true
-            console.log('Auto complete - ', {category: props.categoryUri, course: props.courseUri})
+            console.log('Auto complete - ', {category: categoryUri, course: courseUri})
             setStore((s:any) => ({...s, complete: true, noBanner: true}))
         }
     }, [store])
@@ -52,7 +60,7 @@ const Instructions = (props: IInstructionFullProps) => {
             marginRight: 'auto'
         }}>
             <div style={{display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem'}}>
-                <Text sx={{color: '#68f', fontSize: '.8rem'}}>{currentCategory} / {currentPage}</Text>
+                <Text sx={{color: '#68f', fontSize: '.8rem'}}>{categoryUri} / {courseUri}</Text>
             </div>
             <span>{props.children}</span>
         </div>

@@ -30,12 +30,16 @@ interface ShellProps{
   restricted?: any;
   children?: any;
   categoryIndex: number;
+  nextCourse?:string;
 }
 
 
-const CompletionBanner = () => {
+const CompletionBanner = (props:any) => {
+  const {nextCourse} = props
+
   const {ctx, setCtx} = useConnectionManager()
   const [showBanner, setShowBanner] = useState(false)
+  const router = useRouter()
 
   useEffect(()=>{
     if(ctx.showCompleteBanner){
@@ -52,12 +56,38 @@ const CompletionBanner = () => {
     setCtx({...ctx, showCompleteBanner: false})
   }
 
+  const handleNext = () => {
+    setShowBanner(false)
+    setCtx({...ctx, showCompleteBanner: false, nextCourse: null})
+    ctx.nextCourse && router.push(ctx.nextCourse)
+  }
+
 
   if(showBanner){
     return(
-      <div style={{position: 'fixed', height: '100vh', width: '100vw', top: '0', left: '0', zIndex: '1000', background: '#0f03', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-          <p>Complete banner!</p>
-          <Button onClick={handleClose}>Close Banner</Button>
+      <div style={{position: 'fixed', height: '100vh', width: '100vw', top: '0', left: '0', zIndex: '1000', background: '#0f03', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>\
+        <div style={{background: '#121', padding: '1rem 2rem', borderRadius: '1rem', border: '4px solid white'}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+            <h2 style={{margin: '0', padding:'0'}}>Course Complete!</h2>
+            <Button variant='subtle' onClick={handleClose}>X</Button>
+          </div>
+          <p>This course is complete! Your progress has been saved and you can move on to the next course!</p>
+
+          {ctx.nextCourse 
+          ? (
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <Button onClick={handleClose}>Stay Here</Button>
+              <Button onClick={handleNext}>Next Course</Button>
+            </div>
+          ) : (
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <Button onClick={handleNext}>Close</Button>
+            </div>
+          )
+        
+        }
+
+        </div>
       </div>
     )
   }else{
@@ -72,9 +102,11 @@ const Shell = (props: ShellProps) => {
   const [shrinkNav, setShrinkNav] = useState(false)
   const { ctx, setCtx, connect, checkCompletion } = useConnectionManager()
   const router = useRouter()
-  const routerSplit = router.asPath.split('/')
-  const currentCategory = routerSplit[2]
-  const currentPage = routerSplit[3]
+  const splitRoute = router.pathname.replace('/courses/', '').split('/')
+
+  // console.log('ROUTER PATH:', splitRoute)
+  const categoryUri = splitRoute[0]
+  const courseUri = splitRoute[1]
   //@ts-ignore
   // const currentAccIndex = courseList.indexOf(courseList.find((x, i) => x.title.toLowerCase() === currentCategory.toLowerCase().replace('-',' '))) || 0
   // console.log('currentCategory:', currentCategory)
@@ -100,6 +132,12 @@ const Shell = (props: ShellProps) => {
     // console.log('DDD')
     fixedNav = true
   }
+
+  useEffect(()=>{
+    if(props.nextCourse){
+      setCtx({...ctx, nextCourse: props.nextCourse})
+    }
+  },[])
 
 
   const handleConnect = () => {
@@ -239,7 +277,7 @@ const Shell = (props: ShellProps) => {
         height: '100%'
         }}>
           <AccessContainer restricted={props.restricted}>
-            <CompletionBanner />
+            <CompletionBanner/>
             {props.children}
           </AccessContainer>
     </div>

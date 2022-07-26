@@ -15,7 +15,7 @@ const AccessContainer = (props:AccessContainerProps) => {
     const [verified, setVerified] = useState(false)
     const [expired, setExpired] = useState(false)
     const {ctx, setCtx, connect, reset} = useConnectionManager()
-    const [showConnectModal, setShowConnectModal] = useState(true)
+    const [showConnectModal, setShowConnectModal] = useState(false)
 
 
     const verifyData = async () => {
@@ -66,17 +66,24 @@ const AccessContainer = (props:AccessContainerProps) => {
     }
 
     useEffect(()=>{
-        verifyData()
+        if(localStorage.getItem('solidity-course-connection-denied') !== 'true'){
+            verifyData()
+            setShowConnectModal(true)
+            localStorage.setItem('solidity-course-connection-denied', 'true')
+        }
+
     }, [ctx.address])
 
 
     const handleClose = () => {
         console.log('HANDLE CLOSE')
+        localStorage.setItem('solidity-course-connection-denied', 'true')
         setShowConnectModal(false)
     }
 
     const handleConnect = () => {
         setShowConnectModal(false)
+        localStorage.setItem('solidity-course-connection-denied', 'true')
         connect()
     }
 

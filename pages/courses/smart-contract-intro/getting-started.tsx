@@ -12,7 +12,10 @@ import { SuggestionCoreTypes } from '@utils/interfaces'
 const CoursePage = () => {
 
     return(
-        <Shell categoryIndex={4}>
+        <Shell 
+            categoryIndex={4}
+            nextCourse='/courses/smart-contract-intro/contract-variables'
+        >
 
             
 <InstructionsFull

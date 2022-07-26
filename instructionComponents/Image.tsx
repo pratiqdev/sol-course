@@ -6,7 +6,8 @@ interface ImageProps {
     height?: number;
     alt?:string;
     icon?: any;
-    style?: any
+    style?: any;
+    layout?:  "fixed" | "intrinsic" | "fill" | "responsive" | "raw" | undefined;
 }
 
 
@@ -27,9 +28,9 @@ const CustomImage = (props:ImageProps) => {
     }
 
     return(
-        <div {...props}>
+        <div style={{marginTop: '1rem', marginBottom: '1rem'}} {...props}>
         <Image 
-            layout='responsive'
+            layout={props.layout || 'responsive'}
             width={props.width}
             height={props.height}
             alt={props.alt || 'Instruction Image'}

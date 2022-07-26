@@ -17,9 +17,9 @@ return () => <App />;
 
 const CodeBlock = (props:any) => {
     return(
-        <Highlight {...defaultProps} theme={dracula} code={props.code || ''} language={props.lang  || 'sol'}>
+        <Highlight {...defaultProps} theme={dracula} code={props.code.trim() || ''} language={props.lang  || 'sol'}>
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <pre className={className || 'codeblock'} style={style}>
+          <pre className={className || 'codeblock'} style={{...style, overflow: 'auto'}}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line, key: i })}>
                 {line.map((token, key) => (

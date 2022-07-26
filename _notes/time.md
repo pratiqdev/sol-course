@@ -57,5 +57,10 @@
 
 vvvvvvvvvvvvvv UNPAID vvvvvvvvvvvvvvvvvvvvvv
 
-## 7/5 - 1hr
+## 7/25 - 1hr
 1hr - added courses from course-content repo
+1hr - using localStorage key/val to prevent recurring prompt for connection modal
+3hr - testing regex and string based tests for compiler (fixed)
+1hr - fixed compiler bug with incorrect version string
+2hr - converting progress store uri to use page url split at '/' (required purging data from old mongodb store)
+1hr - added automatic course progression on completion banner

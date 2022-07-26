@@ -10,23 +10,92 @@ import Image from '@instructions/Image'
 import constants from '@data/constants'
 import { SuggestionCoreTypes } from '@utils/interfaces'
 
-const wb = '[\n\r\\s]*';
+const wb = '[\s\r\n]*';
 
 const CoursePage = () => {
 
     return(
-        <Shell categoryIndex={4}>
+        <Shell 
+            categoryIndex={4}
+            nextCourse='/courses/smart-contract-intro/contract-arrays'
+        >
 
             
 <Instructions>
+
+
+<h2>Contract Data</h2>
+
+<p>
+    Now that we have a price, we have to think of a way to add our items. 
+    In real life the customer can easily just view if an item is in stock 
+    and click its corresponding number to see the price. 
+    
+</p>
+<p>
+    However, in order to serve this information digitally we need to provide the
+    customer with the quantity and the name of the goods. Since we chose to have 
+    our vending machine price to be static we don&apos;t have to worry about 
+    providing the price for each individual item.
+</p>
+
+We can do this with a struct. A struct gives us the tools to serve more complex data with multiple properties.
+
+<Blockquote title='Instructions (1/2)' variant='instructions'>
+Lets initialize a new Struct with the keyword struct and call it &apos;Item&apos;.
+</Blockquote>
+
+
+So now we have:
+
+<CodeBlock code={`
+
+struct Item {
+    
+}
+
+`}/>
+
+To add properties to it we can simply add different types to it.
+<h3>
+    Quantity
+</h3>
+
+<p>
+    For our quantity we can use…
+</p>
+
+<p>
+    an integer! That&apos;s right! Since the quantity is a number we want to 
+    store this data as a uint .
+</p>
+
+<p>
+    All we have to do is declare that within our struct and give it a name. 
+    Such as uint quantity;. 
+</p>
+
+<h3>
+    Item Name
+</h3>
+
+<p>
+    We also want to store the name of the item, like a bag of chips. For this we would use a string.
+</p>
+
+<p>
+    A string is a data type that stores UTF-8 data such as “bag of chips” or “drink”
+</p>
+
+<Blockquote title='Instructions (2/2)' variant='instructions'>
+Now go ahead and put these two data types within our struct and give them the names <code>quantity</code> and <code>itemName</code>.
+</Blockquote>
 
 
 </Instructions>
 
 <Editor 
             language='sol'
-            categoryUri='smart-contract-intro'
-            courseUri='contract-variables'
             code={
 `// SPDX-License-Identifier: MIT
 
@@ -59,8 +128,8 @@ contract VendingMachine {
                     }
                 },
                 {
-                    // regex: `struct Item${wb}{${wb}uint quantity;${wb}string itemName;${wb}}`,
-                    regex: 'struct Item { uint ',
+                    // regex: `struct Item {`,
+                    regex: /struct\s*Item\s*{\s*uint\s*quantity;\s*string\s*itemName;\s*}/, 
 
                     exist: true,
                     type: 'VARIABLE',
