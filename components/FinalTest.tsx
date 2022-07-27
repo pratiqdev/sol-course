@@ -4,6 +4,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import useConnectionManager from '@utils/hooks/useConnectionManager';
 import { IFinalQuestions, SuggestionCoreTypes } from '@utils/interfaces'
 import courseList from '@data/courseList'
+import { useRouter } from 'next/router';
 
 import { QuestionMark } from 'tabler-icons-react'
 
@@ -31,7 +32,11 @@ interface IQuestionnaireProps {
 
 const FinalTest = (props:IQuestionnaireProps) => {
 
-  const {categoryUri, courseUri} = props
+
+  const router = useRouter()
+    const routerSplit = router.asPath.split('/')
+    const currentCategory = routerSplit[2]
+    const currentPage = routerSplit[3]
 
   const [width, setWidth] = useState('calc(100vw - 120px)')
   const { ctx, useUriStore} = useConnectionManager()
@@ -60,10 +65,11 @@ const FinalTest = (props:IQuestionnaireProps) => {
     const {title, message, links} = props.item
   
     return (
-      <Grid.Col span={4}>
+      <Grid.Col lg={4} md={6} sm={12}>
         <Box sx={{border: '1px solid white', borderRadius: '.25rem', padding: '.5rem', height: '100%', '*':{margin: '0px'}}}>
           <h4>{title}</h4>
           <p>{message}</p>
+          <div style={{display: 'flex', flexDirection: 'column'}}>{Object.entries(links).map((link:any, index:number) => <a style={{color: '#79f', fontSize: '.8rem'}} key={index} href={link[1]}>{link[0]}</a>)}</div>
         </Box>
       </Grid.Col>
     )
@@ -76,34 +82,38 @@ const FinalTest = (props:IQuestionnaireProps) => {
     return(
       <>
       {suggestionsConceptType.length > 0 && <>
-      <h3>Concept Related Suggestions</h3>
+      <h3 style={{color: '#79f'}}>Concept Related Suggestions</h3>
       <Grid>
         {suggestionsConceptType.map((item:any) => <SuggestionCard key={item.message} item={item} />)}
       </Grid>
+      <hr style={{marginTop: '2rem'}}/>
       </>}
   
       {suggestionsCodeType.length > 0 && <>
-      <h3>Code Related Suggestions</h3>
+        <h3 style={{color: '#79f'}}>Code Related Suggestions</h3>
       <Grid>
         {suggestionsCodeType.map((item:any) => <SuggestionCard key={item.message} item={item} />)}
       </Grid>
+      <hr style={{marginTop: '2rem'}}/>
       </>}
   
       {suggestionsTechType.length > 0 && <>
-      <h3>Tech Related Suggestions</h3>
+        <h3 style={{color: '#79f'}}>Tech Related Suggestions</h3>
       <Grid>
         {suggestionsTechType.map((item:any) => <SuggestionCard key={item.message} item={item} />)}
       </Grid>
+      <hr style={{marginTop: '2rem'}}/>
       </>}
   
       {suggestionsGeneralType.length > 0 && <>
-      <h3>General Suggestions</h3>
+        <h3 style={{color: '#79f'}}>General Suggestions</h3>
       <Grid>
         {suggestionsGeneralType.map((item:any) => <SuggestionCard key={item.message} item={item} />)}
       </Grid>
+      <hr style={{marginTop: '2rem'}}/>
       </>}
   
-      <pre>{JSON.stringify(catStore.feedback, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(catStore.feedback, null, 2)}</pre> */}
       </>
     )
   }
@@ -114,9 +124,6 @@ const FinalTest = (props:IQuestionnaireProps) => {
 
 
   //+ QUESTION TYPES ///////////////////////////////////////////////////////////
-
-
-
   const QuestionString = (props:any) => {
     const {index, data} = props
     const [value, setValue] = useState(data.givenAnswer)
@@ -168,14 +175,6 @@ const FinalTest = (props:IQuestionnaireProps) => {
     )
   }
 
-
-
-
-
-
-
-
-  
   const QuestionOptions = (props:any) => {
     const {index, data} = props
     const [value, setValue] = useState(data.givenAnswer)
@@ -232,14 +231,7 @@ const FinalTest = (props:IQuestionnaireProps) => {
       </>
     )
   }
-  
 
-
-
-
-
-
-    
   const QuestionBoolean = (props:any) => {
     const {index, data} = props
     const [value, setValue] = useState(data.givenAnswer)
@@ -381,7 +373,7 @@ const FinalTest = (props:IQuestionnaireProps) => {
 
   const checkAllComplete = () => {
     console.log('CAC | Checking all courses are complete before test...')
-    let totalCourses = Object.entries(courseList[categoryUri].courses).length - 1 // dont include the test iin this calc
+    let totalCourses = Object.entries(courseList[currentCategory].courses).length - 1 // dont include the test iin this calc
     
     let completeCourses = 0
     Object.entries(catStore).forEach((item:any) => {
@@ -392,7 +384,9 @@ const FinalTest = (props:IQuestionnaireProps) => {
     })
     console.log('CAC | courses:', {totalCourses, completeCourses})
 
-    setCategoryComplete(totalCourses === completeCourses)
+    console.log('COURSE COMPLETION:', {totalCourses, completeCourses})
+
+    setCategoryComplete(totalCourses <= completeCourses)
 
   }
 
@@ -404,8 +398,8 @@ const FinalTest = (props:IQuestionnaireProps) => {
   useEffect(()=>{
     if(ctx.address && Object.entries(catStore).length){
       handleLoadQasFromStore()
-      checkAllComplete()
     } 
+    checkAllComplete()
   }, [ctx.address, catStore])
 
 
@@ -440,32 +434,30 @@ const FinalTest = (props:IQuestionnaireProps) => {
     let localScore = 0
     props.qas.forEach((q:any, i:number) => {
       if(responses[i]){
-        console.log(`FinalTest | found index ${i} in ${responses}`)
         if(responses[i].givenAnswer === q.answer){
+          console.log(`FinalTest | found correct answer for index ${i}`)
           localScore += 1
         }
       }else{
         console.log(`FinalTest | could not find index ${i} in ${responses}`)
       }
     })
-    console.log('FinalTest | score:', localScore)
+    console.log('FinalTest | score:', {localScore, qas: props.qas.length})
     setScore(localScore)
 
     // update the progress object with user responses
     let newProg = {...ctx.progress}
 
-    if(newProg && categoryUri in newProg){
-      // newProg[uri].wasSubmitted = true
-      // newProg[]
-      // newProg[uri]['qas'] = responses
-      newProg[categoryUri][courseUri] = {
-        complete: localScore === props.qas.length,
-        wasSubmitted: true,
-        qas: responses,
-      }
-    }
+    // if(currentCategory in newProg){
+    //   newProg[currentCategory][currentPage] = {
+    //     complete: localScore >= props.qas.length,
+    //     wasSubmitted: true,
+    //     qas: responses,
+    //   }
+    // }
 
     // updateProgress((p) => ({...p, ...newProg}))
+    setStore((s:any)=>({...s, qas: responses, wasSubmitted: true, complete: localScore >= maxScore}))
 
 
   }
@@ -583,10 +575,16 @@ const FinalTest = (props:IQuestionnaireProps) => {
     <div style={{marginTop: '70px', width: '100%' , height: 'calc(100vh - 70px)', display: 'flex', flexDirection: 'column', padding: '1rem', paddingTop: '.5rem', overflow: 'auto', overflowX:'hidden'  }}>
       <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', marginTop: '1rem', paddingRight: '.5rem'}}>
         <Text sx={{color: '#68f', fontSize: '.8rem'}}>{props.categoryUri} / {props.courseUri}</Text>
-        {hasSuggestions && <ActionIcon variant={showSuggestions ? 'hover' : 'filled'} color='blue' size='md' onClick={()=>setShowSuggestions(b => !b)}><QuestionMark size={20}/></ActionIcon>}
       </div>
 
-        <h2 style={{margin: '0', marginTop: '1rem'}}>{props.title}</h2>
+        <h2 style={{margin: '0', marginTop: '1rem', width: '100%', display: 'flex', justifyContent: 'space-between'}}>
+          {props.title}
+
+          {(hasSuggestions && !showSuggestions) 
+            ? <Button onClick={() => setShowSuggestions(true)}>Show Suggestions</Button>
+            : <Button onClick={() => setShowSuggestions(false)}>Start Test</Button>
+          }
+        </h2>
 
       {!ctx.connected && <p>Not Connected - You must be connected to take any tests for any category</p>}
       {(ctx.connected && !categoryComplete) &&<p>Not complete - You must complete all courses in this category before taking this test!</p>}

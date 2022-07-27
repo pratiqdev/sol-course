@@ -166,10 +166,10 @@ contract VendingMachine {
                     }
                 },
                 {
-                    regex: /\s*function\s*addMoney\s*\(\s*uint\s*_amount\s*\)\s*public\s*payable\s*{\s*};\s*/, 
+                    regex: /\s*function\s*addMoney\s*\(\s*uint\s*_amount\s*\)\s*public\s*payable\s*{\s*}\s*/, 
                     exist: true,
                     type: 'VARIABLE',
-                    title: 'Missing: "function addMoney (uint _amount) public payable { };"',
+                    title: 'Missing: "function addMoney (uint _amount) public payable { }"',
                     message: 'Add this code to the contract',
                     feedback:{
                         coreType: SuggestionCoreTypes.CODE,

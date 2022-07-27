@@ -11,7 +11,7 @@ import { SuggestionCoreTypes } from '@utils/interfaces'
 const CoursePage = () => {
 
     return(
-        <Shell categoryIndex={0}>
+        <Shell categoryIndex={2}>
 
             
 <Instructions>
@@ -95,8 +95,6 @@ Type error: Type '{
 
         <Editor 
             language='sol'
-            categoryUri='intro'
-            courseUri='getting-started'
             code={
 `// SPDX-License-Identifier: MIT
 pragma solidity >=0.4.16 <0.9.0;

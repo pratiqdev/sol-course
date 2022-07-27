@@ -67,11 +67,11 @@ const CoursePage = () => {
         <Shell 
             categoryIndex={9999}    
         >
-            <div style={{width:'100%', marginRight: '20vw', display:'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+            <div style={{width:'100%', margin: '0 20vw', display:'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
 
-                <h2>404</h2>
+                <h2 style={{fontSize: '4rem', fontFamily: 'monospace', letterSpacing: '.5rem'}}>404</h2>
                 <h4>The page you are looking for does not exist</h4>
-                <Link href='/'>Go Home</Link>
+                <Link href='/' passHref><Button>Go Home</Button></Link>
 
             </div>
 

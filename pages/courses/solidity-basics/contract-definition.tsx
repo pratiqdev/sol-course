@@ -46,8 +46,6 @@ const CoursePage = () => {
 
         <Editor 
             language='sol'
-            categoryUri='intro'
-            courseUri='getting-started'
             code={
 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;

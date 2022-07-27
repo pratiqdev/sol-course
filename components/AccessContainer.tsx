@@ -19,6 +19,10 @@ const AccessContainer = (props:AccessContainerProps) => {
 
 
     const verifyData = async () => {
+        if(ctx.isVerified){
+            setVerified(true)
+            return
+        }
         let tokenData = localStorage.getItem(CONSTANTS.JWT_STORAGE_KEY) || null
         console.log('ACCESS | FOUND STORAGE TOKEN:', tokenData)
 
@@ -66,13 +70,14 @@ const AccessContainer = (props:AccessContainerProps) => {
     }
 
     useEffect(()=>{
+        verifyData()
         if(localStorage.getItem('solidity-course-connection-denied') !== 'true'){
-            verifyData()
             setShowConnectModal(true)
             localStorage.setItem('solidity-course-connection-denied', 'true')
         }
 
     }, [ctx.address])
+    
 
 
     const handleClose = () => {
@@ -88,6 +93,7 @@ const AccessContainer = (props:AccessContainerProps) => {
     }
 
     if(props.restricted && expired){
+        console.log('RESTRICTED & EXPIRED')
         return(
       
                 <div style={{
@@ -105,6 +111,8 @@ const AccessContainer = (props:AccessContainerProps) => {
                 </div>
         )
     }else if(props.restricted && !verified){
+        console.log('RESTRICTED & !VERIFIED')
+        console.log('ctx', ctx)
         return(
    
      
@@ -120,9 +128,11 @@ const AccessContainer = (props:AccessContainerProps) => {
                         <h3>You must verify your account!</h3>
                         <p>Connect to your wallet provider to verify this address...</p>
                         <Button onClick={connect}>Connect</Button>
+                        <pre>{JSON.stringify({...ctx, w3m: ''}, null, 2)}</pre>
                 </div>
         )
     }else{
+        console.log('!RESTRICTED')
         return(
             <>
                 <Modal centered open={showConnectModal && !props.restricted} title='Connect a Wallet' style={{zIndex:'100'}} onClose={handleClose}>

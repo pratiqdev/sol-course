@@ -11,7 +11,7 @@ import { SuggestionCoreTypes } from '@utils/interfaces'
 const CoursePage = () => {
 
     return(
-        <Shell categoryIndex={0}>
+        <Shell categoryIndex={2}>
 
             
 <Instructions>
@@ -65,8 +65,6 @@ List most common license types and why to choose each type of license
 
         <Editor 
             language='sol'
-            categoryUri='intro'
-            courseUri='getting-started'
             code={
 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;

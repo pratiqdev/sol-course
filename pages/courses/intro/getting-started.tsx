@@ -111,8 +111,6 @@ Type error: Type '{
 
         <Editor 
             language='sol'
-            categoryUri='intro'
-            courseUri='getting-started'
             code={
 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;
@@ -134,10 +132,10 @@ contract HelloWorld {
                     message: 'Add this code to the contract',
                     feedback:{
                         coreType: SuggestionCoreTypes.CODE,
-                        title: 'Cats',
-                        suggestion: 'Learn about *this* before taking the test',
+                        title: 'Variable Declaration',
+                        suggestion: 'Learn about defining string variables before taking the test',
                         links:{
-                            'https://google.com/images/cats': 'Cat Pictures to Study'
+                            'Cat Pictures to Study': 'https://google.com/images/cats'
                         }
                     }
                 },
@@ -149,10 +147,10 @@ contract HelloWorld {
                     message: 'Use double quotes instead of single quotes',
                     feedback:{
                         coreType: SuggestionCoreTypes.CODE,
-                        title: 'Dogs',
-                        suggestion: 'Learn about *this* before taking the test',
+                        title: 'Syntax Quirks',
+                        suggestion: 'Learn about solidity syntax before taking the test',
                         links:{
-                            'https://google.com/images/dogs': 'Dog Pictures to Study'
+                            'Dog Pictures to Study': 'https://google.com/images/dogs'
                         }
                     }
                 }

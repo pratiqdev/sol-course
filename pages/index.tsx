@@ -9,49 +9,13 @@ import {
   Burger,
   useMantineTheme,
   Button,
+  Grid,
 } from '@mantine/core';
 import useConnectionManager from '@utils/hooks/useConnectionManager';
 import { ellipseAddress } from '@utils/utilities';
+import { FileX } from 'tabler-icons-react';
 
 
-
-
-
-// const Debugger = (props) => {
-//   const { 
-//     ctx, 
-//     setCtx, 
-    
-//     connect, 
-//     reset, 
-    
-//     progress, 
-// } = useConnectionManager()
-
-//   const [open, setOpen] = useState(true)
-
-//   const [progressState, setProgressState] = useState('empty')
-//   const [contextState, setContextState] = useState('empty')
-
-//   useEffect(()=>{
-//     let context = {...ctx}
-//     delete context['w3m']
-//     setContextState(JSON.stringify(context, null, 2))
-//     setProgressState(JSON.stringify(progress, null, 2))
-
-//   },[ctx, progress])
-  
-
-//   return(
-//     <div className={open ? 'debugger-open' : 'debugger-closed'} onClick={()=>setOpen(b=>!b)}>
-//         <h4>Context</h4>
-//         <pre>{contextState}</pre>
-//         <hr/>
-//         <h4>Progress</h4>
-//         <pre>{progressState}</pre>
-//     </div>
-//   )
-// }
 
 
 
@@ -100,7 +64,7 @@ const HomePage = () => {
 
           <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
             <div style={{width: '100%'}}>
-              <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>ChiptosX Sol</Button></Link>
+              <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>ChiptosX</Button></Link>
             </div>
             <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
             <div style={{display: 'flex', alignItems: 'center'}}>
@@ -117,15 +81,48 @@ const HomePage = () => {
       </Header>
     }
     >
-        <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', }}>
-            <Text>Basic intro, what is this, quick how to, get started callout</Text>
+        <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', display: 'flex', flexDirection: 'column'}}>
 
-            <div className='quik-menu'>
-              <Link href='/courses' passHref><Button variant='light' component='a'>Courses</Button></Link>
-              <Link href='/tests/access-test' passHref><Button variant='light' component='a' >Access Test</Button></Link>
-              <Link href='/tests/progress-test' passHref><Button variant='light' component='a' >Storage Test</Button></Link>
+            <div style={{background: '#446', display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', marginBottom: '1rem', padding: '2rem'}}>
+                <Text variant='gradient' style={{fontSize: '3rem', fontWeight: 'bold', fontFamily: 'monospace'}}>ChiptosX Solidity Courses</Text>
 
+                <p>Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution. User generated content in real-time will have multiple touchpoints for offshoring.</p>
             </div>
+
+            <Grid style={{padding: '.75rem', paddingRight: '1rem'}} gutter={0}>
+                <Grid.Col lg={4} md={6} sm={12}>
+                    <div style={{background: '#224', borderRadius: '.5rem', margin: '1rem', padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                        <h3>Courses</h3>
+                        <p>Get started on the Solidity courses</p>
+                        <Link href='/courses' passHref><Button variant='gradient' component='a' fullWidth>View Courses</Button></Link>
+                    </div>
+                </Grid.Col>
+                <Grid.Col lg={4} md={6} sm={12}>
+                    <div style={{background: '#224', borderRadius: '.5rem', margin: '1rem', padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                        <h3>Access Test</h3>
+                        <p>Test access to restricted and non-restricted courses</p>
+                        <Link href='/tests/access-test' passHref><Button variant='gradient' component='a' fullWidth>Access Test</Button></Link>
+                    </div>
+                </Grid.Col>
+                <Grid.Col lg={4} md={6} sm={12}>
+                    <div style={{background: '#224', borderRadius: '.5rem', margin: '1rem', padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                        <h3>Storage Test</h3>
+                        <p>Test context storage modification</p>
+                        <Link href='/tests/progress-test' passHref><Button variant='gradient' component='a' fullWidth>Storage Test</Button></Link>
+                    </div>
+                </Grid.Col>
+                <Grid.Col lg={4} md={6} sm={12}>
+                    <div style={{background: '#224', borderRadius: '.5rem', margin: '1rem', padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                        <h3>Placeholder</h3>
+                        <p>A placeholder for another grid column item</p>
+                       <Button variant='gradient' component='a' fullWidth>Placeholder</Button>
+                    </div>
+                </Grid.Col>
+                
+            </Grid>
+
+
+
         </div>
     </AppShell>
   );

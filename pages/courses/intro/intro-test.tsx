@@ -34,6 +34,7 @@ const CoursePage = () => {
         {
             question: 'A question!!!',
             answer: 'option 3',
+            type: 'options',
             options: [
                 'option 1',
                 'option 2',

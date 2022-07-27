@@ -88,8 +88,6 @@ const myFunction = (arg) => {
 
 <Editor 
             language='sol'
-            categoryUri='restricted-test'
-            courseUri='getting-started'
             code={
 `// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;

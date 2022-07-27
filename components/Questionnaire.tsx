@@ -89,13 +89,6 @@ const Questionnaire = (props:QuestionnaireProps) => {
     )
   }
 
-
-
-
-
-
-
-
   
   const QuestionOptions = (props:any) => {
     const {index, data} = props
@@ -153,13 +146,6 @@ const Questionnaire = (props:QuestionnaireProps) => {
       </div>
     )
   }
-  
-
-
-
-
-
-
 
   
   const QuestionBoolean = (props:any) => {
@@ -391,7 +377,7 @@ const Questionnaire = (props:QuestionnaireProps) => {
     setScore(localScore)
 
 
-    setStore((s:any)=>({...s, qas: responses, wasSubmitted: true, complete: localScore === maxScore}))
+    setStore((s:any)=>({...s, qas: responses, wasSubmitted: true, complete: localScore >= maxScore}))
 
       console.log('QAS | SUBMIT | TEST COMPLETE?', {localScore, maxScore})
 

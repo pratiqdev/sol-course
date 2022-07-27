@@ -31,6 +31,7 @@ interface ShellProps{
   children?: any;
   categoryIndex: number;
   nextCourse?:string;
+  hideNavbar?: boolean;
 }
 
 
@@ -176,7 +177,7 @@ const Shell = (props: ShellProps) => {
 
 
 
-      navbar={
+      navbar={props.hideNavbar ? <></> :
         <>
         <MediaQuery smallerThan="md" styles={{ display: 'none !important'}}>
           <Navbar p="md" hiddenBreakpoint="md" hidden={!opened} width={{md: ctx.navOpen ? '20vw' : 60 }}>
@@ -192,9 +193,11 @@ const Shell = (props: ShellProps) => {
                       {Object.entries(categoryObject.courses).map(([courseUri, courseObject]) => {
 
                         return(
-                          <Box key={courseObject.file} sx={{padding: '.25rem .5rem',marginTop: '.5rem', marginLeft: '-10px', marginRight: '-10px',cursor: 'pointer', minWidth: '100%', borderBottom: '1px solid transparent', '&:hover': { borderBottom: '1px solid #555'}}}>
-                            <StatusBadge path={courseObject.file}/> <Link href={`/courses/${courseObject.file}`}>{courseObject.title}</Link>
+                          <Link key={courseObject.file} href={`/courses/${courseObject.file}`} passHref>
+                          <Box sx={{padding: '.25rem .5rem',marginTop: '.5rem', marginLeft: '-10px', marginRight: '-10px',cursor: 'pointer', minWidth: '100%', borderBottom: '1px solid transparent', '&:hover': { borderBottom: '1px solid #555'}}}>
+                            <StatusBadge path={courseObject.file}/> {courseObject.title}
                           </Box>
+                          </Link>
                         )}
 
 
@@ -250,7 +253,7 @@ const Shell = (props: ShellProps) => {
 
             <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
               <div style={{width: '100%'}}>
-                <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>ChiptosX Sol</Button></Link>
+                <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>ChiptosX</Button></Link>
               </div>
               <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
               <div style={{display: 'flex', alignItems: 'center'}}>
@@ -271,7 +274,7 @@ const Shell = (props: ShellProps) => {
     <div style={{
         display: 'flex', 
         justifyContent: 'stretch', 
-        marginLeft: isMobile ? '0' : ctx.navOpen ? '20vw' : 60 ,
+        marginLeft: props.hideNavbar ? '0' : isMobile ? '0' : ctx.navOpen ? '20vw' : 60 ,
         flexDirection: isMobile ? 'column' : 'row',
         // overflow: isMobile ? 'auto' : 'hidden',
         height: '100%'
