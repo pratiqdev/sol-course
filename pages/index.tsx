@@ -64,7 +64,7 @@ const HomePage = () => {
 
           <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
             <div style={{width: '100%'}}>
-              <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>ChiptosX</Button></Link>
+              <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}><b style={{color: '#6af'}}>Ether</b><b style={{color:'white'}}>able</b></Button></Link>
             </div>
             <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>
             <div style={{display: 'flex', alignItems: 'center'}}>
@@ -84,9 +84,10 @@ const HomePage = () => {
         <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', display: 'flex', flexDirection: 'column'}}>
 
             <div style={{background: '#446', display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', marginBottom: '1rem', padding: '2rem'}}>
-                <Text variant='gradient' style={{fontSize: '3rem', fontWeight: 'bold', fontFamily: 'monospace'}}>ChiptosX Solidity Courses</Text>
+                <Text variant='text' style={{fontSize: '3rem', fontWeight: 'normal', fontFamily: 'monospace', color: '#fff'}}><b style={{color: '#6af'}}>Ether</b><b style={{color:'white'}}>able</b></Text>
+                <Text variant='text' style={{fontSize: '3rem', fontWeight: 'normal', fontFamily: 'monospace', color: '#fff'}}>Solidity Courses</Text>
 
-                <p>Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution. User generated content in real-time will have multiple touchpoints for offshoring.</p>
+                <p>Study up on your solidity / ethereum / blockchain basics with these interactive courses</p>
             </div>
 
             <Grid style={{padding: '.75rem', paddingRight: '1rem'}} gutter={0}>

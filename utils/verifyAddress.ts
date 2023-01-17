@@ -33,7 +33,7 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
   }
 
 
-  const msg = `Welcome to the Chiptos Solidity Course! \n\nVerify your address to access courses and save your progress.`;
+  const msg = `Welcome to the Etherable Solidity Course! \n\nVerify your address to access courses and save your progress.`;
 
   // attempt to sign a message thru metamask
   // does this work thru any provider?
@@ -89,30 +89,30 @@ const verifyAddress = async (_address:string): Promise<IVerfifiedDataStruct> => 
         message: 'This address could not be verified...'
       }
     }
+    // TODO: Create a new contract for purchasing etherable credits
+    // let holderData = await Contract.methods
+    // .balanceOf(verifiedAddress)
+    // .call()
 
-    let holderData = await Contract.methods
-    .balanceOf(verifiedAddress)
-    .call()
-
-    if(parseInt(holderData) >= 1){
-        let storageItem = {
-          token: await generateJWT(),
-          expiration: Date.now() + 7.2e+6
-        }
-        localStorage.setItem(CONSTANTS.JWT_STORAGE_KEY, JSON.stringify(storageItem))
-        // console.log('set localStorage item:', storageItem)
-        return {
-          isHolder: true,
-          isVerified: true,
-          message: 'Address verified as ChiptosX owner',
-        }
-    }else{
+    // if(parseInt(holderData) >= 1){
+    //     let storageItem = {
+    //       token: await generateJWT(),
+    //       expiration: Date.now() + 7.2e+6
+    //     }
+    //     localStorage.setItem(CONSTANTS.JWT_STORAGE_KEY, JSON.stringify(storageItem))
+    //     // console.log('set localStorage item:', storageItem)
+    //     return {
+    //       isHolder: true,
+    //       isVerified: true,
+    //       message: 'Address verified as Etherable owner',
+    //     }
+    // }else{
       return {
         isHolder: false,
         isVerified: true,
-        message: 'This address is not a ChiptosX owner...'
+        message: 'This address is verified and is not a Etherable owner...'
       }
-    }
+    // }
   }catch(err){
     console.log('VERIFY ADDRESS ERROR:',err)
     return {

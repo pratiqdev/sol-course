@@ -92,7 +92,7 @@ const Courses = () => {
 
             <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
               <div style={{width: '100%'}}>
-                <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}>ChiptosX Sol</Button></Link>
+                <Link href='/' passHref><Button variant='subtle' component='a' sx={{marginRight: 10}}><b style={{color: '#6af'}}>Ether</b><b style={{color:'white'}}>able</b></Button></Link>
               </div>
 
               <MediaQuery smallerThan="md" styles={{ display: 'none !important', }}>

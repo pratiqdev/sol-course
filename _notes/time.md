@@ -57,14 +57,28 @@
 
 vvvvvvvvvvvvvv UNPAID vvvvvvvvvvvvvvvvvvvvvv
 
-## 7/25 - 9hr
+## 7/25 - 5hr
 1hr - added courses from course-content repo
 1hr - using localStorage key/val to prevent recurring prompt for connection modal
 3hr - testing regex and string based tests for compiler (fixed)
+
+
+## 7/26 - 4hr
 1hr - fixed compiler bug with incorrect version string
 2hr - converting progress store uri to use page url split at '/' (required purging data from old mongodb store)
 1hr - added automatic course progression on completion banner
 
-## 7/27
+## 7/27 - 6hr
 1hr - updated suggestion structures and content
 1hr - added completion check to final course tests
+2hr - added docs page
+    - added hideNav flag to shell
+    - fixed final test progress storage
+    - added option type to input types for final test
+1hr - added start test prompt to pretest suggestions
+    - refactored suggestion structure and suggestion cards
+    - fixed reload bug with access container
+1hr - added custom 404 page
+    - added handleNav function to load route after user connected event
+    - added responsive grid span definitions to all grids
+    - cleaned up unused code

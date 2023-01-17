@@ -191,8 +191,9 @@ const CustomEditor = (props:ICustomEditorProps) => {
             message: x.formattedMessage.replace('--> code.sol:', '').trim()
           })
         })
-      }else{
         setCompiledOutput('Errors during compilation. Fix errors and compile again to see output.')
+      }else{
+        setCompiledOutput(JSON.stringify(output.contracts['code.sol'], null, 2))
       }
 
       

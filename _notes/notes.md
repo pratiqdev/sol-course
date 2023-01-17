@@ -43,7 +43,7 @@ https://vercel.com/pratiqdev/sol-course
 The Repo
 https://github.com/pratiqdev/sol-course
 
-The ChiptosX Contract
+The Original Token Holder Contract
 https://etherscan.io/address/0x5955373cc1196fd91a4165c4c5c227b30a3948f9#readContract
 
 Medium article on message signing and verification (with gist)
