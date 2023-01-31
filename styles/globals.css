@@ -20,7 +20,9 @@ a {
   /* border: 1px solid grey */
 }
 
-
+.hover-red:hover{
+  background: red;
+}
 
 main{
   display: flex;

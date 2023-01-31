@@ -3,8 +3,11 @@ import Blockies from 'react-blockies';
 import { Button } from '@mantine/core'
 import { useEffect, useState } from 'react';
 import { ellipseAddress } from '@utils/utilities';
- 
-const Blocky = () => {
+export type BlockyProps = {
+    wide?: boolean;
+    handleConnect?: () => unknown;
+}
+const Blocky = (props:BlockyProps) => {
     const {ctx, connect, reset} = useConnectionManager()
     const [hasAddress, setHasAddress] = useState(false)
     
@@ -14,7 +17,7 @@ const Blocky = () => {
 
     if(!ctx.connected || !ctx.address){
         return(
-            <Button onClick={connect} loading={ctx.connecting}>Connect...</Button>
+            <Button onClick={() => props.handleConnect ? props.handleConnect() : connect} loading={ctx.connecting}>{ctx.connecting ? 'Connecting...' : 'Connect'}</Button>
         )
     }    
 
@@ -32,7 +35,7 @@ const Blocky = () => {
                     className="identicon" 
                 />
             }>
-                <span style={{paddingTop: '.25rem'}}>{ellipseAddress(ctx.address || '', 4)}</span>
+                <span style={{paddingTop: '.25rem'}}>{props.wide ? ctx.address : ellipseAddress(ctx.address || '', 4)}</span>
         </Button>
     )
 }
@@ -40,13 +43,13 @@ const Blocky = () => {
 export default Blocky
 
 /*
-       <Blockies
-            seed={ctx.address} {/* the only required prop; determines how the image is generated 
-            size={10} {/* number of squares wide/tall the image will be; default = 15 
-            scale={3} {/* width/height of each square in pixels; default = 4 
-            color="#dfe" {/* normal color; random by default 
-            bgColor="#ffe" {/* background color; random by default 
-            spotColor="#abc" {/* color of the more notable features; random by default 
-            className="identicon" {/* optional class name for the canvas element; "identicon" by default 
-        />
+    <Blockies
+        seed={ctx.address} {/* the only required prop; determines how the image is generated 
+        size={10} {/* number of squares wide/tall the image will be; default = 15 
+        scale={3} {/* width/height of each square in pixels; default = 4 
+        color="#dfe" {/* normal color; random by default 
+        bgColor="#ffe" {/* background color; random by default 
+        spotColor="#abc" {/* color of the more notable features; random by default 
+        className="identicon" {/* optional class name for the canvas element; "identicon" by default 
+    />
 */

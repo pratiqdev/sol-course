@@ -67,6 +67,8 @@ const useConnectionManager = () => {
 
       let holderData = await verifyAddress(accounts[0])
 
+      // TODO- Create a new token contract for holder verification
+
       setCtx({
         ...ctx,
         address: accounts[0],

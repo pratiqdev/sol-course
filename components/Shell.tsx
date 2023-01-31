@@ -177,7 +177,7 @@ const Shell = (props: ShellProps) => {
 
 
 
-      navbar={props.hideNavbar ? <></> :
+      navbar={
         <>
         <MediaQuery smallerThan="md" styles={{ display: 'none !important'}}>
           <Navbar p="md" hiddenBreakpoint="md" hidden={!opened} width={{md: ctx.navOpen ? '20vw' : 60 }}>
@@ -210,9 +210,10 @@ const Shell = (props: ShellProps) => {
         </MediaQuery>
         <MediaQuery largerThan="md" styles={{ display: 'none !important',}}>
           <Navbar p="md" hiddenBreakpoint="md" hidden={!opened} width={{md: ctx.navOpen ? '20vw' : 60 }}>
-            <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginBottom: 10}}>Courses</Button></Link>
+            <Blocky wide={true} handleConnect={handleConnect} />
+            <Link href='/courses' passHref><Button variant='light' component='a' sx={{marginBottom: 10, marginTop: 10}}>Courses</Button></Link>
             <Link href='/docs' passHref><Button variant='light' component='a' sx={{marginBottom: 10}}>Docs</Button></Link>
-            <Button variant='light' sx={{marginBottom: 10}} onClick={handleConnect}>Connect</Button>
+            {/* <Button variant='light' sx={{marginBottom: 10}} onClick={handleConnect}>Connect</Button> */}
          
             <Accordion state={accordionState} onChange={handlers.setState} offsetIcon={false} >
                 {Object.entries(courseList).map(([categoryUri, categoryObject],i) => 
