@@ -32,6 +32,7 @@ interface ShellProps{
   categoryIndex: number;
   nextCourse?:string;
   hideNavbar?: boolean;
+  hideSidebar?: boolean;
 }
 
 
@@ -177,7 +178,7 @@ const Shell = (props: ShellProps) => {
 
 
 
-      navbar={
+      navbar={props.hideSidebar ? <></> : 
         <>
         <MediaQuery smallerThan="md" styles={{ display: 'none !important'}}>
           <Navbar p="md" hiddenBreakpoint="md" hidden={!opened} width={{md: ctx.navOpen ? '20vw' : 60 }}>
@@ -275,7 +276,7 @@ const Shell = (props: ShellProps) => {
     <div style={{
         display: 'flex', 
         justifyContent: 'stretch', 
-        marginLeft: props.hideNavbar ? '0' : isMobile ? '0' : ctx.navOpen ? '20vw' : 60 ,
+        marginLeft: props.hideSidebar ? '0' : isMobile ? '0' : ctx.navOpen ? '20vw' : 60 ,
         flexDirection: isMobile ? 'column' : 'row',
         // overflow: isMobile ? 'auto' : 'hidden',
         height: '100%'

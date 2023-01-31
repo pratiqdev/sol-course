@@ -31,7 +31,7 @@ const HomePage = () => {
   const isMobile = useMediaQuery('(max-width: 992px)');
 
   return(
-      <Shell categoryIndex={0} hideNavbar>
+      <Shell categoryIndex={0} hideNavbar hideSidebar>
           <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', display: 'flex', flexDirection: 'column'}}>
 
            <div style={{background: '#446', display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', marginBottom: '1rem', padding: '2rem'}}>

@@ -17,7 +17,7 @@ const DocLink = (props:any) => <a href={'#'+props.text.replace(/ /g, '-').toLowe
 const DocsHome = () => {
     const isMobile = useMediaQuery('max-width: 900px')
     return(
-        <Shell categoryIndex={0} hideNavbar>
+        <Shell categoryIndex={0} hideSidebar>
             <div style={{display: 'flex', flexDirection: isMobile ? 'column-reverse' : 'row', width: '100%', margin: '0 auto', maxWidth: '1200px'}}>
                 <div style={{padding: '1rem',  display: 'flex', flexDirection: 'column', width: '100%', marginTop: isMobile ? '0' : '70px'}}>
 

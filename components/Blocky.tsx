@@ -17,7 +17,7 @@ const Blocky = (props:BlockyProps) => {
 
     if(!ctx.connected || !ctx.address){
         return(
-            <Button onClick={() => props.handleConnect ? props.handleConnect() : connect} loading={ctx.connecting}>{ctx.connecting ? 'Connecting...' : 'Connect'}</Button>
+            <Button onClick={() => props.handleConnect ? props.handleConnect() : connect()} loading={ctx.connecting}>{ctx.connecting ? 'Connecting...' : 'Connect'}</Button>
         )
     }    
 

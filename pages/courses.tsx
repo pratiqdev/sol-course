@@ -33,16 +33,6 @@ if started = false => showStart => setStarted false
 
 */
 
-const DocSection = (props:any) => {
-  return (
-      <div id={props.title.replace(/ /g, '-').toLowerCase()} style={{border: '1px solid grey', width: '100%', padding:'0 1rem', borderRadius: '.5rem', marginBottom: '1rem'}}>
-          <h2>{props.title}</h2>
-         {props.children}
-      </div>
-  )
-}
-
-const DocLink = (props:any) => <a href={'#'+props.text.replace(/ /g, '-').toLowerCase()}><Button variant='subtle'>{props.text}</Button></a>
 
 const Courses = () => {
   const theme = useMantineTheme();
@@ -52,7 +42,7 @@ const Courses = () => {
   const isMobile = useMediaQuery('(max-width: 992px)');
 
   return(
-      <Shell categoryIndex={0} hideNavbar>
+      <Shell categoryIndex={0} hideSidebar>
           <div style={{display: 'flex', flexDirection: isMobile ? 'column-reverse' : 'row', width: '100%', margin: '0 auto', maxWidth: '1200px'}}>
               <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', padding: '1rem'}}>
                 <Grid style={{alignItems: 'stretch', flexDirection: isMobile ? 'column' : 'row'}}>
