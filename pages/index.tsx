@@ -32,7 +32,7 @@ const HomePage = () => {
 
   return(
       <Shell categoryIndex={0} hideNavbar hideSidebar>
-          <div style={{minHeight: 'calc(100vh - 70px)', marginTop: '70px', display: 'flex', flexDirection: 'column'}}>
+          <div style={{minHeight: 'calc(100vh - 70px)', margin: '70px auto', marginBottom: '0px', display: 'flex', flexDirection: 'column'}}>
 
            <div style={{background: '#446', display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center', marginBottom: '1rem', padding: '2rem'}}>
                <Text variant='text' style={{fontSize: '3rem', fontWeight: 'normal', fontFamily: 'monospace', color: '#fff'}}><b style={{color: '#6af'}}>Ether</b><b style={{color:'white'}}>able</b></Text>
