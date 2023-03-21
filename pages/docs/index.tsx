@@ -191,8 +191,8 @@ const DocsHome = () => {
                         <p>This is a place to explain the usage and functions of components, editors, how to compile, how to </p>
                     </DocSection>
 
-                    {data.map(x => 
-                        <DocSection title={x.title} >
+                    {data.map((x, i) => 
+                        <DocSection key={i} title={x.title} >
                             <small>{x.subtitle}</small>
                             <p>{x.description} </p>
                             {x.content}
@@ -210,8 +210,8 @@ const DocsHome = () => {
                     <DocLink text='Taking a Course' />
                     <DocLink text='Taking a Course' />
 
-                    {data.map(x =>
-                        <DocLink text={x.title} >
+                    {data.map((x, i) =>
+                        <DocLink key={i} text={x.title} >
                             <p>{x.description} </p>
                         </DocLink>
                     )}
